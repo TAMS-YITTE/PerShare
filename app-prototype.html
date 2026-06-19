@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>PerShare — SHARE</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:       #0A0A0F;
+    --surface:  #1C1C27;
+    --surface2: #252535;
+    --primary:  #7C3AED;
+    --primary2: #9D5FF0;
+    --green:    #10B981;
+    --amber:    #F59E0B;
+    --red:      #EF4444;
+    --text:     #E2E8F0;
+    --muted:    #64748B;
+    --border:   rgba(255,255,255,0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; font-size: 15px; line-height: 1.5; min-height: 100vh; overflow-x: hidden; }
+  h1,h2,h3 { font-family: 'Space Grotesk', sans-serif; }
+  mono { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--muted); }
+
+  /* Layout */
+  .app { max-width: 420px; margin: 0 auto; min-height: 100vh; position: relative; padding-bottom: 80px; }
+  .screen { display: none; padding: 20px 16px; }
+  .screen.active { display: block; }
+
+  /* Top bar */
+  .topbar { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; padding-top: 8px; }
+  .topbar-title { font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 600; flex: 1; }
+  .back-btn { width: 36px; height: 36px; border-radius: 10px; background: var(--surface); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text); font-size: 18px; flex-shrink: 0; }
+  .logo { font-family: 'Space Grotesk', sans-serif; font-size: 20px; font-weight: 700; letter-spacing: -0.5px; }
+  .logo span { color: var(--primary); }
+
+  /* Cards */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 16px; margin-bottom: 12px; }
+  .card-title { font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+  .card-sub { font-size: 13px; color: var(--muted); }
+
+  /* Share card */
+  .share-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 20px; margin-bottom: 14px; cursor: pointer; transition: border-color 0.2s; }
+  .share-card:hover { border-color: var(--primary); }
+  .share-card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 14px; }
+  .share-name { font-family: 'Space Grotesk', sans-serif; font-size: 17px; font-weight: 600; }
+  .share-type { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .badge { font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px; }
+  .badge-green { background: rgba(16,185,129,0.15); color: var(--green); }
+  .badge-amber { background: rgba(245,158,11,0.15); color: var(--amber); }
+  .badge-purple { background: rgba(124,58,237,0.15); color: var(--primary2); }
+  .badge-red { background: rgba(239,68,68,0.15); color: var(--red); }
+
+  /* Progress */
+  .progress-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .progress-amount { font-family: 'Space Grotesk', sans-serif; font-size: 15px; font-weight: 600; }
+  .progress-target { font-size: 13px; color: var(--muted); }
+  .progress-bar { height: 6px; background: var(--surface2); border-radius: 3px; overflow: hidden; margin-bottom: 12px; }
+  .progress-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--primary), var(--primary2)); transition: width 0.8s cubic-bezier(0.4,0,0.2,1); }
+  .progress-fill.green { background: linear-gradient(90deg, #059669, var(--green)); }
+
+  /* Members avatars */
+  .members-row { display: flex; align-items: center; gap: 6px; }
+  .avatar { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; border: 2px solid var(--bg); flex-shrink: 0; }
+  .av-purple { background: rgba(124,58,237,0.3); color: var(--primary2); }
+  .av-green  { background: rgba(16,185,129,0.3); color: var(--green); }
+  .av-amber  { background: rgba(245,158,11,0.3);  color: var(--amber); }
+  .av-blue   { background: rgba(59,130,246,0.3);  color: #60A5FA; }
+  .av-pink   { background: rgba(236,72,153,0.3);  color: #F472B6; }
+  .avatar.validated { box-shadow: 0 0 0 2px var(--green); }
+  .members-count { font-size: 12px; color: var(--muted); margin-left: 4px; }
+  .deadline { font-size: 12px; color: var(--muted); margin-left: auto; }
+
+  /* Buttons */
+  .btn { width: 100%; padding: 14px; border-radius: 14px; font-family: 'Space Grotesk', sans-serif; font-size: 15px; font-weight: 600; border: none; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .btn:active { transform: scale(0.98); }
+  .btn-primary { background: var(--primary); color: #fff; }
+  .btn-primary:hover { background: var(--primary2); }
+  .btn-outline { background: var(--surface); border: 1px solid var(--border); color: var(--text); }
+  .btn-outline:hover { border-color: var(--primary); color: var(--primary2); }
+  .btn-green { background: var(--green); color: #fff; }
+  .btn-sm { padding: 10px 16px; width: auto; font-size: 13px; border-radius: 10px; }
+
+  /* Form */
+  .field { margin-bottom: 16px; }
+  .field label { display: block; font-size: 13px; font-weight: 500; color: var(--muted); margin-bottom: 6px; }
+  .field input, .field select { width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 12px 14px; color: var(--text); font-family: 'Inter', sans-serif; font-size: 15px; outline: none; transition: border-color 0.2s; }
+  .field input:focus, .field select:focus { border-color: var(--primary); }
+  .field select option { background: var(--surface2); }
+  .field-row { display: flex; gap: 10px; }
+  .field-row .field { flex: 1; }
+
+  /* Member input */
+  .member-input-row { display: flex; gap: 8px; align-items: flex-end; margin-bottom: 8px; }
+  .member-input-row input { flex: 1; }
+  .remove-btn { width: 36px; height: 44px; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; color: var(--red); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+  .add-member-btn { background: none; border: 1px dashed var(--border); border-radius: 10px; color: var(--muted); padding: 10px; width: 100%; cursor: pointer; font-size: 13px; transition: all 0.2s; }
+  .add-member-btn:hover { border-color: var(--primary); color: var(--primary2); }
+
+  /* Validation rows */
+  .validation-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); }
+  .validation-row:last-child { border-bottom: none; }
+  .val-member { display: flex; align-items: center; gap: 10px; }
+  .val-name { font-size: 14px; font-weight: 500; }
+  .val-addr { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); }
+  .val-status { font-size: 20px; }
+
+  /* Info box */
+  .info-box { background: var(--surface2); border-left: 3px solid var(--primary); border-radius: 0 10px 10px 0; padding: 12px 14px; margin-bottom: 16px; }
+  .info-box.green { border-color: var(--green); }
+  .info-box.amber { border-color: var(--amber); }
+  .info-box p { font-size: 13px; color: var(--muted); line-height: 1.5; }
+  .info-box strong { color: var(--text); }
+
+  /* Stat row */
+  .stat-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .stat-row:last-child { border-bottom: none; }
+  .stat-label { font-size: 13px; color: var(--muted); }
+  .stat-value { font-size: 14px; font-weight: 500; }
+
+  /* Big amount */
+  .big-amount { font-family: 'Space Grotesk', sans-serif; font-size: 36px; font-weight: 700; letter-spacing: -1px; margin: 8px 0; }
+  .big-amount span { font-size: 18px; color: var(--muted); font-weight: 400; }
+
+  /* Success */
+  .success-icon { width: 64px; height: 64px; background: rgba(16,185,129,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 32px; }
+
+  /* Type selector */
+  .type-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 20px; }
+  .type-btn { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 12px 8px; cursor: pointer; text-align: center; transition: all 0.2s; }
+  .type-btn.selected { border-color: var(--primary); background: rgba(124,58,237,0.1); }
+  .type-btn .icon { font-size: 22px; margin-bottom: 6px; }
+  .type-btn .label { font-size: 11px; font-weight: 600; color: var(--muted); }
+  .type-btn.selected .label { color: var(--primary2); }
+
+  /* Tabs */
+  .tabs { display: flex; background: var(--surface); border-radius: 12px; padding: 4px; margin-bottom: 20px; }
+  .tab { flex: 1; padding: 8px; text-align: center; font-size: 13px; font-weight: 500; border-radius: 8px; cursor: pointer; color: var(--muted); transition: all 0.2s; }
+  .tab.active { background: var(--primary); color: #fff; }
+
+  /* Bottom nav */
+  .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 420px; background: rgba(10,10,15,0.95); backdrop-filter: blur(20px); border-top: 1px solid var(--border); display: flex; padding: 8px 0 16px; z-index: 100; }
+  .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; cursor: pointer; padding: 6px 0; color: var(--muted); transition: color 0.2s; }
+  .nav-item.active { color: var(--primary2); }
+  .nav-icon { font-size: 22px; line-height: 1; }
+  .nav-label { font-size: 10px; font-weight: 500; }
+
+  /* Onramp section */
+  .onramp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+  .onramp-btn { background: var(--surface2); border: 1px solid var(--border); border-radius: 14px; padding: 14px 12px; cursor: pointer; text-align: center; transition: all 0.2s; }
+  .onramp-btn:hover { border-color: var(--primary); }
+  .onramp-name { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+  .onramp-sub { font-size: 11px; color: var(--muted); }
+
+  /* Divider */
+  .divider { display: flex; align-items: center; gap: 12px; margin: 16px 0; }
+  .divider-line { flex: 1; height: 1px; background: var(--border); }
+  .divider-text { font-size: 12px; color: var(--muted); }
+
+  /* Toast */
+  .toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: var(--green); color: #fff; padding: 10px 20px; border-radius: 20px; font-size: 14px; font-weight: 500; z-index: 999; display: none; }
+  .toast.show { display: block; animation: slideDown 0.3s ease; }
+  @keyframes slideDown { from { top: -40px; opacity: 0; } to { top: 20px; opacity: 1; } }
+
+  /* Pulse animation */
+  @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(124,58,237,0.4); } 50% { box-shadow: 0 0 0 8px rgba(124,58,237,0); } }
+  .pulse { animation: pulse 2s infinite; }
+
+  /* Section title */
+  .section-title { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px; }
+
+  /* Empty state */
+  .empty { text-align: center; padding: 60px 20px; }
+  .empty-icon { font-size: 48px; margin-bottom: 16px; }
+  .empty-title { font-family: 'Space Grotesk', sans-serif; font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+  .empty-sub { font-size: 14px; color: var(--muted); margin-bottom: 24px; }
+
+  /* Wallet connect */
+  .wallet-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 32px 24px; text-align: center; }
+  .wallet-logo { font-family: 'Space Grotesk', sans-serif; font-size: 32px; font-weight: 700; letter-spacing: -1px; margin-bottom: 8px; }
+  .wallet-logo span { color: var(--primary); }
+  .wallet-tagline { font-size: 15px; color: var(--muted); margin-bottom: 48px; line-height: 1.6; }
+  .wallet-options { width: 100%; display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+  .wallet-btn { display: flex; align-items: center; gap: 12px; padding: 14px 16px; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; cursor: pointer; transition: border-color 0.2s; }
+  .wallet-btn:hover { border-color: var(--primary); }
+  .wallet-btn-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+  .wallet-btn-info { text-align: left; }
+  .wallet-btn-name { font-size: 15px; font-weight: 600; }
+  .wallet-btn-sub { font-size: 12px; color: var(--muted); }
+  .wallet-note { font-size: 12px; color: var(--muted); line-height: 1.6; }
+  .wallet-note a { color: var(--primary2); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<!-- ── WALLET CONNECT ──────────────────────────────────────────────── -->
+<div id="screen-wallet" class="app" style="display:block">
+  <div class="wallet-screen">
+    <div class="wallet-logo">Per<span>Share</span></div>
+    <p style="font-size:11px;color:var(--muted);letter-spacing:0.1em;margin-bottom:4px">SHARE</p>
+    <p class="wallet-tagline">Chaque membre reçoit sa part.<br>Automatiquement. Onchain.</p>
+
+    <div class="wallet-options">
+      <div class="wallet-btn" onclick="connectWallet('metamask')">
+        <div class="wallet-btn-icon" style="background:rgba(245,130,32,0.15)">🦊</div>
+        <div class="wallet-btn-info">
+          <div class="wallet-btn-name">MetaMask</div>
+          <div class="wallet-btn-sub">Browser extension</div>
+        </div>
+        <span style="margin-left:auto;color:var(--muted)">›</span>
+      </div>
+      <div class="wallet-btn" onclick="connectWallet('trustwallet')">
+        <div class="wallet-btn-icon" style="background:rgba(59,130,246,0.15)">🛡️</div>
+        <div class="wallet-btn-info">
+          <div class="wallet-btn-name">Trust Wallet</div>
+          <div class="wallet-btn-sub">Mobile wallet</div>
+        </div>
+        <span style="margin-left:auto;color:var(--muted)">›</span>
+      </div>
+      <div class="wallet-btn" onclick="connectWallet('binance')">
+        <div class="wallet-btn-icon" style="background:rgba(245,158,11,0.15)">⬡</div>
+        <div class="wallet-btn-info">
+          <div class="wallet-btn-name">Binance Wallet</div>
+          <div class="wallet-btn-sub">BNB Chain natif</div>
+        </div>
+        <span style="margin-left:auto;color:var(--muted)">›</span>
+      </div>
+      <div class="wallet-btn" onclick="connectWallet('walletconnect')">
+        <div class="wallet-btn-icon" style="background:rgba(59,153,252,0.15)">🔗</div>
+        <div class="wallet-btn-info">
+          <div class="wallet-btn-name">WalletConnect</div>
+          <div class="wallet-btn-sub">Tous les wallets</div>
+        </div>
+        <span style="margin-left:auto;color:var(--muted)">›</span>
+      </div>
+    </div>
+
+    <div class="divider"><div class="divider-line"></div><div class="divider-text">Pas de crypto ?</div><div class="divider-line"></div></div>
+    <button class="btn btn-outline" onclick="showScreen('screen-onramp')" style="margin-bottom:16px">
+      💳 Acheter avec une carte ou Mobile Money
+    </button>
+    <p class="wallet-note">En connectant tu acceptes les <a href="#">conditions d'utilisation</a>.<br>PerShare ne custodise jamais tes fonds.</p>
+  </div>
+</div>
+
+<!-- ── APP PRINCIPALE ──────────────────────────────────────────────── -->
+<div id="screen-app" class="app" style="display:none">
+
+  <!-- HOME -->
+  <div id="s-home" class="screen active">
+    <div class="topbar">
+      <div class="logo">Per<span>Share</span></div>
+      <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:6px 10px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)">0x3f2a...8b1c</div>
+        <div style="width:8px;height:8px;background:var(--green);border-radius:50%"></div>
+      </div>
+    </div>
+
+    <!-- Balance card -->
+    <div class="card" style="background:linear-gradient(135deg,#1a1040,#1C1C27);border-color:rgba(124,58,237,0.3);margin-bottom:20px">
+      <div class="card-sub" style="margin-bottom:4px">Mon wallet</div>
+      <div class="big-amount">1 420 <span>USDT</span></div>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button class="btn btn-primary btn-sm pulse" onclick="showScreen('s-create')">+ Créer un SHARE</button>
+        <button class="btn btn-outline btn-sm" onclick="showScreen('screen-onramp')">💳 Acheter</button>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab(this,'tab-active')">Actifs</div>
+      <div class="tab" onclick="switchTab(this,'tab-completed')">Terminés</div>
+    </div>
+
+    <!-- Active shares -->
+    <div id="tab-active">
+      <div class="share-card" onclick="showScreen('s-dashboard')">
+        <div class="share-card-header">
+          <div>
+            <div class="share-name">🇵🇹 Voyage Lisbonne</div>
+            <div class="share-type">Pool collective · 3 membres</div>
+          </div>
+          <div class="badge badge-amber">En cours</div>
+        </div>
+        <div class="progress-row">
+          <div class="progress-amount">2 000 USDT</div>
+          <div class="progress-target">sur 3 000</div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:67%"></div></div>
+        <div class="members-row">
+          <div class="avatar av-purple validated">AL</div>
+          <div class="avatar av-green validated">BO</div>
+          <div class="avatar av-amber">CH</div>
+          <div class="deadline">⏱ 12 jours</div>
+        </div>
+      </div>
+
+      <div class="share-card" onclick="showScreen('s-dashboard-presale')">
+        <div class="share-card-header">
+          <div>
+            <div class="share-name">🚀 Presale XYZ Token</div>
+            <div class="share-type">Group buy · 4 membres</div>
+          </div>
+          <div class="badge badge-green">Objectif atteint</div>
+        </div>
+        <div class="progress-row">
+          <div class="progress-amount">5 000 USDT</div>
+          <div class="progress-target">sur 5 000</div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill green" style="width:100%"></div></div>
+        <div class="members-row">
+          <div class="avatar av-purple validated">AL</div>
+          <div class="avatar av-green validated">BO</div>
+          <div class="avatar av-blue validated">MA</div>
+          <div class="avatar av-pink validated">SA</div>
+          <div class="deadline">✅ Validé — tokens attendus</div>
+        </div>
+      </div>
+
+      <div class="share-card" onclick="showScreen('s-dashboard')">
+        <div class="share-card-header">
+          <div>
+            <div class="share-name">🎁 Cadeau pour Julie</div>
+            <div class="share-type">Cagnotte · 5 membres</div>
+          </div>
+          <div class="badge badge-purple">Action requise</div>
+        </div>
+        <div class="progress-row">
+          <div class="progress-amount">450 USDT</div>
+          <div class="progress-target">sur 500</div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:90%"></div></div>
+        <div class="members-row">
+          <div class="avatar av-purple validated">AL</div>
+          <div class="avatar av-green validated">BO</div>
+          <div class="avatar av-amber validated">CH</div>
+          <div class="avatar av-blue validated">MA</div>
+          <div class="avatar av-pink">SA</div>
+          <div class="deadline">⏱ 3 jours</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-completed" style="display:none">
+      <div class="share-card">
+        <div class="share-card-header">
+          <div>
+            <div class="share-name">🏠 Coloc charges mars</div>
+            <div class="share-type">Pool collective · 4 membres</div>
+          </div>
+          <div class="badge badge-green">Envoyé</div>
+        </div>
+        <div class="progress-row">
+          <div class="progress-amount">1 200 USDT</div>
+          <div class="progress-target">envoyés le 01/03</div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill green" style="width:100%"></div></div>
+        <div class="members-row">
+          <div class="avatar av-purple">AL</div>
+          <div class="avatar av-green">BO</div>
+          <div class="avatar av-amber">CH</div>
+          <div class="avatar av-blue">MA</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CREATE SHARE -->
+  <div id="s-create" class="screen">
+    <div class="topbar">
+      <div class="back-btn" onclick="showScreen('s-home')">←</div>
+      <div class="topbar-title">Nouveau SHARE</div>
+    </div>
+
+    <div class="section-title">Type de SHARE</div>
+    <div class="type-grid">
+      <div class="type-btn selected" onclick="selectType(this,'transfer')">
+        <div class="icon">💸</div>
+        <div class="label">Transfert</div>
+      </div>
+      <div class="type-btn" onclick="selectType(this,'pool')">
+        <div class="icon">🌊</div>
+        <div class="label">Pool</div>
+      </div>
+      <div class="type-btn" onclick="selectType(this,'presale')">
+        <div class="icon">🚀</div>
+        <div class="label">Presale</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Nom du SHARE</label>
+      <input type="text" placeholder="ex: Voyage Lisbonne 🇵🇹" id="share-name">
+    </div>
+
+    <div class="section-title">Membres</div>
+    <div id="members-list">
+      <div class="member-input-row">
+        <input type="text" placeholder="wallet.eth ou 0x..." class="member-input">
+        <button class="remove-btn" onclick="removeMember(this)">×</button>
+      </div>
+      <div class="member-input-row">
+        <input type="text" placeholder="wallet.eth ou 0x..." class="member-input">
+        <button class="remove-btn" onclick="removeMember(this)">×</button>
+      </div>
+    </div>
+    <button class="add-member-btn" onclick="addMember()">+ Ajouter un membre</button>
+
+    <div style="height:16px"></div>
+
+    <div class="field-row">
+      <div class="field">
+        <label>Objectif</label>
+        <input type="number" placeholder="1000" id="target-amount">
+      </div>
+      <div class="field">
+        <label>Token</label>
+        <select>
+          <option>USDT</option>
+          <option>USDC</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Date limite</label>
+      <input type="date" id="deadline">
+    </div>
+
+    <div class="field">
+      <label>Destination (wallet externe)</label>
+      <input type="text" placeholder="agence.eth ou 0x..." id="destination">
+    </div>
+
+    <div class="field">
+      <label>Validations requises pour envoyer</label>
+      <select id="threshold">
+        <option value="1">1 validation suffit</option>
+        <option value="2" selected>2 validations (majorité)</option>
+        <option value="3">3 validations (unanimité)</option>
+      </select>
+    </div>
+
+    <div class="info-box">
+      <p><strong>Commission PerShare</strong><br>1% prélevé automatiquement sur l'envoi. Aucune commission sur les remboursements.</p>
+    </div>
+
+    <button class="btn btn-primary" onclick="createShare()" style="margin-top:8px">
+      Créer le SHARE
+    </button>
+    <div style="height:16px"></div>
+  </div>
+
+  <!-- DASHBOARD — Pool -->
+  <div id="s-dashboard" class="screen">
+    <div class="topbar">
+      <div class="back-btn" onclick="showScreen('s-home')">←</div>
+      <div class="topbar-title">Voyage Lisbonne 🇵🇹</div>
+      <div class="badge badge-amber" style="margin-left:auto">En cours</div>
+    </div>
+
+    <!-- Progress -->
+    <div class="card" style="margin-bottom:16px">
+      <div class="progress-row">
+        <div class="progress-amount">2 000 USDT</div>
+        <div class="progress-target">67% · sur 3 000</div>
+      </div>
+      <div class="progress-bar" style="height:8px;margin-bottom:14px"><div class="progress-fill" style="width:67%"></div></div>
+      <div class="stat-row">
+        <div class="stat-label">Destination</div>
+        <mono>AgenceVoyage.eth</mono>
+      </div>
+      <div class="stat-row">
+        <div class="stat-label">Validations requises</div>
+        <div class="stat-value">2 / 3</div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-label">Expire dans</div>
+        <div class="stat-value">12 jours</div>
+      </div>
+    </div>
+
+    <!-- Contributions -->
+    <div class="section-title">Contributions</div>
+    <div class="card" style="margin-bottom:16px">
+      <div class="validation-row">
+        <div class="val-member">
+          <div class="avatar av-purple validated">AL</div>
+          <div><div class="val-name">alice.eth</div><div class="val-addr">0x3f2a...8b1c</div></div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-weight:600">800 USDT</div>
+          <div style="font-size:11px;color:var(--green)">40%</div>
+        </div>
+      </div>
+      <div class="validation-row">
+        <div class="val-member">
+          <div class="avatar av-green validated">BO</div>
+          <div><div class="val-name">bob.eth</div><div class="val-addr">0x7c1b...4d2e</div></div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-weight:600">800 USDT</div>
+          <div style="font-size:11px;color:var(--green)">40%</div>
+        </div>
+      </div>
+      <div class="validation-row">
+        <div class="val-member">
+          <div class="avatar av-amber">CH</div>
+          <div><div class="val-name">charles.eth</div><div class="val-addr">0x9a3c...2f1d</div></div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-weight:600;color:var(--muted)">0 USDT</div>
+          <div style="font-size:11px;color:var(--amber)">En attente</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contribute -->
+    <div class="section-title">Ma contribution</div>
+    <div class="card" style="margin-bottom:16px">
+      <div class="field" style="margin-bottom:12px">
+        <label>Montant à contribuer</label>
+        <input type="number" placeholder="400 USDT" style="background:var(--surface2)">
+      </div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Solde wallet : 1 420 USDT</div>
+      <button class="btn btn-primary" onclick="showToast('Contribution de 400 USDT envoyée ✓')">
+        Contribuer
+      </button>
+    </div>
+
+    <!-- Share link -->
+    <button class="btn btn-outline" onclick="showToast('Lien copié ✓')">
+      🔗 Partager le lien d'invitation
+    </button>
+    <div style="height:16px"></div>
+  </div>
+
+  <!-- DASHBOARD — Presale (objectif atteint) -->
+  <div id="s-dashboard-presale" class="screen">
+    <div class="topbar">
+      <div class="back-btn" onclick="showScreen('s-home')">←</div>
+      <div class="topbar-title">Presale XYZ Token</div>
+      <div class="badge badge-green" style="margin-left:auto">✓ Atteint</div>
+    </div>
+
+    <div class="info-box green" style="margin-bottom:16px">
+      <p><strong>Phase 1 terminée</strong><br>5 000 USDT envoyés vers le presale. En attente des tokens XYZ.</p>
+    </div>
+
+    <div class="card" style="margin-bottom:16px">
+      <div class="stat-row">
+        <div class="stat-label">Total envoyé</div>
+        <div class="stat-value" style="color:var(--green)">5 000 USDT</div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-label">Destination</div>
+        <mono>PresaleXYZ.eth</mono>
+      </div>
+      <div class="stat-row">
+        <div class="stat-label">Tokens attendus</div>
+        <div class="stat-value">100 000 XYZ</div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-label">Transaction Phase 1</div>
+        <mono style="color:var(--primary2)">0xabcd...ef12</mono>
+      </div>
+    </div>
+
+    <div class="section-title">Parts de redistribution</div>
+    <div class="card" style="margin-bottom:16px">
+      <div class="validation-row">
+        <div class="val-member">
+          <div class="avatar av-purple">AL</div>
+          <div><div class="val-name">alice.eth</div></div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-weight:600">25 000 XYZ</div>
+          <div style="font-size:11px;color:var(--muted)">25%</div>
+        </div>
+      </div>
+      <div class="validation-row">
+        <div class="val-member">
+          <div class="avatar av-green">BO</div>
+          <div><div class="val-name">bob.eth</div></div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-weight:600">25 000 XYZ</div>
+          <div style="font-size:11px;color:var(--muted)">25%</div>
+        </div>
+      </div>
+      <div class="validation-row">
+        <div class="val-member">
+          <div class="avatar av-blue">MA</div>
+          <div><div class="val-name">marie.eth</div></div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-weight:600">30 000 XYZ</div>
+          <div style="font-size:11px;color:var(--muted)">30%</div>
+        </div>
+      </div>
+      <div class="validation-row">
+        <div class="val-member">
+          <div class="avatar av-pink">SA</div>
+          <div><div class="val-name">sarah.eth</div></div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-weight:600">20 000 XYZ</div>
+          <div style="font-size:11px;color:var(--muted)">20%</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="info-box amber">
+      <p><strong>En attente des tokens</strong><br>Dès que le presale envoie les tokens XYZ vers ce SHARE, vous pourrez valider la redistribution.</p>
+    </div>
+
+    <button class="btn btn-outline" style="margin-top:8px" onclick="showScreen('s-validate-dist')">
+      Tokens reçus — Valider la redistribution
+    </button>
+    <div style="height:16px"></div>
+  </div>
+
+  <!-- VALIDATE DISTRIBUTION — Phase 2 -->
+  <div id="s-validate-dist" class="screen">
+    <div class="topbar">
+      <div class="back-btn" onclick="showScreen('s-dashboard-presale')">←</div>
+      <div class="topbar-title">Redistribuer les tokens</div>
+    </div>
+
+    <div class="info-box green" style="margin-bottom:20px">
+      <p><strong>100 000 XYZ reçus</strong><br>Le contrat PerShare détient les tokens. Valide pour déclencher la redistribution automatique.</p>
+    </div>
+
+    <div class="card" style="margin-bottom:16px">
+      <div class="stat-row">
+        <div class="stat-label">Token à redistribuer</div>
+        <div class="stat-value">XYZ Token</div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-label">Adresse token</div>
+        <mono>0x7f3c...9a1b</mono>
+      </div>
+      <div class="stat-row">
+        <div class="stat-label">Solde dans PerShare</div>
+        <div class="stat-value" style="color:var(--green)">100 000 XYZ</div>
+      </div>
+    </div>
+
+    <div class="section-title">Validations — 2 / 4 requises</div>
+    <div class="card" style="margin-bottom:16px">
+      <div class="validation-row">
+        <div class="val-member">
+          <div class="avatar av-purple validated">AL</div>
+          <div><div class="val-name">alice.eth</div></div>
+        </div>
+        <div class="val-status">✅</div>
+      </div>
+      <div class="validation-row">
+        <div class="val-member">
+          <div class="avatar av-green validated">BO</div>
+          <div><div class="val-name">bob.eth</div></div>
+        </div>
+        <div class="val-status">✅</div>
+      </div>
+      <div class="validation-row">
+        <div class="val-member">
+          <div class="avatar av-blue">MA</div>
+          <div><div class="val-name">marie.eth</div></div>
+        </div>
+        <div class="val-status">⏳</div>
+      </div>
+      <div class="validation-row">
+        <div class="val-member">
+          <div class="avatar av-pink">SA</div>
+          <div><div class="val-name">sarah.eth</div></div>
+        </div>
+        <div class="val-status">⏳</div>
+      </div>
+    </div>
+
+    <button class="btn btn-green" onclick="showScreen('s-confirm-dist')">
+      ✓ Valider la redistribution
+    </button>
+    <div style="height:16px"></div>
+  </div>
+
+  <!-- CONFIRM DISTRIBUTION -->
+  <div id="s-confirm-dist" class="screen">
+    <div class="topbar">
+      <div class="back-btn" onclick="showScreen('s-validate-dist')">←</div>
+      <div class="topbar-title">Redistribution confirmée</div>
+    </div>
+
+    <div style="text-align:center;padding:32px 0">
+      <div class="success-icon">✓</div>
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;margin-bottom:8px">Tokens redistribués</div>
+      <div style="font-size:15px;color:var(--muted)">Chaque membre a reçu sa part dans son wallet</div>
+    </div>
+
+    <div class="card" style="margin-bottom:16px">
+      <div class="stat-row">
+        <div class="stat-label">alice.eth</div>
+        <div class="stat-value" style="color:var(--green)">25 000 XYZ</div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-label">bob.eth</div>
+        <div class="stat-value" style="color:var(--green)">25 000 XYZ</div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-label">marie.eth</div>
+        <div class="stat-value" style="color:var(--green)">30 000 XYZ</div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-label">sarah.eth</div>
+        <div class="stat-value" style="color:var(--green)">20 000 XYZ</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:16px">
+      <div class="stat-row">
+        <div class="stat-label">Transaction</div>
+        <mono style="color:var(--primary2)">0xabcd...ef12</mono>
+      </div>
+      <div class="stat-row">
+        <div class="stat-label">Block</div>
+        <div class="stat-value">#38 291 044</div>
+      </div>
+    </div>
+
+    <button class="btn btn-outline" onclick="showToast('Lien BscScan copié ✓')">
+      🔍 Voir sur BscScan
+    </button>
+    <button class="btn btn-primary" onclick="showScreen('s-home')" style="margin-top:10px">
+      Retour à l'accueil
+    </button>
+    <div style="height:16px"></div>
+  </div>
+
+  <!-- ON-RAMP -->
+  <div id="screen-onramp" class="screen">
+    <div class="topbar">
+      <div class="back-btn" onclick="goBack()">←</div>
+      <div class="topbar-title">Obtenir des USDT</div>
+    </div>
+
+    <div class="section-title">Carte bancaire</div>
+    <div class="onramp-grid">
+      <div class="onramp-btn" onclick="showToast('Ouverture Transak...')">
+        <div class="onramp-name">Transak</div>
+        <div class="onramp-sub">Visa / Mastercard</div>
+        <div class="onramp-sub" style="color:var(--green);margin-top:4px">1 à 2%</div>
+      </div>
+      <div class="onramp-btn" onclick="showToast('Ouverture MoonPay...')">
+        <div class="onramp-name">MoonPay</div>
+        <div class="onramp-sub">Visa / Apple Pay</div>
+        <div class="onramp-sub" style="color:var(--green);margin-top:4px">1 à 4%</div>
+      </div>
+    </div>
+
+    <div class="section-title">Mobile Money — Afrique</div>
+    <div class="info-box amber" style="margin-bottom:12px">
+      <p><strong>Via Binance P2P</strong><br>La méthode la plus simple pour M-Pesa, Orange Money, MTN, Wave. Des milliers de marchands locaux disponibles 24h/24.</p>
+    </div>
+    <div class="onramp-grid">
+      <div class="onramp-btn" onclick="showToast('Ouverture Binance P2P...')">
+        <div class="onramp-name">Binance P2P</div>
+        <div class="onramp-sub">M-Pesa · Orange · MTN</div>
+        <div class="onramp-sub" style="color:var(--green);margin-top:4px">0% frais plateforme</div>
+      </div>
+      <div class="onramp-btn" onclick="showToast('Ouverture Yellow Card...')">
+        <div class="onramp-name">Yellow Card</div>
+        <div class="onramp-sub">Mobile Money Afrique</div>
+        <div class="onramp-sub" style="color:var(--green);margin-top:4px">1 à 2%</div>
+      </div>
+    </div>
+
+    <div class="section-title">Mobile Money — Asie</div>
+    <div class="onramp-grid">
+      <div class="onramp-btn" onclick="showToast('Ouverture GCash...')">
+        <div class="onramp-name">GCash</div>
+        <div class="onramp-sub">Philippines</div>
+      </div>
+      <div class="onramp-btn" onclick="showToast('Ouverture bKash...')">
+        <div class="onramp-name">bKash</div>
+        <div class="onramp-sub">Bangladesh</div>
+      </div>
+    </div>
+
+    <div class="divider"><div class="divider-line"></div><div class="divider-text">Dépenser ses USDT</div><div class="divider-line"></div></div>
+
+    <div class="info-box" style="margin-bottom:12px">
+      <p><strong>Carte Safe Visa</strong><br>Reçois tes USDT dans un Safe wallet et dépense-les directement avec une carte Visa — partout dans le monde, instantanément.</p>
+    </div>
+    <button class="btn btn-outline" onclick="showToast('Redirection Safe Card...')">
+      💳 Commander ma carte Safe Visa
+    </button>
+    <div style="height:16px"></div>
+  </div>
+
+  <!-- EXPLORE -->
+  <div id="s-explore" class="screen">
+    <div class="topbar">
+      <div class="logo">Per<span>Share</span></div>
+    </div>
+    <div class="empty">
+      <div class="empty-icon">🔍</div>
+      <div class="empty-title">Explorer les SHAREs</div>
+      <div class="empty-sub">Rejoins un SHARE existant avec un lien d'invitation ou cherche par adresse.</div>
+      <input type="text" placeholder="Lien ou adresse de SHARE..." style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px;color:var(--text);font-size:15px;width:100%;outline:none;margin-bottom:12px">
+      <button class="btn btn-primary">Rejoindre</button>
+    </div>
+  </div>
+
+  <!-- PROFILE -->
+  <div id="s-profile" class="screen">
+    <div class="topbar">
+      <div class="logo">Per<span>Share</span></div>
+    </div>
+
+    <div style="text-align:center;margin-bottom:24px">
+      <div class="avatar av-purple" style="width:64px;height:64px;font-size:24px;margin:0 auto 12px">AL</div>
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:600">alice.eth</div>
+      <mono>0x3f2a...8b1c</mono>
+    </div>
+
+    <div class="section-title">Statistiques</div>
+    <div class="card" style="margin-bottom:16px">
+      <div class="stat-row">
+        <div class="stat-label">SHAREs créés</div>
+        <div class="stat-value">12</div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-label">Volume total</div>
+        <div class="stat-value">24 500 USDT</div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-label">Membre depuis</div>
+        <div class="stat-value">Janvier 2025</div>
+      </div>
+    </div>
+
+    <div class="section-title">Paramètres</div>
+    <div class="card" style="margin-bottom:16px">
+      <div class="stat-row" style="cursor:pointer" onclick="showToast('Notifications activées ✓')">
+        <div class="stat-label">Notifications Push</div>
+        <div class="stat-value" style="color:var(--green)">Activées</div>
+      </div>
+      <div class="stat-row" style="cursor:pointer">
+        <div class="stat-label">Langue</div>
+        <div class="stat-value">Français</div>
+      </div>
+      <div class="stat-row" style="cursor:pointer">
+        <div class="stat-label">BNB Chain</div>
+        <div class="stat-value" style="display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;background:var(--green);border-radius:50%;display:inline-block"></span>Connecté</div>
+      </div>
+    </div>
+
+    <button class="btn btn-outline" onclick="showScreen('screen-wallet')">
+      Déconnecter le wallet
+    </button>
+    <div style="height:16px"></div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div class="bottom-nav">
+    <div class="nav-item active" onclick="switchNav(this,'s-home')">
+      <div class="nav-icon">⬡</div>
+      <div class="nav-label">Accueil</div>
+    </div>
+    <div class="nav-item" onclick="switchNav(this,'s-create')">
+      <div class="nav-icon">＋</div>
+      <div class="nav-label">Créer</div>
+    </div>
+    <div class="nav-item" onclick="switchNav(this,'s-explore')">
+      <div class="nav-icon">🔍</div>
+      <div class="nav-label">Explorer</div>
+    </div>
+    <div class="nav-item" onclick="switchNav(this,'s-profile')">
+      <div class="nav-icon">◯</div>
+      <div class="nav-label">Profil</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let prevScreen = 's-home';
+
+function showScreen(id) {
+  // Wallet screen vs app screens
+  if (id === 'screen-wallet' || id === 'screen-onramp') {
+    document.getElementById('screen-app').style.display = 'none';
+    document.getElementById('screen-wallet').style.display = 'none';
+
+    if (id === 'screen-wallet') {
+      document.getElementById('screen-wallet').style.display = 'block';
+    } else {
+      // Onramp is inside app
+      document.getElementById('screen-app').style.display = 'block';
+      switchAppScreen('screen-onramp');
+    }
+    return;
+  }
+
+  document.getElementById('screen-app').style.display = 'block';
+  document.getElementById('screen-wallet').style.display = 'none';
+  switchAppScreen(id);
+}
+
+function switchAppScreen(id) {
+  const screens = document.querySelectorAll('#screen-app .screen');
+  screens.forEach(s => {
+    if (s.id === id) {
+      prevScreen = s.id;
+      s.classList.add('active');
+    } else {
+      s.classList.remove('active');
+    }
+  });
+  window.scrollTo(0,0);
+}
+
+function goBack() {
+  showScreen('s-home');
+}
+
+function connectWallet(type) {
+  const names = { metamask:'MetaMask', trustwallet:'Trust Wallet', binance:'Binance Wallet', walletconnect:'WalletConnect' };
+  showToast('Connexion ' + names[type] + ' simulée ✓');
+  setTimeout(() => {
+    document.getElementById('screen-wallet').style.display = 'none';
+    document.getElementById('screen-app').style.display = 'block';
+  }, 800);
+}
+
+function switchNav(el, screenId) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  el.classList.add('active');
+  showScreen(screenId);
+}
+
+function switchTab(el, tabId) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab-active').style.display = tabId === 'tab-active' ? 'block' : 'none';
+  document.getElementById('tab-completed').style.display = tabId === 'tab-completed' ? 'block' : 'none';
+}
+
+function selectType(el, type) {
+  document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function addMember() {
+  const list = document.getElementById('members-list');
+  const row = document.createElement('div');
+  row.className = 'member-input-row';
+  row.innerHTML = '<input type="text" placeholder="wallet.eth ou 0x..." class="member-input"><button class="remove-btn" onclick="removeMember(this)">×</button>';
+  list.appendChild(row);
+}
+
+function removeMember(btn) {
+  const rows = document.querySelectorAll('.member-input-row');
+  if (rows.length > 2) btn.parentElement.remove();
+  else showToast('Minimum 2 membres requis');
+}
+
+function createShare() {
+  const name = document.getElementById('share-name').value;
+  if (!name) { showToast('Donne un nom à ton SHARE'); return; }
+  showToast('SHARE "' + name + '" créé ✓');
+  setTimeout(() => showScreen('s-home'), 800);
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+</script>
+</body>
+</html>
+ENDOFFILE

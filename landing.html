@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PerShare — SHARE</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--purple:#7C3AED;--purple2:#9D5FF0;--purpleDark:#4C1D95;--bg:#0A0A0F;--surface:#1C1C27;--green:#10B981;--amber:#F59E0B;--text:#E2E8F0;--muted:#64748B}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;overflow-x:hidden}
+h1,h2,h3,h4{font-family:'Space Grotesk',sans-serif}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 24px;display:flex;align-items:center;background:rgba(10,10,15,0.8);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.06)}
+.logo{font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:700;letter-spacing:-0.5px}
+.logo span{color:var(--purple)}
+.nav-links{display:flex;gap:32px;margin-left:48px}
+.nav-links a{font-size:14px;color:var(--muted);text-decoration:none;transition:color 0.2s}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{margin-left:auto}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:10px;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.15s;text-decoration:none}
+.btn-primary{background:var(--purple);color:#fff;border:none}
+.btn-primary:hover{background:var(--purple2);transform:translateY(-1px)}
+.btn-outline{background:transparent;color:var(--text);border:1px solid rgba(255,255,255,0.15)}
+.btn-outline:hover{border-color:var(--purple);color:var(--purple2)}
+.btn-lg{padding:14px 28px;font-size:16px;border-radius:12px}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:120px 24px 80px;text-align:center;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 0%,rgba(124,58,237,0.15),transparent)}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.3);border-radius:20px;padding:6px 14px;font-size:13px;color:var(--purple2);margin-bottom:32px}
+.hero-badge-dot{width:6px;height:6px;background:var(--green);border-radius:50%}
+.hero h1{font-size:clamp(48px,8vw,80px);font-weight:700;letter-spacing:-2px;line-height:1.05;margin-bottom:24px}
+.hero h1 span{color:var(--purple)}
+.hero p{font-size:clamp(16px,2vw,20px);color:var(--muted);max-width:560px;line-height:1.6;margin-bottom:40px}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-bottom:64px}
+.hero-stats{display:flex;gap:48px;flex-wrap:wrap;justify-content:center}
+.stat{text-align:center}
+.stat-num{font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:700;color:var(--text)}
+.stat-label{font-size:13px;color:var(--muted);margin-top:4px}
+
+/* SECTION */
+section{padding:100px 24px;max-width:1100px;margin:0 auto}
+.section-tag{font-size:12px;font-weight:600;color:var(--purple);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:16px}
+.section-title{font-size:clamp(32px,4vw,48px);font-weight:700;letter-spacing:-1px;margin-bottom:16px}
+.section-sub{font-size:17px;color:var(--muted);max-width:560px;line-height:1.6}
+
+/* USE CASES */
+.use-cases{padding:100px 24px}
+.use-cases-inner{max-width:1100px;margin:0 auto}
+.use-cases-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;margin-top:48px}
+.use-card{background:var(--surface);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:28px;transition:border-color 0.2s,transform 0.2s}
+.use-card:hover{border-color:rgba(124,58,237,0.4);transform:translateY(-2px)}
+.use-card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.use-icon{font-size:32px}
+.use-tag{font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;background:rgba(124,58,237,0.15);color:var(--purple2)}
+.use-title{font-size:20px;font-weight:700;margin-bottom:10px}
+.use-desc{font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:20px}
+.use-examples{display:flex;flex-wrap:wrap;gap:6px}
+.use-example{font-size:11px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:4px 8px;color:var(--muted)}
+
+/* HOW IT WORKS */
+.how{background:rgba(124,58,237,0.04);border-top:1px solid rgba(124,58,237,0.1);border-bottom:1px solid rgba(124,58,237,0.1);padding:100px 24px}
+.how-inner{max-width:1100px;margin:0 auto}
+.how-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;margin-top:48px}
+.how-steps{display:flex;flex-direction:column;gap:24px}
+.step{display:flex;gap:16px}
+.step-num{width:32px;height:32px;border-radius:50%;background:var(--purple);display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:700;color:#fff;flex-shrink:0}
+.step-content h4{font-size:16px;font-weight:600;margin-bottom:6px}
+.step-content p{font-size:14px;color:var(--muted);line-height:1.5}
+.how-visual{background:var(--surface);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:28px}
+.flow-item{display:flex;align-items:center;gap:12px;padding:12px;border-radius:12px;margin-bottom:8px}
+.flow-item.active{background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.3)}
+.flow-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.flow-dot.purple{background:var(--purple)}
+.flow-dot.green{background:var(--green)}
+.flow-dot.amber{background:var(--amber)}
+.flow-text{font-size:13px}
+.flow-sub{font-size:11px;color:var(--muted)}
+.flow-arrow{text-align:center;font-size:20px;color:var(--purple);padding:4px 0}
+
+/* GLOBAL */
+.global{padding:100px 24px}
+.global-inner{max-width:1100px;margin:0 auto}
+.global-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:48px}
+.global-card{background:var(--surface);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:24px}
+.global-flag{font-size:28px;margin-bottom:12px}
+.global-region{font-size:16px;font-weight:600;margin-bottom:6px}
+.global-method{font-size:13px;color:var(--muted);margin-bottom:10px}
+.global-partners{display:flex;flex-wrap:wrap;gap:6px}
+.partner-tag{font-size:11px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:6px;padding:3px 8px;color:var(--muted)}
+
+/* BM */
+.bm{background:var(--surface);border-radius:24px;padding:60px;margin:0 24px;max-width:1100px;margin:0 auto 100px}
+.bm-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+.bm-number{font-family:'Space Grotesk',sans-serif;font-size:96px;font-weight:700;color:var(--purple);line-height:1}
+.bm-label{font-size:18px;color:var(--muted);margin-top:8px}
+.bm-items{display:flex;flex-direction:column;gap:16px}
+.bm-item{display:flex;align-items:flex-start;gap:12px}
+.bm-check{width:20px;height:20px;border-radius:50%;background:rgba(16,185,129,0.15);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--green);flex-shrink:0;margin-top:2px}
+.bm-item-text h4{font-size:15px;font-weight:600;margin-bottom:4px}
+.bm-item-text p{font-size:13px;color:var(--muted)}
+
+/* CTA */
+.cta-section{padding:100px 24px;text-align:center}
+.cta-inner{max-width:600px;margin:0 auto}
+.cta-inner h2{font-size:clamp(36px,5vw,56px);font-weight:700;letter-spacing:-1.5px;margin-bottom:20px}
+.cta-inner p{font-size:17px;color:var(--muted);margin-bottom:40px;line-height:1.6}
+.waitlist{display:flex;gap:10px;max-width:400px;margin:0 auto 20px;flex-wrap:wrap;justify-content:center}
+.waitlist input{flex:1;min-width:220px;background:var(--surface);border:1px solid rgba(255,255,255,0.15);border-radius:10px;padding:12px 16px;color:var(--text);font-size:15px;outline:none}
+.waitlist input:focus{border-color:var(--purple)}
+.waitlist input::placeholder{color:var(--muted)}
+
+/* FOOTER */
+footer{border-top:1px solid rgba(255,255,255,0.06);padding:40px 24px;max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.footer-logo{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700}
+.footer-logo span{color:var(--purple)}
+.footer-links{display:flex;gap:24px}
+.footer-links a{font-size:13px;color:var(--muted);text-decoration:none}
+.footer-note{font-size:12px;color:var(--muted)}
+
+@media(max-width:768px){
+  .nav-links{display:none}
+  .how-grid{grid-template-columns:1fr}
+  .bm-grid{grid-template-columns:1fr}
+  .bm{padding:32px 24px}
+  .hero-stats{gap:24px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Per<span>Share</span></div>
+  <div class="nav-links">
+    <a href="#usages">Usages</a>
+    <a href="#comment">Comment</a>
+    <a href="#global">Mondial</a>
+    <a href="#bm">Tarifs</a>
+  </div>
+  <div class="nav-cta">
+    <a href="#waitlist" class="btn btn-primary">Rejoindre la beta →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-badge">
+    <span class="hero-badge-dot"></span>
+    BNB Chain · Non-custodial · En développement
+  </div>
+  <h1>Chaque membre<br>reçoit sa <span>part</span>.</h1>
+  <p>Pool collective, transfert conditionnel, group buy presale. Un seul contrat intelligent. Zéro intermédiaire. Zéro confiance aveugle.</p>
+  <div class="hero-btns">
+    <a href="#waitlist" class="btn btn-primary btn-lg">Rejoindre la beta →</a>
+    <a href="#comment" class="btn btn-outline btn-lg">Comment ça marche</a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">1%</div><div class="stat-label">Commission uniquement sur l'envoi</div></div>
+    <div class="stat"><div class="stat-num">50</div><div class="stat-label">Membres max par SHARE</div></div>
+    <div class="stat"><div class="stat-num">0</div><div class="stat-label">Token requis · Zéro custody</div></div>
+  </div>
+</div>
+
+<!-- USE CASES -->
+<div class="use-cases" id="usages">
+  <div class="use-cases-inner">
+    <div class="section-tag">Usages</div>
+    <h2 class="section-title">Un contrat. Trois produits.</h2>
+    <p class="section-sub">PerShare s'adapte à chaque situation où un groupe veut gérer de l'argent ensemble.</p>
+    <div class="use-cases-grid">
+      <div class="use-card">
+        <div class="use-card-top">
+          <div class="use-icon">💸</div>
+          <div class="use-tag">Simple</div>
+        </div>
+        <div class="use-title">Transfert conditionnel</div>
+        <div class="use-desc">Tu envoies de l'argent à quelqu'un. L'argent part seulement quand les deux parties valident. Remboursement automatique si pas d'accord avant la deadline.</div>
+        <div class="use-examples">
+          <span class="use-example">Paiement freelance</span>
+          <span class="use-example">Achat entre particuliers</span>
+          <span class="use-example">Dépôt de garantie</span>
+        </div>
+      </div>
+      <div class="use-card">
+        <div class="use-card-top">
+          <div class="use-icon">🌊</div>
+          <div class="use-tag">Universel</div>
+        </div>
+        <div class="use-title">Pool collective</div>
+        <div class="use-desc">Jusqu'à 50 membres cotisent ensemble vers une destination commune. La tontine numérique — transparente, automatique, onchain.</div>
+        <div class="use-examples">
+          <span class="use-example">Voyage en groupe</span>
+          <span class="use-example">Cadeau collectif</span>
+          <span class="use-example">Charges de coloc</span>
+          <span class="use-example">Tontine</span>
+        </div>
+      </div>
+      <div class="use-card">
+        <div class="use-card-top">
+          <div class="use-icon">🚀</div>
+          <div class="use-tag">Exclusif BNB</div>
+        </div>
+        <div class="use-title">Group buy presale</div>
+        <div class="use-desc">Ce presale est à 1 000 USDT minimum ? Souscrivez ensemble. Les tokens arrivent dans PerShare et sont redistribués automatiquement selon vos parts.</div>
+        <div class="use-examples">
+          <span class="use-example">Presale BNB Chain</span>
+          <span class="use-example">ICO différée</span>
+          <span class="use-example">Allocation groupée</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div class="how" id="comment">
+  <div class="how-inner">
+    <div class="section-tag">Comment ça marche</div>
+    <h2 class="section-title">30 secondes pour créer un SHARE.</h2>
+    <div class="how-grid">
+      <div class="how-steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h4>Tu crées le SHARE</h4>
+            <p>Nom, membres, destination, objectif, deadline. Le contrat est déployé instantanément onchain.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h4>Les membres contribuent</h4>
+            <p>Chacun envoie sa part en USDT depuis son wallet. Contributions multiples autorisées.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h4>Validation collective</h4>
+            <p>Quand l'objectif est atteint, les membres valident. Le threshold est paramétrable — majorité ou unanimité.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h4>Envoi automatique</h4>
+            <p>Le contrat envoie vers la destination. Si la deadline expire sans envoi — remboursement automatique.</p>
+          </div>
+        </div>
+      </div>
+      <div class="how-visual">
+        <div style="font-size:12px;font-weight:600;color:var(--purple);margin-bottom:16px;letter-spacing:0.05em">SHARE · Voyage Lisbonne 🇵🇹</div>
+        <div class="flow-item active">
+          <div class="flow-dot purple"></div>
+          <div>
+            <div class="flow-text">Pool créée · 3 membres</div>
+            <div class="flow-sub">Objectif 3 000 USDT · 30 jours</div>
+          </div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-item active">
+          <div class="flow-dot green"></div>
+          <div>
+            <div class="flow-text">2 000 USDT collectés</div>
+            <div class="flow-sub">alice.eth 800 · bob.eth 800 · charles.eth 400</div>
+          </div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-item">
+          <div class="flow-dot amber"></div>
+          <div>
+            <div class="flow-text">Objectif atteint · Validation</div>
+            <div class="flow-sub">2/3 validations requises</div>
+          </div>
+        </div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-item">
+          <div class="flow-dot purple"></div>
+          <div>
+            <div class="flow-text">2 970 USDT → AgenceVoyage.eth</div>
+            <div class="flow-sub">30 USDT commission PerShare (1%)</div>
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.06)">
+          Vérifiable sur BscScan · Hash : 0xabcd...ef12
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- GLOBAL -->
+<div class="global" id="global">
+  <div class="global-inner">
+    <div class="section-tag">Accessibilité mondiale</div>
+    <h2 class="section-title">Du cash au wallet. Partout.</h2>
+    <p class="section-sub">PerShare est accessible depuis n'importe quelle région — carte bancaire, Mobile Money, ou wallet existant.</p>
+    <div class="global-grid">
+      <div class="global-card">
+        <div class="global-flag">🌍</div>
+        <div class="global-region">Europe & USA</div>
+        <div class="global-method">Carte bancaire</div>
+        <div class="global-partners">
+          <span class="partner-tag">Transak</span>
+          <span class="partner-tag">MoonPay</span>
+          <span class="partner-tag">Apple Pay</span>
+        </div>
+      </div>
+      <div class="global-card">
+        <div class="global-flag">🌍</div>
+        <div class="global-region">Afrique</div>
+        <div class="global-method">Mobile Money</div>
+        <div class="global-partners">
+          <span class="partner-tag">M-Pesa</span>
+          <span class="partner-tag">Orange Money</span>
+          <span class="partner-tag">MTN</span>
+          <span class="partner-tag">Wave</span>
+        </div>
+      </div>
+      <div class="global-card">
+        <div class="global-flag">🌏</div>
+        <div class="global-region">Asie</div>
+        <div class="global-method">Mobile Money</div>
+        <div class="global-partners">
+          <span class="partner-tag">GCash</span>
+          <span class="partner-tag">bKash</span>
+          <span class="partner-tag">TrueMoney</span>
+        </div>
+      </div>
+      <div class="global-card">
+        <div class="global-flag">💳</div>
+        <div class="global-region">Off-ramp mondial</div>
+        <div class="global-method">Carte Safe Visa</div>
+        <div class="global-partners">
+          <span class="partner-tag">Dépense USDT directement</span>
+          <span class="partner-tag">Visa partout</span>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:13px;color:var(--muted);margin-top:24px;text-align:center">Via Binance P2P pour l'Afrique et l'Asie · Partenaires directs pour l'Europe · PerShare ne gère pas les on-ramps</p>
+  </div>
+</div>
+
+<!-- BUSINESS MODEL -->
+<div style="padding:0 24px 100px;max-width:1100px;margin:0 auto" id="bm">
+  <div class="bm">
+    <div class="bm-grid">
+      <div>
+        <div class="bm-number">1%</div>
+        <div class="bm-label">de commission sur chaque envoi.<br>C'est tout.</div>
+      </div>
+      <div class="bm-items">
+        <div class="bm-item">
+          <div class="bm-check">✓</div>
+          <div class="bm-item-text">
+            <h4>Prélevé automatiquement</h4>
+            <p>Dans le smart contract. Pas de facture. Pas de négociation.</p>
+          </div>
+        </div>
+        <div class="bm-item">
+          <div class="bm-check">✓</div>
+          <div class="bm-item-text">
+            <h4>Zéro commission sur les remboursements</h4>
+            <p>Si la deadline expire — tu récupères 100% de ta mise.</p>
+          </div>
+        </div>
+        <div class="bm-item">
+          <div class="bm-check">✓</div>
+          <div class="bm-item-text">
+            <h4>Zéro abonnement</h4>
+            <p>Tu paies uniquement quand tu utilises. Créer une pool est gratuit.</p>
+          </div>
+        </div>
+        <div class="bm-item">
+          <div class="bm-check">✓</div>
+          <div class="bm-item-text">
+            <h4>Vérifiable onchain</h4>
+            <p>Chaque commission est visible sur BscScan. Aucun frais caché.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA / WAITLIST -->
+<div class="cta-section" id="waitlist">
+  <div class="cta-inner">
+    <h2>Prêt à créer ton premier SHARE ?</h2>
+    <p>PerShare est en développement actif. Rejoins la beta privée pour être parmi les premiers sur BNB Mainnet.</p>
+    <div class="waitlist">
+      <input type="email" placeholder="ton@email.com">
+      <a href="#" class="btn btn-primary" onclick="this.textContent='Inscrit ✓';return false">Rejoindre →</a>
+    </div>
+    <p style="font-size:12px;color:var(--muted)">Pas de spam. Pas de token à vendre. Juste PerShare.</p>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div style="max-width:1100px;margin:0 auto;padding:0 24px">
+  <footer>
+    <div class="footer-logo">Per<span>Share</span> <span style="font-size:11px;color:var(--muted);font-weight:400;margin-left:8px">SHARE</span></div>
+    <div class="footer-links">
+      <a href="#">Whitepaper</a>
+      <a href="#">BscScan</a>
+      <a href="#">Twitter</a>
+      <a href="#">Telegram</a>
+    </div>
+    <div class="footer-note">BNB Chain · Non-custodial · Audit en cours</div>
+  </footer>
+</div>
+
+</body>
+</html>
