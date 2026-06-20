@@ -28,7 +28,7 @@ const BSC_MAINNET = {
 
 const config = getDefaultConfig({
   appName: 'PerShare',
-  projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || 'YOUR_PROJECT_ID',
+  projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || 'a0485249623e9a167f133146abc2eb4e',
   chains: [BSC_TESTNET, BSC_MAINNET],
   ssr: false,
   transports: {
