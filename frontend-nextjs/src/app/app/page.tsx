@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useAccount } from 'wagmi';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { ShareCard } from '../../components/ShareCard';
 import { CreateShareModal } from '../../components/CreateShareModal';
 import { useShareCount, useShare, useUserTotalContribution, formatUSDT } from '../../hooks/useShare';
@@ -52,17 +51,15 @@ export default function Dashboard() {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '100vh', padding: '24px', textAlign: 'center' }}>
         <h1 style={{ marginBottom: '24px' }}>Connection Required</h1>
-        <ConnectButton />
+        {/* @ts-ignore */}
+        <appkit-button />
       </div>
     );
   }
 
   return (
-    <main style={{ padding: '40px 24px', maxWidth: '800px', margin: '0 auto' }}>
+    <main style={{ padding: '40px 24px', maxWidth: '1200px', margin: '0 auto' }}>
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
-        <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '24px', margin: 0 }}>
-          Per<span style={{ color: 'var(--purple)' }}>Share</span> App
-        </h1>
         <button 
           onClick={() => setShowCreate(true)}
           style={{ 
@@ -70,7 +67,7 @@ export default function Dashboard() {
             color: '#fff', 
             border: 'none', 
             padding: '10px 24px', 
-            borderRadius: '8px', 
+            borderRadius: '24px', 
             cursor: 'pointer',
             fontWeight: 'bold',
             boxShadow: '0 4px 14px rgba(6, 182, 212, 0.3)'
@@ -80,7 +77,7 @@ export default function Dashboard() {
         </button>
       </header>
 
-      {count > 0 && address && <TotalContributionsBadge shareIds={shareIds} userAddress={address as string} />}
+      {/* Badge was here */}
 
       <div style={{ display: 'flex', gap: '32px', borderBottom: '1px solid #1a233a', marginBottom: '24px' }}>
         <button
@@ -109,7 +106,11 @@ export default function Dashboard() {
         </button>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+      {activeTab === 'myShares' && count > 0 && address && (
+        <TotalContributionsBadge shareIds={shareIds} userAddress={address as string} />
+      )}
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '24px' }}>
         {count === 0 && (
           <div style={{ padding: '40px', textAlign: 'center', background: 'var(--surface)', borderRadius: '12px', border: '1px dashed var(--border)' }}>
             <p style={{ color: 'var(--muted)' }}>No SHARE found on the platform.</p>
