@@ -6,6 +6,7 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { ShareCard } from '../../components/ShareCard';
 import { CreateShareModal } from '../../components/CreateShareModal';
 import { GuideModal } from '../../components/GuideModal';
+import { ComparisonModal } from '../../components/ComparisonModal';
 import { useShareCount, useShare, useUserTotalContribution, formatUSDT } from '../../hooks/useShare';
 
 function TotalContributionsBadge({ shareIds, userAddress }: { shareIds: bigint[], userAddress: string }) {
@@ -44,6 +45,7 @@ export default function Dashboard() {
   const { address, isConnected } = useAccount();
   const [showCreate, setShowCreate] = useState(false);
   const [showGuide, setShowGuide] = useState(false);
+  const [showComparison, setShowComparison] = useState(false);
   
   const { data: shareCount } = useShareCount();
   const count = shareCount ? Number(shareCount) : 0;
@@ -78,6 +80,12 @@ export default function Dashboard() {
           >
             How it works?
           </button>
+          <button 
+            onClick={() => setShowComparison(true)}
+            style={{ background: 'transparent', border: '1px solid var(--purple)', color: 'var(--purple)', padding: '4px 12px', borderRadius: '16px', fontSize: '12px', cursor: 'pointer', fontWeight: 'bold' }}
+          >
+            Why PerShare?
+          </button>
         </h2>
         <button 
           onClick={() => setShowCreate(true)}
@@ -108,6 +116,7 @@ export default function Dashboard() {
 
       {showCreate && <CreateShareModal onClose={() => setShowCreate(false)} />}
       {showGuide && <GuideModal onClose={() => setShowGuide(false)} />}
+      {showComparison && <ComparisonModal onClose={() => setShowComparison(false)} />}
     </main>
   );
 }
