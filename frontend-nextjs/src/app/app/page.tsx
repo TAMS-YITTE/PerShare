@@ -100,7 +100,7 @@ export default function Dashboard() {
           </button>
           <button 
             onClick={() => setShowGuide(true)}
-            style={{ background: 'transparent', border: '1px solid var(--border)', color: 'var(--muted)', padding: '4px 12px', borderRadius: '16px', fontSize: '12px', cursor: 'pointer' }}
+            style={{ background: 'transparent', border: '1px solid var(--purple)', color: 'var(--purple)', padding: '4px 12px', borderRadius: '16px', fontSize: '12px', cursor: 'pointer', fontWeight: 'bold' }}
           >
             How it works?
           </button>
