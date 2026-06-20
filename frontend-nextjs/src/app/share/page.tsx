@@ -38,7 +38,7 @@ function SharePageContent() {
   const { address } = useAccount();
   const searchParams = useSearchParams();
   const idParam = searchParams.get('id');
-  const shareId = idParam ? BigInt(idParam) : 0n;
+  const shareId = idParam ? BigInt(idParam) : BigInt(0);
   const { data: share, refetch } = useShare(shareId);
 
   const [contributeAmount, setContributeAmount] = useState('');
@@ -75,7 +75,7 @@ function SharePageContent() {
   const status = getShareStatus(share);
   const isCreator = address && share.creator.toLowerCase() === address.toLowerCase();
   const isMember = address && share.members.map((m: string) => m.toLowerCase()).includes(address.toLowerCase());
-  const progress = share.targetAmount === 0n ? 0 : Number((share.totalReceived * 100n) / share.targetAmount);
+  const progress = share.targetAmount === BigInt(0) ? 0 : Number((share.totalReceived * BigInt(100)) / share.targetAmount);
   const isTargetReached = share.totalReceived >= share.targetAmount;
   
   return (

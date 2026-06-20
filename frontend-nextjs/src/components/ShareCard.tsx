@@ -58,7 +58,7 @@ export function ShareCard({ id, share, userAddress }: { id: bigint; share: any; 
         {userAddress && (
           <div style={{ gridColumn: 'span 2', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--bg)', padding: '8px 12px', borderRadius: '6px', marginTop: '4px' }}>
             <span>My Contribution:</span> 
-            <span style={{ color: 'var(--purple)', fontWeight: 'bold', fontSize: '14px' }}>{formatUSDT(myContribution || 0n)} USDT</span>
+            <span style={{ color: 'var(--purple)', fontWeight: 'bold', fontSize: '14px' }}>{formatUSDT(myContribution || BigInt(0))} USDT</span>
           </div>
         )}
       </div>

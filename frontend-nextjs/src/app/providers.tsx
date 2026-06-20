@@ -4,6 +4,7 @@
 // RainbowKit + wagmi + React Query
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import React, { useState, useEffect } from 'react';
 import { WagmiProvider, http } from 'wagmi';
 import { RainbowKitProvider, getDefaultConfig } from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/styles.css';
@@ -29,7 +30,7 @@ const config = getDefaultConfig({
   appName: 'PerShare',
   projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || 'YOUR_PROJECT_ID',
   chains: [BSC_TESTNET, BSC_MAINNET],
-  ssr: true,
+  ssr: false,
   transports: {
     [BSC_TESTNET.id]: http(),
     [BSC_MAINNET.id]: http(),
@@ -39,11 +40,14 @@ const config = getDefaultConfig({
 const queryClient = new QueryClient();
 
 export function Providers({ children }: { children: React.ReactNode }) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider>
-          {children}
+          {mounted ? children : null}
         </RainbowKitProvider>
       </QueryClientProvider>
     </WagmiProvider>
