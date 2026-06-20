@@ -1,16 +1,16 @@
 :root {
-  --purple:      #7C3AED;
-  --purple2:     #9D5FF0;
-  --purpleDark:  #4C1D95;
-  --bg:          #0A0A0F;
-  --surface:     #1C1C27;
-  --surface2:    #252535;
+  --purple:      #00D2FF;
+  --purple2:     #45E0FF;
+  --purpleDark:  #009CBF;
+  --bg:          #0B1120;
+  --surface:     #141C2F;
+  --surface2:    #1E293B;
   --green:       #10B981;
   --amber:       #F59E0B;
   --red:         #EF4444;
-  --text:        #E2E8F0;
-  --muted:       #64748B;
-  --border:      rgba(255, 255, 255, 0.08);
+  --text:        #F8FAFC;
+  --muted:       #94A3B8;
+  --border:      rgba(255, 255, 255, 0.1);
   --font-display: var(--font-display, 'Space Grotesk', sans-serif);
   --font-body:    var(--font-body, 'Inter', sans-serif);
 }
@@ -42,5 +42,5 @@ h1, h2, h3, h4, h5, h6 {
 
 /* RainbowKit override */
 [data-rk] {
-  --rk-colors-accentColor: #7C3AED !important;
+  --rk-colors-accentColor: #00D2FF !important;
 }
