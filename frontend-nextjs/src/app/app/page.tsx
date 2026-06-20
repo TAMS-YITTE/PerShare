@@ -75,16 +75,16 @@ export default function Dashboard() {
         <h2 style={{ fontSize: '20px', display: 'flex', alignItems: 'center', gap: '12px' }}>
           My SHAREs
           <button 
-            onClick={() => setShowGuide(true)}
-            style={{ background: 'transparent', border: '1px solid var(--border)', color: 'var(--muted)', padding: '4px 12px', borderRadius: '16px', fontSize: '12px', cursor: 'pointer' }}
-          >
-            How it works?
-          </button>
-          <button 
             onClick={() => setShowComparison(true)}
             style={{ background: 'transparent', border: '1px solid var(--purple)', color: 'var(--purple)', padding: '4px 12px', borderRadius: '16px', fontSize: '12px', cursor: 'pointer', fontWeight: 'bold' }}
           >
             Why PerShare?
+          </button>
+          <button 
+            onClick={() => setShowGuide(true)}
+            style={{ background: 'transparent', border: '1px solid var(--border)', color: 'var(--muted)', padding: '4px 12px', borderRadius: '16px', fontSize: '12px', cursor: 'pointer' }}
+          >
+            How it works?
           </button>
         </h2>
         <button 
