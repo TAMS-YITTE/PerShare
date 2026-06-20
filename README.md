@@ -110,4 +110,4 @@ npm run dev
 
 ## Contact
 
-pershare.io
+pershare.org
