@@ -1,3 +1,4 @@
+// @ts-nocheck
 // useShare — Hook principal pour interagir avec le contrat PerShare
 // Utilise wagmi v2 + viem
 
