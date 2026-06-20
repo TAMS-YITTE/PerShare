@@ -4,6 +4,8 @@ import dynamic from 'next/dynamic';
 import './globals.css';
 
 const Providers = dynamic(() => import('./providers').then(mod => mod.Providers), { ssr: false });
+import { Footer } from '../components/Footer';
+import { CookieConsent } from '../components/CookieConsent';
 
 const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], variable: '--font-display' });
 const inter = Inter({ subsets: ['latin'], variable: '--font-body' });
@@ -31,6 +33,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <Providers>
           {children}
+          <Footer />
+          <CookieConsent />
         </Providers>
       </body>
     </html>
