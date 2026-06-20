@@ -63,10 +63,14 @@ export default function Dashboard() {
 
   return (
     <main style={{ padding: '40px 24px', maxWidth: '800px', margin: '0 auto' }}>
-      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
-        <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '24px' }}>
+      <header style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '40px' }}>
+        <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '24px', margin: 0 }}>
           Per<span style={{ color: 'var(--purple)' }}>Share</span> App
         </h1>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#10b981', fontSize: '14px', fontWeight: '500' }}>
+          <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10b981' }}></div>
+          Deployed on BNB Chain
+        </div>
       </header>
 
       {count > 0 && address && <TotalContributionsBadge shareIds={shareIds} userAddress={address as string} />}
