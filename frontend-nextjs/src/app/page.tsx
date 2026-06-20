@@ -32,7 +32,8 @@ export default function Home() {
       <ConnectButton label="Connecter mon wallet" />
 
       <p style={{ fontSize: '12px', color: 'var(--muted)', marginTop: '24px' }}>
-        BNB Chain · Non-custodial · Audit en cours
+        BNB Chain · Non-custodial · Audit en cours<br/>
+        <a href="mailto:support@pershare.org" style={{ color: 'var(--purple)', textDecoration: 'none', marginTop: '8px', display: 'inline-block' }}>support@pershare.org</a>
       </p>
     </main>
   );
