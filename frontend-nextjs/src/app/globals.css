@@ -1,7 +1,7 @@
 :root {
-  --purple:      #00D2FF;
-  --purple2:     #45E0FF;
-  --purpleDark:  #009CBF;
+  --purple:      #067B92; /* Darker teal for button backgrounds */
+  --purple2:     #00D2FF; /* Bright cyan for highlights */
+  --purpleDark:  #045869; /* Even darker teal for hover states */
   --bg:          #0B1120;
   --surface:     #141C2F;
   --surface2:    #1E293B;
