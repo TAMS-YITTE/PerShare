@@ -4,7 +4,6 @@
 // sinon affiche la landing page
 
 import { useAccount } from 'wagmi';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -26,13 +25,14 @@ export default function Home() {
       <p style={{ fontSize: '13px', color: 'var(--muted)', letterSpacing: '0.1em', marginBottom: '8px' }}>SHARE</p>
 
       <p style={{ fontSize: '20px', color: 'var(--muted)', maxWidth: '480px', lineHeight: 1.6, marginBottom: '40px' }}>
-        Chaque membre reçoit sa part.<br />Automatiquement. Onchain.
+        Automated trustless pooling protocol on BNB Chain.<br />Pool, pay, and share automatically.
       </p>
 
-      <ConnectButton label="Connect Wallet" />
+      {/* @ts-ignore */}
+      <appkit-button label="Connect Wallet" />
 
       <p style={{ fontSize: '12px', color: 'var(--muted)', marginTop: '24px' }}>
-        BNB Chain · Non-custodial · Audit en cours<br/>
+        BNB Chain · Non-custodial · Audit in progress<br/>
         <a href="mailto:support@pershare.org" style={{ color: 'var(--purple)', textDecoration: 'none', marginTop: '8px', display: 'inline-block' }}>support@pershare.org</a>
       </p>
     </main>
