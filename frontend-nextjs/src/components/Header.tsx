@@ -3,9 +3,78 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { GuideModal } from './GuideModal';
 import { ComparisonModal } from './ComparisonModal';
+import { useAppKit } from '@reown/appkit/react';
+import { useAccount, useDisconnect } from 'wagmi';
+
+function CustomConnectButton() {
+  const { open } = useAppKit();
+  const { address, isConnected } = useAccount();
+  const { disconnect } = useDisconnect();
+
+  if (!isConnected) {
+    return (
+      <button onClick={() => open()} style={{
+        background: 'linear-gradient(135deg, #06b6d4, #0284c7)',
+        color: '#fff',
+        border: 'none',
+        padding: '8px 18px',
+        borderRadius: '24px',
+        cursor: 'pointer',
+        fontSize: '14px',
+        fontWeight: 'bold',
+        transition: 'all 0.2s',
+      }}>
+        Connect Wallet
+      </button>
+    );
+  }
+
+  const shortAddress = address ? `${address.slice(0, 6)}...${address.slice(-4)}` : '';
+
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+      <button onClick={() => open()} style={{
+        background: '#1c2333',
+        border: '1px solid #2a344a',
+        color: '#fff',
+        padding: '8px 16px',
+        borderRadius: '24px',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
+        cursor: 'pointer',
+        fontSize: '14px',
+        fontWeight: 'bold',
+        transition: 'all 0.2s',
+      }}>
+        <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10b981' }} />
+        {shortAddress}
+      </button>
+      
+      <button onClick={() => disconnect()} style={{
+        background: '#1c2333',
+        border: '1px solid #2a344a',
+        color: '#ef4444',
+        width: '36px',
+        height: '36px',
+        borderRadius: '50%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        cursor: 'pointer',
+        transition: 'all 0.2s',
+      }} title="Disconnect">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+          <polyline points="16 17 21 12 16 7"></polyline>
+          <line x1="21" y1="12" x2="9" y2="12"></line>
+        </svg>
+      </button>
+    </div>
+  );
+}
 
 export function Header() {
   const pathname = usePathname();
@@ -53,13 +122,13 @@ export function Header() {
               color: '#fff',
               textDecoration: 'none',
               padding: '8px 18px',
-              borderRadius: '8px',
+              borderRadius: '24px',
               fontSize: '14px',
               fontWeight: 'bold',
               boxShadow: '0 4px 14px rgba(6, 182, 212, 0.4)',
               transition: 'transform 0.2s',
             }}>
-              LAUNCH APP
+              App
             </Link>
 
             <button
@@ -95,10 +164,10 @@ export function Header() {
             })}
           </nav>
 
-          {/* Right: Wallet */}
+          {/* Right: Reown Wallet Button */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
             <div className="wallet-wrapper">
-              <ConnectButton showBalance={false} />
+              <CustomConnectButton />
             </div>
           </div>
         </div>
