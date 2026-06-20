@@ -38,25 +38,32 @@ docs/
 - **Public Refund (Permissionless)**: In case of failure (deadline passed), anyone can trigger the `refund` to unlock inactive members' funds.
 - **Kill-Switch (Pausable & Ownable)**: Allows temporary transaction blocking if a vulnerability is detected.
 
-## Presale Workflows (Important)
+## V1 Compatibility — Grouped by Affinity
 
-When using PerShare for a presale/ICO, there are three main ways to handle the Destination:
+**🔒 Secure a transaction (escrow / holding)**
+- **Beat Fiverr/Upwork** ✅ Client/freelance escrow, threshold 2. Available now.
+- **Instant P2P Escrow** ✅ Buyer deposits, seller ships, cross-validation. Available now.
 
-1. **Automatic Presale Push ⭐**
-   * **Destination** = Presale contract address
-   * → PerShare sends the USDT
-   * → The presale automatically sends the tokens back to PerShare
-   * → *Works ONLY IF the presale executes a return `transfer()` upon receiving funds.*
-2. **Request a Push from the Seller ⭐**
-   * **Destination** = Seller's address
-   * "Send the tokens to our contract address"
-   * → The seller performs a manual `transfer()`
-   * → *Trivial for them, zero risk for you.*
-3. **Personal EOA Wallet as Destination**
-   * **Destination** = Your own wallet
-   * → You receive the pooled USDT
-   * → You buy/claim the presale tokens yourself
-   * → You send the tokens back to PerShare manually.
+**🚀 Invest together (presale / group buy)**
+- **Buy together** ✅ The pool collects USDT and sends it to the presale. Works out of the box if the presale returns tokens automatically (Push mode).
+- **Institutional buying syndicate** ✅ Grouped pool, single ticket to the seller. Available now (Push).
+
+  *Built-in safety net: as long as the pool hasn't validated, the money remains locked in the contract. Any doubts before the deadline? Don't validate, and each member is refunded 100% at the deadline.*
+
+> [!WARNING]
+> ## Presales in Claim mode
+> Push (tokens returned automatically) = **good case**, everything works in V1.
+> **Claim** mode (active purchase required) → use a **personal wallet as destination**. Full automation coming in **V2 Factory pattern**.
+>
+> The safety net only protects **before** sending. Once the funds are sent to the presale, the presale has control.
+
+**👥 Pool money (money pool / tontine)**
+- **Joint account without a bank** ✅ Multi-member pool, collective validation. Available now.
+- **Trustless crypto tontine** ✅ Collective pool among crypto members, code holds the money. Available now (USDT version between wallets).
+
+**💰 Distribute gains (proportional distribution)**
+- **Dispute-free revenue sharing** ✅ For one-off revenues. Native proportional distribution.
+- **Hackathon prize pool** ✅ Team + shares, auto distribution. Available now.
 
 ## Quick Start
 
