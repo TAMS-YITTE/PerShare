@@ -36,7 +36,7 @@ function TotalContributionsBadge({ shareIds, userAddress }: { shareIds: bigint[]
 function ShareListItem({ id, userAddress, showOnlyMyShares }: { id: bigint, userAddress: string, showOnlyMyShares: boolean }) {
   const { data: share } = useShare(id);
   if (!share) return null;
-  const isMember = share.members.map((m: string) => m.toLowerCase()).includes(userAddress.toLowerCase());
+  const isMember = userAddress && share.members.map((m: string) => m.toLowerCase()).includes(userAddress.toLowerCase());
   if (showOnlyMyShares && !isMember) return null;
   return <ShareCard id={id} share={share} userAddress={userAddress} />;
 }
