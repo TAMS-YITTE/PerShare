@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic';
 import './globals.css';
 
 const Providers = dynamic(() => import('./providers').then(mod => mod.Providers), { ssr: false });
+import { Header } from '../components/Header';
 import { Footer } from '../components/Footer';
 import { CookieConsent } from '../components/CookieConsent';
 
@@ -32,6 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="fr" className={`${outfit.variable} ${outfitBody.variable}`}>
       <body>
         <Providers>
+          <Header />
           {children}
           <Footer />
           <CookieConsent />
