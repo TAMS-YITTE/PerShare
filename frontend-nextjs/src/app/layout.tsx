@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 import { Space_Grotesk, Inter } from 'next/font/google';
-import { Providers } from './providers';
+import dynamic from 'next/dynamic';
 import './globals.css';
+
+const Providers = dynamic(() => import('./providers').then(mod => mod.Providers), { ssr: false });
 
 const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], variable: '--font-display' });
 const inter = Inter({ subsets: ['latin'], variable: '--font-body' });

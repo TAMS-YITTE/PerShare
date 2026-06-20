@@ -9,7 +9,7 @@ export function ShareCard({ id, share, userAddress }: { id: bigint; share: any; 
   const { data: myContribution } = useContribution(id, (userAddress as `0x${string}`) || '0x0000000000000000000000000000000000000000');
 
   return (
-    <Link href={`/share/${id.toString()}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
+    <Link href={`/share?id=${id.toString()}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
       <div style={{
         background: 'var(--surface)',
         border: '1px solid var(--border)',
