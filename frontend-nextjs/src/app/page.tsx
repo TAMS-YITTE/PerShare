@@ -29,7 +29,7 @@ export default function Home() {
         Chaque membre reçoit sa part.<br />Automatiquement. Onchain.
       </p>
 
-      <ConnectButton label="Connecter mon wallet" />
+      <ConnectButton label="Connect Wallet" />
 
       <p style={{ fontSize: '12px', color: 'var(--muted)', marginTop: '24px' }}>
         BNB Chain · Non-custodial · Audit en cours<br/>
