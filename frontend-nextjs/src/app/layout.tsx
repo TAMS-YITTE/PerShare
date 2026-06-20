@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Space_Grotesk, Inter } from 'next/font/google';
+import { Plus_Jakarta_Sans } from 'next/font/google';
 import dynamic from 'next/dynamic';
 import './globals.css';
 
@@ -7,8 +7,8 @@ const Providers = dynamic(() => import('./providers').then(mod => mod.Providers)
 import { Footer } from '../components/Footer';
 import { CookieConsent } from '../components/CookieConsent';
 
-const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], variable: '--font-display' });
-const inter = Inter({ subsets: ['latin'], variable: '--font-body' });
+const plusJakarta = Plus_Jakarta_Sans({ subsets: ['latin'], variable: '--font-display' });
+const plusJakartaBody = Plus_Jakarta_Sans({ subsets: ['latin'], variable: '--font-body' });
 
 export const metadata: Metadata = {
   title: 'PerShare — Trustless Pool, Pay, Invest & Share Automatically',
@@ -29,7 +29,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr" className={`${spaceGrotesk.variable} ${inter.variable}`}>
+    <html lang="fr" className={`${plusJakarta.variable} ${plusJakartaBody.variable}`}>
       <body>
         <Providers>
           {children}
