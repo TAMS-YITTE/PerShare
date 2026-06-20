@@ -27,6 +27,11 @@ export function GuideModal({ onClose }: { onClose: () => void }) {
             <div style={{ background: 'var(--bg)', padding: '16px', borderRadius: '8px', border: '1px solid var(--border)' }}>
               <strong>1. Private Presale / ICO (Web3 Syndicate)</strong><br/>
               <span style={{ fontSize: '14px', color: 'var(--muted)' }}>Pool funds to reach a minimum investment ticket. Phase 3 redistributes the received tokens mathematically in a single drop.</span>
+              <ul style={{ fontSize: '13px', color: 'var(--text)', marginTop: '8px', paddingLeft: '20px' }}>
+                <li><strong>Automatic Presale Push ⭐</strong>: destination = presale contract. PerShare sends USDT, presale automatically sends tokens back (works ONLY IF the presale does a return `transfer()`).</li>
+                <li><strong>Request a Push from seller ⭐</strong>: "Send the tokens to our contract address". Seller does a manual `transfer()` (trivial for them, zero risk for you).</li>
+                <li><strong>Personal EOA Wallet</strong>: destination = your wallet. You receive USDT, buy/claim yourself, and send tokens back to PerShare.</li>
+              </ul>
             </div>
 
             <div style={{ background: 'var(--bg)', padding: '16px', borderRadius: '8px', border: '1px solid var(--border)' }}>
