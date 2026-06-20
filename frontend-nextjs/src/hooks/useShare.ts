@@ -16,6 +16,7 @@ if (!CONTRACT) {
 // ── Lecture ───────────────────────────────────────────────────────────────────
 
 export function useShare(id: bigint) {
+  // @ts-ignore
   const result = useReadContracts({
     contracts: [
       { address: CONTRACT, abi: PERSHARE_ABI, functionName: 'getShareDetails', args: [id] },
@@ -81,6 +82,7 @@ export function useUserTotalContribution(shareIds: bigint[], member: `0x${string
     functionName: 'getContribution',
     args: [id, member]
   }));
+  // @ts-ignore
   return useReadContracts({ contracts, query: { refetchInterval: 5000 } });
 }
 
@@ -270,6 +272,6 @@ export function getShareStatus(share: any): 'active' | 'sent' | 'refunded' | 'ex
 }
 
 export function getShareProgress(share: any): number {
-  if (share.targetAmount === 0n) return 0;
-  return Number((share.totalReceived * 100n) / share.targetAmount);
+  if (share.targetAmount === BigInt(0)) return 0;
+  return Number((share.totalReceived * BigInt(100)) / share.targetAmount);
 }

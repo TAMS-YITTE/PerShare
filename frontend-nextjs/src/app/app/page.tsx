@@ -19,9 +19,9 @@ function TotalContributionsBadge({ shareIds, userAddress }: { shareIds: bigint[]
       return acc + (curr.result as bigint);
     }
     return acc;
-  }, 0n);
+  }, BigInt(0));
 
-  if (total === 0n) return null;
+  if (total === BigInt(0)) return null;
 
   return (
     <div style={{ background: 'var(--purpleDark)', padding: '16px 24px', borderRadius: '12px', marginBottom: '32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
