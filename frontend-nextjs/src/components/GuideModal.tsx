@@ -53,6 +53,13 @@ export function GuideModal({ onClose }: { onClose: () => void }) {
               <strong>5. Personal Vault (Multisig Auto-Safe)</strong><br/>
               <span style={{ fontSize: '14px', color: 'var(--muted)' }}>A user creates a Share using their own wallets (e.g. PC, Mobile, Spouse) with a threshold of 2 or 3. Funds are locked securely. To unlock, they must validate with multiple devices, replacing a hardware wallet!</span>
             </div>
+
+            <div style={{ background: 'var(--bg)', padding: '16px', borderRadius: '8px', border: '1px solid var(--border)', borderLeft: '4px solid var(--purple)' }}>
+              <strong>6. Web3 Escrow (Fiverr / Upwork Alternative) ⭐</strong><br/>
+              <span style={{ fontSize: '14px', color: 'var(--muted)' }}>
+                Stop paying 30% in middleman fees (e.g. 20% to the seller + 10% to the buyer). A Client and a Freelancer create a Share with a Threshold of 2. The Client deposits USDT. When the work is delivered, both validate, releasing the funds instantly. <strong>Total cost? 1% max.</strong>
+              </span>
+            </div>
           </div>
 
           <h3 style={{ marginTop: '32px', color: '#E2E8F0' }}>Why use PerShare?</h3>
