@@ -33,11 +33,11 @@ function TotalContributionsBadge({ shareIds, userAddress }: { shareIds: bigint[]
   );
 }
 
-function ShareListItem({ id, userAddress }: { id: bigint, userAddress: string }) {
+function ShareListItem({ id, userAddress, showOnlyMyShares }: { id: bigint, userAddress: string, showOnlyMyShares: boolean }) {
   const { data: share } = useShare(id);
   if (!share) return null;
   const isMember = share.members.map((m: string) => m.toLowerCase()).includes(userAddress.toLowerCase());
-  if (!isMember) return null;
+  if (showOnlyMyShares && !isMember) return null;
   return <ShareCard id={id} share={share} userAddress={userAddress} />;
 }
 
@@ -46,6 +46,7 @@ export default function Dashboard() {
   const [showCreate, setShowCreate] = useState(false);
   const [showGuide, setShowGuide] = useState(false);
   const [showComparison, setShowComparison] = useState(false);
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'myShares'>('dashboard');
   
   const { data: shareCount } = useShareCount();
   const count = shareCount ? Number(shareCount) : 0;
@@ -64,42 +65,68 @@ export default function Dashboard() {
     <main style={{ padding: '40px 24px', maxWidth: '800px', margin: '0 auto' }}>
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
         <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '24px' }}>
-          Per<span style={{ color: 'var(--purple)' }}>Share</span> Dashboard
+          Per<span style={{ color: 'var(--purple)' }}>Share</span> App
         </h1>
-        <ConnectButton />
       </header>
 
       {count > 0 && address && <TotalContributionsBadge shareIds={shareIds} userAddress={address as string} />}
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-        <h2 style={{ fontSize: '20px', display: 'flex', alignItems: 'center', gap: '12px' }}>
-          My SHAREs
+      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px', gap: '16px' }}>
+        <div style={{ display: 'flex', gap: '12px' }}>
           <button 
             onClick={() => setShowComparison(true)}
-            style={{ background: 'transparent', border: '1px solid var(--purple)', color: 'var(--purple)', padding: '4px 12px', borderRadius: '16px', fontSize: '12px', cursor: 'pointer', fontWeight: 'bold' }}
+            style={{ background: 'transparent', border: '1px solid #06b6d4', color: '#06b6d4', padding: '8px 16px', borderRadius: '24px', fontSize: '14px', cursor: 'pointer', fontWeight: '500', transition: 'all 0.2s' }}
           >
             Why PerShare?
           </button>
           <button 
             onClick={() => setShowGuide(true)}
-            style={{ background: 'transparent', border: '1px solid var(--purple)', color: 'var(--purple)', padding: '4px 12px', borderRadius: '16px', fontSize: '12px', cursor: 'pointer', fontWeight: 'bold' }}
+            style={{ background: 'transparent', border: '1px solid #06b6d4', color: '#06b6d4', padding: '8px 16px', borderRadius: '24px', fontSize: '14px', cursor: 'pointer', fontWeight: '500', transition: 'all 0.2s' }}
           >
             How it works?
           </button>
-        </h2>
+        </div>
         <button 
           onClick={() => setShowCreate(true)}
           style={{ 
-            background: 'var(--purple)', 
+            background: 'linear-gradient(135deg, #06b6d4, #0284c7)', 
             color: '#fff', 
             border: 'none', 
-            padding: '10px 20px', 
+            padding: '10px 24px', 
             borderRadius: '8px', 
             cursor: 'pointer',
-            fontWeight: 'bold'
+            fontWeight: 'bold',
+            boxShadow: '0 4px 14px rgba(6, 182, 212, 0.3)'
           }}
         >
           + New SHARE
+        </button>
+      </div>
+
+      <div style={{ display: 'flex', gap: '32px', borderBottom: '1px solid #1a233a', marginBottom: '24px' }}>
+        <button
+          onClick={() => setActiveTab('dashboard')}
+          style={{
+            background: 'none', border: 'none', padding: '12px 0', fontSize: '18px', cursor: 'pointer',
+            color: activeTab === 'dashboard' ? '#fff' : '#8892b0',
+            borderBottom: activeTab === 'dashboard' ? '2px solid #06b6d4' : '2px solid transparent',
+            fontWeight: activeTab === 'dashboard' ? 'bold' : 'normal',
+            transition: 'color 0.2s'
+          }}
+        >
+          Dashboard
+        </button>
+        <button
+          onClick={() => setActiveTab('myShares')}
+          style={{
+            background: 'none', border: 'none', padding: '12px 0', fontSize: '18px', cursor: 'pointer',
+            color: activeTab === 'myShares' ? '#fff' : '#8892b0',
+            borderBottom: activeTab === 'myShares' ? '2px solid #06b6d4' : '2px solid transparent',
+            fontWeight: activeTab === 'myShares' ? 'bold' : 'normal',
+            transition: 'color 0.2s'
+          }}
+        >
+          My SHAREs
         </button>
       </div>
 
@@ -110,7 +137,7 @@ export default function Dashboard() {
           </div>
         )}
         {shareIds.map((id) => (
-          <ShareListItem key={id.toString()} id={id} userAddress={address as string} />
+          <ShareListItem key={id.toString()} id={id} userAddress={address as string} showOnlyMyShares={activeTab === 'myShares'} />
         ))}
       </div>
 

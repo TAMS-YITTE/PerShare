@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 export function Header() {
   const pathname = usePathname();
@@ -80,8 +81,7 @@ export function Header() {
         {/* Right: Actions */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           <div className="wallet-wrapper">
-            {/* @ts-ignore */}
-            <w3m-button balance="hide" />
+            <ConnectButton showBalance={false} />
           </div>
         </div>
       </div>
