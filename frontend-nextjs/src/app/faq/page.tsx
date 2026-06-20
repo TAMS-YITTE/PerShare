@@ -29,8 +29,8 @@ export default function FAQ() {
         <div style={{ background: 'var(--surface)', padding: '24px', borderRadius: '12px', border: '1px solid var(--border)' }}>
           <h3 style={{ color: '#fff', fontSize: '18px', marginBottom: '8px' }}>What are the fees?</h3>
           <p style={{ color: 'var(--muted)', margin: 0 }}>
-            PerShare takes a small protocol fee (currently set to 0% during the launch phase) on the stablecoin deposits. 
-            There are NO fees on the token distribution phase. You only pay the standard BNB Chain network gas fees.
+            PerShare takes a small protocol fee (currently set to 0% during the launch phase) on the stablecoin deposits to support future development. 
+            There are NO fees during the token distribution phase. You only pay the standard BNB Chain network gas fees.
           </p>
         </div>
 
@@ -39,6 +39,17 @@ export default function FAQ() {
           <p style={{ color: 'var(--muted)', margin: 0 }}>
             No. Immutability is our core feature. Once a SHARE is deployed, its members are written into the blockchain permanently. 
             Nobody can kick you out or steal your allocation.
+          </p>
+        </div>
+
+        <div style={{ background: 'var(--surface)', padding: '24px', borderRadius: '12px', border: '1px solid var(--border)' }}>
+          <h3 style={{ color: '#fff', fontSize: '18px', marginBottom: '8px' }}>What are the main use cases for PerShare?</h3>
+          <p style={{ color: 'var(--muted)', margin: 0 }}>
+            PerShare is incredibly versatile. The most common use cases include: <br/><br/>
+            • <b>Crypto Presales & IDOs:</b> Grouping funds to hit high minimum investment tiers.<br/>
+            • <b>OTC Deals:</b> Buying vested tokens from early investors safely.<br/>
+            • <b>NFT Fractionalization:</b> Pooling money to buy an expensive NFT (coming in V2).<br/>
+            • <b>Web3 Tontines:</b> Creating savings pools with friends or community members.
           </p>
         </div>
 

@@ -119,9 +119,9 @@ export default function Dashboard() {
       {showComparison && <ComparisonModal onClose={() => setShowComparison(false)} />}
 
       <footer style={{ marginTop: '64px', textAlign: 'center', borderTop: '1px solid var(--border)', paddingTop: '24px' }}>
-        <p style={{ color: 'var(--muted)', fontSize: '13px' }}>
+        <p style={{ color: 'var(--muted)', fontSize: '13px', margin: 0 }}>
           Besoin d'aide ? Contactez-nous : <br/>
-          <a href="mailto:support@pershare.org" style={{ color: 'var(--purple)', textDecoration: 'none', fontWeight: 'bold', display: 'inline-block', marginTop: '8px' }}>support@pershare.org</a>
+          <a href="mailto:support@pershare.org" style={{ color: 'var(--purple)', textDecoration: 'none', fontWeight: 'bold' }}>support@pershare.org</a>
         </p>
       </footer>
     </main>
