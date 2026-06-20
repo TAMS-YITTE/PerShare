@@ -5,8 +5,6 @@ import { useAccount } from 'wagmi';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { ShareCard } from '../../components/ShareCard';
 import { CreateShareModal } from '../../components/CreateShareModal';
-import { GuideModal } from '../../components/GuideModal';
-import { ComparisonModal } from '../../components/ComparisonModal';
 import { useShareCount, useShare, useUserTotalContribution, formatUSDT } from '../../hooks/useShare';
 
 function TotalContributionsBadge({ shareIds, userAddress }: { shareIds: bigint[], userAddress: string }) {
@@ -44,8 +42,6 @@ function ShareListItem({ id, userAddress, showOnlyMyShares }: { id: bigint, user
 export default function Dashboard() {
   const { address, isConnected } = useAccount();
   const [showCreate, setShowCreate] = useState(false);
-  const [showGuide, setShowGuide] = useState(false);
-  const [showComparison, setShowComparison] = useState(false);
   const [activeTab, setActiveTab] = useState<'dashboard' | 'myShares'>('dashboard');
   
   const { data: shareCount } = useShareCount();
@@ -63,33 +59,10 @@ export default function Dashboard() {
 
   return (
     <main style={{ padding: '40px 24px', maxWidth: '800px', margin: '0 auto' }}>
-      <header style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '40px' }}>
+      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
         <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '24px', margin: 0 }}>
           Per<span style={{ color: 'var(--purple)' }}>Share</span> App
         </h1>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#10b981', fontSize: '14px', fontWeight: '500' }}>
-          <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10b981' }}></div>
-          Deployed on BNB Chain
-        </div>
-      </header>
-
-      {count > 0 && address && <TotalContributionsBadge shareIds={shareIds} userAddress={address as string} />}
-
-      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px', gap: '16px' }}>
-        <div style={{ display: 'flex', gap: '12px' }}>
-          <button 
-            onClick={() => setShowComparison(true)}
-            style={{ background: 'transparent', border: '1px solid #06b6d4', color: '#06b6d4', padding: '8px 16px', borderRadius: '24px', fontSize: '14px', cursor: 'pointer', fontWeight: '500', transition: 'all 0.2s' }}
-          >
-            Why PerShare?
-          </button>
-          <button 
-            onClick={() => setShowGuide(true)}
-            style={{ background: 'transparent', border: '1px solid #06b6d4', color: '#06b6d4', padding: '8px 16px', borderRadius: '24px', fontSize: '14px', cursor: 'pointer', fontWeight: '500', transition: 'all 0.2s' }}
-          >
-            How it works?
-          </button>
-        </div>
         <button 
           onClick={() => setShowCreate(true)}
           style={{ 
@@ -105,7 +78,9 @@ export default function Dashboard() {
         >
           + New SHARE
         </button>
-      </div>
+      </header>
+
+      {count > 0 && address && <TotalContributionsBadge shareIds={shareIds} userAddress={address as string} />}
 
       <div style={{ display: 'flex', gap: '32px', borderBottom: '1px solid #1a233a', marginBottom: '24px' }}>
         <button
@@ -146,15 +121,6 @@ export default function Dashboard() {
       </div>
 
       {showCreate && <CreateShareModal onClose={() => setShowCreate(false)} />}
-      {showGuide && <GuideModal onClose={() => setShowGuide(false)} />}
-      {showComparison && <ComparisonModal onClose={() => setShowComparison(false)} />}
-
-      <footer style={{ marginTop: '64px', textAlign: 'center', borderTop: '1px solid var(--border)', paddingTop: '24px' }}>
-        <p style={{ color: 'var(--muted)', fontSize: '13px', margin: 0 }}>
-          Besoin d'aide ? Contactez-nous : <br/>
-          <a href="mailto:support@pershare.org" style={{ color: 'var(--purple)', textDecoration: 'none', fontWeight: 'bold' }}>support@pershare.org</a>
-        </p>
-      </footer>
     </main>
   );
 }
