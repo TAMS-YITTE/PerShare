@@ -24,41 +24,44 @@ export function GuideModal({ onClose }: { onClose: () => void }) {
           <p style={{ marginBottom: '16px' }}>The "Secure Collection → Validated Sending → Automatic Redistribution" mechanism adapts to many needs:</p>
           
           <div style={{ display: 'grid', gap: '16px', gridTemplateColumns: '1fr' }}>
-            <div style={{ background: 'var(--bg)', padding: '16px', borderRadius: '8px', border: '1px solid var(--border)' }}>
-              <strong>1. Private Presale / ICO (Web3 Syndicate)</strong><br/>
-              <span style={{ fontSize: '14px', color: 'var(--muted)' }}>Pool funds to reach a minimum investment ticket. Phase 3 redistributes the received tokens mathematically in a single drop.</span>
-              <ul style={{ fontSize: '13px', color: 'var(--text)', marginTop: '8px', paddingLeft: '20px' }}>
-                <li><strong>Automatic Presale Push ⭐</strong>: destination = presale contract. PerShare sends USDT, presale automatically sends tokens back (works ONLY IF the presale does a return `transfer()`).</li>
-                <li><strong>Request a Push from seller ⭐</strong>: "Send the tokens to our contract address". Seller does a manual `transfer()` (trivial for them, zero risk for you).</li>
-                <li><strong>Personal EOA Wallet</strong>: destination = your wallet. You receive USDT, buy/claim yourself, and send tokens back to PerShare.</li>
+            {/* Category 1 */}
+            <div style={{ background: 'var(--bg)', padding: '16px', borderRadius: '8px', border: '1px solid var(--border)', borderLeft: '4px solid var(--purple)' }}>
+              <h4 style={{ margin: '0 0 12px 0', fontSize: '16px', color: '#E2E8F0' }}>🔒 Secure a transaction (Escrow)</h4>
+              <ul style={{ fontSize: '14px', color: 'var(--muted)', margin: 0, paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <li><strong style={{ color: 'var(--text)' }}>Beat Fiverr/Upwork ⭐:</strong> Stop paying 30% in fees. Client & Freelancer create a Share. Client deposits, delivery triggers cross-validation. <strong>Total cost: 1% max.</strong></li>
+                <li><strong style={{ color: 'var(--text)' }}>Instant P2P Escrow:</strong> Buyer deposits, seller ships the item, cross-validation releases funds.</li>
+                <li><strong style={{ color: 'var(--text)' }}>Personal Vault:</strong> Multisig Auto-Safe for your own wallets.</li>
               </ul>
             </div>
 
+            {/* Category 2 */}
             <div style={{ background: 'var(--bg)', padding: '16px', borderRadius: '8px', border: '1px solid var(--border)' }}>
-              <strong>2. Crowdfunding / Kickstarter</strong><br/>
-              <span style={{ fontSize: '14px', color: 'var(--muted)' }}>Fund a creative project. If the target isn't met before the deadline, the contract refunds everyone. If successful, Phase 3 can be used (optional) to airdrop a reward token!</span>
+              <h4 style={{ margin: '0 0 12px 0', fontSize: '16px', color: '#E2E8F0' }}>🚀 Invest together (Presale / Group Buy)</h4>
+              <p style={{ fontSize: '14px', color: 'var(--muted)', margin: '0 0 12px 0' }}>The pool collects USDT and sends a single ticket to the presale. Safety net: money is locked until majority validates. 100% refund at deadline if aborted.</p>
+              <ul style={{ fontSize: '13px', color: 'var(--text)', margin: 0, paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <li><strong>Automatic Push ⭐:</strong> Destination = presale contract. Presale automatically sends tokens back.</li>
+                <li><strong>Seller Push ⭐:</strong> Seller does a manual `transfer()` back to the contract. Zero risk for you.</li>
+                <li><strong>Claim Mode ⚠️:</strong> Destination = your wallet. You claim tokens manually, then send them to PerShare for Phase 3.</li>
+              </ul>
             </div>
 
+            {/* Category 3 */}
             <div style={{ background: 'var(--bg)', padding: '16px', borderRadius: '8px', border: '1px solid var(--border)' }}>
-              <strong>3. Shared Money Pool (Friends & Family)</strong><br/>
-              <span style={{ fontSize: '14px', color: 'var(--muted)' }}>Pay for a vacation rental or a shared gift in stablecoin without fronting the cost. The Destination is the organizer. Phase 3 is simply ignored.</span>
+              <h4 style={{ margin: '0 0 12px 0', fontSize: '16px', color: '#E2E8F0' }}>👥 Pool money (Money Pool / Tontine)</h4>
+              <ul style={{ fontSize: '14px', color: 'var(--muted)', margin: 0, paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <li><strong style={{ color: 'var(--text)' }}>Joint account without a bank:</strong> Pay for a shared vacation rental or Kickstarter. Collective validation.</li>
+                <li><strong style={{ color: 'var(--text)' }}>Trustless Crypto Tontine:</strong> Collective pool among crypto members. Code holds the money securely.</li>
+              </ul>
             </div>
 
+            {/* Category 4 */}
             <div style={{ background: 'var(--bg)', padding: '16px', borderRadius: '8px', border: '1px solid var(--border)' }}>
-              <strong>4. Trading Pool (Ephemeral Hedge Fund)</strong><br/>
-              <span style={{ fontSize: '14px', color: 'var(--muted)' }}>A trusted trader raises funds (Phase 1), executes trades over a cycle, then converts all profits into a single token sent back for distribution via Phase 3.</span>
-            </div>
-
-            <div style={{ background: 'var(--bg)', padding: '16px', borderRadius: '8px', border: '1px solid var(--border)' }}>
-              <strong>5. Personal Vault (Multisig Auto-Safe)</strong><br/>
-              <span style={{ fontSize: '14px', color: 'var(--muted)' }}>A user creates a Share using their own wallets (e.g. PC, Mobile, Spouse) with a threshold of 2 or 3. Funds are locked securely. To unlock, they must validate with multiple devices, replacing a hardware wallet!</span>
-            </div>
-
-            <div style={{ background: 'var(--bg)', padding: '16px', borderRadius: '8px', border: '1px solid var(--border)', borderLeft: '4px solid var(--purple)' }}>
-              <strong>6. Web3 Escrow (Fiverr / Upwork Alternative) ⭐</strong><br/>
-              <span style={{ fontSize: '14px', color: 'var(--muted)' }}>
-                Stop paying 30% in middleman fees (e.g. 20% to the seller + 10% to the buyer). A Client and a Freelancer create a Share with a Threshold of 2. The Client deposits USDT. When the work is delivered, both validate, releasing the funds instantly. <strong>Total cost? 1% max.</strong>
-              </span>
+              <h4 style={{ margin: '0 0 12px 0', fontSize: '16px', color: '#E2E8F0' }}>💰 Distribute gains (Proportional)</h4>
+              <ul style={{ fontSize: '14px', color: 'var(--muted)', margin: 0, paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <li><strong style={{ color: 'var(--text)' }}>Dispute-free Revenue Sharing:</strong> Native proportional distribution for one-off revenues among creators.</li>
+                <li><strong style={{ color: 'var(--text)' }}>Hackathon Prize Pool:</strong> Distribute winnings automatically between team members.</li>
+                <li><strong style={{ color: 'var(--text)' }}>Trading Pool:</strong> Distribute hedge fund trading profits.</li>
+              </ul>
             </div>
           </div>
 
