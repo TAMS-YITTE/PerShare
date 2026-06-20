@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useAccount } from 'wagmi';
+import { useAccount, useDisconnect } from 'wagmi';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { ShareCard } from '../../components/ShareCard';
 import { CreateShareModal } from '../../components/CreateShareModal';
@@ -43,6 +43,7 @@ function ShareListItem({ id, userAddress }: { id: bigint, userAddress: string })
 
 export default function Dashboard() {
   const { address, isConnected } = useAccount();
+  const { disconnect } = useDisconnect();
   const [showCreate, setShowCreate] = useState(false);
   const [showGuide, setShowGuide] = useState(false);
   const [showComparison, setShowComparison] = useState(false);
@@ -66,7 +67,24 @@ export default function Dashboard() {
         <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '24px' }}>
           Per<span style={{ color: 'var(--purple)' }}>Share</span> Dashboard
         </h1>
-        <ConnectButton />
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+          <ConnectButton />
+          <button 
+            onClick={() => disconnect()}
+            style={{
+              background: 'transparent',
+              border: '1px solid var(--red)',
+              color: 'var(--red)',
+              padding: '8px 16px',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              fontWeight: 'bold',
+              height: '40px'
+            }}
+          >
+            Déconnexion
+          </button>
+        </div>
       </header>
 
       {count > 0 && address && <TotalContributionsBadge shareIds={shareIds} userAddress={address as string} />}
