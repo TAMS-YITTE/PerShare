@@ -144,6 +144,12 @@ contract PerShare is ReentrancyGuard, Pausable, Ownable {
         address indexed token
     );
 
+    event DustSwept(
+        uint256 indexed id,
+        address indexed creator,
+        uint256 amount
+    );
+
     event PlatformTokenSet(address indexed token);
     event FeeUpdated(uint256 newFeeBPS);
     event FeeRecipientUpdated(address indexed newRecipient);
@@ -437,6 +443,35 @@ contract PerShare is ReentrancyGuard, Pausable, Ownable {
     }
 
     // ─────────────────────────────────────────────────────────────────────────
+    // FUNCTION 6b - Sweep Dust (Phase 2)
+    //
+    // Allows the creator to sweep any leftover tokens (dust) resulting from
+    // division rounding in claimDistribution. Dust is defined as the remainder
+    // of totalTokensReceived after all theoretical claims are subtracted.
+    // ─────────────────────────────────────────────────────────────────────────
+
+    function sweepDust(uint256 id) external whenNotPaused nonReentrant {
+        Share storage s = shares[id];
+        require(msg.sender == s.creator, "PerShare: not the creator");
+        require(s.tokensDistributed, "PerShare: distribution not finalized");
+
+        uint256 totalTheoreticalClaims = 0;
+        uint256 length = s.members.length;
+        for (uint256 i = 0; i < length; i++) {
+            totalTheoreticalClaims += (s.totalTokensReceived * contributions[id][s.members[i]]) / s.totalReceived;
+        }
+
+        require(s.totalTokensReceived > totalTheoreticalClaims, "PerShare: no dust");
+        uint256 dust = s.totalTokensReceived - totalTheoreticalClaims;
+        
+        // Prevent sweeping the same dust twice if late tranches arrive
+        s.totalTokensReceived -= dust;
+
+        IERC20(s.expectedToken).safeTransfer(msg.sender, dust);
+        emit DustSwept(id, msg.sender, dust);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
     // FUNCTION 7 - Late token tranches
     //
     // Late tranches are handled by calling depositTokens(id, amount) again — even
@@ -507,6 +542,7 @@ contract PerShare is ReentrancyGuard, Pausable, Ownable {
         require(s.sent, "PerShare: phase 1 not finished");
         require(!s.tokensDistributed, "PerShare: already distributed");
         require(tokenAddress != address(0), "PerShare: invalid token");
+        require(tokenAddress.code.length > 0, "PerShare: not a contract");
         require(tokenAddress != s.stablecoin, "PerShare: cannot be stablecoin");
 
         // 🔒 SECURITY: Prevent using a token already claimed by another active share
