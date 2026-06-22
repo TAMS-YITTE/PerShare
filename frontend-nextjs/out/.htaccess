@@ -1,0 +1,15 @@
+RewriteEngine On
+
+# Si l'utilisateur demande une URL sans slash final et que ce n'est pas un fichier
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_URI} !(.*)/$
+RewriteRule ^(.*)$ /$1/ [L,R=301]
+
+# Rediriger vers le fichier index.html s'il existe dans le dossier demandé
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI}index.html -f
+RewriteRule ^(.*)$ /$1index.html [L]
+
+# Servir la page 404.html par defaut si le fichier n'existe vraiment pas
+ErrorDocument 404 /404.html

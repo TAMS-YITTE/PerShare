@@ -9,14 +9,24 @@
     "test": "jest"
   },
   "dependencies": {
-    "@rainbow-me/rainbowkit": "2.1.0",
-    "@tanstack/react-query": "5.40.0",
+    "@base-org/account": "^2.5.6",
+    "@coinbase/wallet-sdk": "^4.3.7",
+    "@metamask/connect-evm": "^2.1.0",
+    "@reown/appkit": "^1.8.21",
+    "@reown/appkit-adapter-wagmi": "^1.8.21",
+    "@safe-global/safe-apps-provider": "^0.18.6",
+    "@safe-global/safe-apps-sdk": "^9.1.0",
+    "@tanstack/react-query": "^5.101.0",
+    "@wagmi/core": "^3.5.1",
+    "@walletconnect/ethereum-provider": "^2.23.9",
+    "accounts": "^0.14.11",
     "ethers": "6.13.0",
     "next": "14.2.0",
+    "porto": "^0.2.37",
     "react": "18.3.0",
     "react-dom": "18.3.0",
-    "viem": "2.17.0",
-    "wagmi": "2.10.0"
+    "viem": "^2.53.1",
+    "wagmi": "^3.6.17"
   },
   "devDependencies": {
     "@testing-library/dom": "^10.4.1",
