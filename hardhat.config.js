@@ -13,6 +13,9 @@ module.exports = {
     }
   },
   networks: {
+    hardhat: {
+      allowUnlimitedContractSize: true
+    },
     // BNB Testnet
     bscTestnet: {
       url: "https://data-seed-prebsc-1-s1.binance.org:8545/",
