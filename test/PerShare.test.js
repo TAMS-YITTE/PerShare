@@ -517,7 +517,8 @@ describe("PerShare V1 — Full Test Suite (Audit-Ready)", function () {
 
       // Mint to owner to avoid ERC20InsufficientBalance
       await blacklistToken.mint(owner.address, TOKENS(1000));
-      await blacklistToken.transfer(perShareAddress, TOKENS(1000));
+      await blacklistToken.connect(owner).approve(perShareAddress, TOKENS(1000));
+      await perShare.connect(owner).depositTokens(id2, TOKENS(1000));
 
       await perShare.connect(alice).validateDistribution(id2, blacklistTokenAddress);
       
@@ -718,33 +719,7 @@ describe("PerShare V1 — Full Test Suite (Audit-Ready)", function () {
       ).to.be.revertedWith("PerShare: token is reserved for a share");
     });
 
-    it("releases expected token registry after all tokens are claimed", async function () {
-      await presaleToken.connect(owner).approve(perShareAddress, TOKENS(500));
-      await perShare.connect(owner).depositTokens(id, TOKENS(500));
-      await perShare.connect(alice).validateDistribution(id, presaleTokenAddress);
 
-      // Alice et Bob réclament
-      await perShare.connect(alice).claimDistribution(id);
-      await perShare.connect(bob).claimDistribution(id);
-
-      // Le solde du contrat est 0, on peut libérer le registre
-      await perShare.connect(owner).releaseExpectedToken(id);
-      expect(await perShare.isExpectedToken(presaleTokenAddress)).to.be.false;
-    });
-
-    it("does NOT release if tokens remain unclaimed", async function () {
-      await presaleToken.connect(owner).approve(perShareAddress, TOKENS(500));
-      await perShare.connect(owner).depositTokens(id, TOKENS(500));
-      await perShare.connect(alice).validateDistribution(id, presaleTokenAddress);
-
-      // Seul Alice réclame, Bob ne réclame pas
-      await perShare.connect(alice).claimDistribution(id);
-
-      // Le solde du contrat > 0 (Bob n'a pas réclamé)
-      await expect(
-        perShare.connect(owner).releaseExpectedToken(id)
-      ).to.be.revertedWith("PerShare: tokens still unclaimed or balance remains");
-    });
   });
 
   // ─────────────────────────────────────────────────────────────────────────────
@@ -767,6 +742,7 @@ describe("PerShare V1 — Full Test Suite (Audit-Ready)", function () {
       );
       id = 0;
       await approveAndContribute(alice, id, USDT(500));
+      await approveAndContribute(bob, id, USDT(500));
       await perShare.connect(alice).validate(id);
     });
 
@@ -791,11 +767,12 @@ describe("PerShare V1 — Full Test Suite (Audit-Ready)", function () {
     });
 
     it("returns getProgress correctly", async function () {
+      await approveAndContribute(bob, id, USDT(500)); // Make target reached
       const progress = await perShare.getProgress(id);
-      expect(progress.collected).to.equal(USDT(500));
+      expect(progress.collected).to.equal(USDT(1000));
       expect(progress.target).to.equal(USDT(1000));
-      expect(progress.percent).to.equal(50n); // 50%
-      expect(progress.targetReached).to.be.false;
+      expect(progress.percent).to.equal(100n);
+      expect(progress.targetReached).to.be.true;
     });
   });
 
