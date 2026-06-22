@@ -453,7 +453,8 @@ describe("PerShare V1 — Full Test Suite (Audit-Ready)", function () {
     });
 
     it("validates distribution and snapshots totalTokensReceived", async function () {
-      await presaleToken.sendToShare(perShareAddress, TOKENS(1000));
+      await presaleToken.connect(owner).approve(perShareAddress, TOKENS(1000));
+      await perShare.connect(owner).depositTokens(id, TOKENS(1000));
       await perShare.connect(alice).validateDistribution(id, presaleTokenAddress);
       await perShare.connect(bob).validateDistribution(id, presaleTokenAddress);
 
@@ -465,7 +466,8 @@ describe("PerShare V1 — Full Test Suite (Audit-Ready)", function () {
     });
 
     it("allows each member to claim their share individually (pull pattern)", async function () {
-      await presaleToken.sendToShare(perShareAddress, TOKENS(1000));
+      await presaleToken.connect(owner).approve(perShareAddress, TOKENS(1000));
+      await perShare.connect(owner).depositTokens(id, TOKENS(1000));
       await perShare.connect(alice).validateDistribution(id, presaleTokenAddress);
       await perShare.connect(bob).validateDistribution(id, presaleTokenAddress);
 
@@ -481,7 +483,8 @@ describe("PerShare V1 — Full Test Suite (Audit-Ready)", function () {
     });
 
     it("prevents double claiming", async function () {
-      await presaleToken.sendToShare(perShareAddress, TOKENS(1000));
+      await presaleToken.connect(owner).approve(perShareAddress, TOKENS(1000));
+      await perShare.connect(owner).depositTokens(id, TOKENS(1000));
       await perShare.connect(alice).validateDistribution(id, presaleTokenAddress);
       await perShare.connect(bob).validateDistribution(id, presaleTokenAddress);
 
@@ -557,7 +560,9 @@ describe("PerShare V1 — Full Test Suite (Audit-Ready)", function () {
       await perShare.connect(alice).validate(id2);
       await perShare.connect(bob).validate(id2);
       await perShare.connect(owner).setExpectedToken(id2, presaleToken2Address);
-      await presaleToken2.sendToShare(perShareAddress, TOKENS(1000));
+      await presaleToken2.connect(owner).transfer(alice.address, TOKENS(1000));
+      await presaleToken2.connect(alice).approve(perShareAddress, TOKENS(1000));
+      await perShare.connect(alice).depositTokens(id2, TOKENS(1000));
 
       await perShare.connect(alice).validateDistribution(id2, presaleToken2Address);
       await perShare.connect(bob).validateDistribution(id2, presaleToken2Address);
@@ -577,67 +582,6 @@ describe("PerShare V1 — Full Test Suite (Audit-Ready)", function () {
 
   // ─────────────────────────────────────────────────────────────────────────────
   // 7. PHASE 2 — LATE TRANCHE (registerNewTranche)
-  // ─────────────────────────────────────────────────────────────────────────────
-
-  describe("7. Phase 2 — Late tranche registration", function () {
-    let deadline, id;
-
-    beforeEach(async function () {
-      deadline = (await time.latest()) + 86400;
-      await perShare.createShare(
-        "Late Tranche Test",
-        [alice.address, bob.address],
-        usdtAddress,
-        stranger.address,
-        USDT(1000),
-        deadline,
-        1
-      );
-      id = 0;
-      await approveAndContribute(alice, id, USDT(500));
-      await approveAndContribute(bob, id, USDT(500));
-      await perShare.connect(alice).validate(id);
-      await perShare.connect(owner).setExpectedToken(id, presaleTokenAddress);
-    });
-
-    it("allows creator to register a new tranche after distribution", async function () {
-      // Première tranche : 500 tokens
-      await presaleToken.sendToShare(perShareAddress, TOKENS(500));
-      await perShare.connect(alice).validateDistribution(id, presaleTokenAddress);
-      // Threshold = 1, donc distribué directement
-
-      // Alice et Bob réclament
-      await perShare.connect(alice).claimDistribution(id);
-      await perShare.connect(bob).claimDistribution(id);
-      // 250 chacun
-
-      // Deuxième tranche : 300 tokens (arrivée tardive)
-      await presaleToken.sendToShare(perShareAddress, TOKENS(300));
-      await perShare.connect(owner).registerNewTranche(id);
-
-      // Alice et Bob réclament le surplus
-      const aliceBefore = await presaleToken.balanceOf(alice.address);
-      const bobBefore = await presaleToken.balanceOf(bob.address);
-      await perShare.connect(alice).claimDistribution(id);
-      await perShare.connect(bob).claimDistribution(id);
-
-      // 50% de 300 = 150 chacun
-      expect(await presaleToken.balanceOf(alice.address) - aliceBefore).to.equal(TOKENS(150));
-      expect(await presaleToken.balanceOf(bob.address) - bobBefore).to.equal(TOKENS(150));
-    });
-
-    it("only creator or owner can register new tranche", async function () {
-      await presaleToken.sendToShare(perShareAddress, TOKENS(500));
-      await perShare.connect(alice).validateDistribution(id, presaleTokenAddress);
-
-      await expect(
-        perShare.connect(alice).registerNewTranche(id)
-      ).to.be.revertedWith("PerShare: not authorized"); // Alice n'est pas creator
-    });
-  });
-
-  // ─────────────────────────────────────────────────────────────────────────────
-  // 8. REFUND — PULL PATTERN (markRefunded + claimRefund)
   // ─────────────────────────────────────────────────────────────────────────────
 
   describe("8. Refund — Pull Pattern", function () {
@@ -764,7 +708,8 @@ describe("PerShare V1 — Full Test Suite (Audit-Ready)", function () {
     });
 
     it("does NOT sweep expected tokens (reserved)", async function () {
-      await presaleToken.sendToShare(perShareAddress, TOKENS(500));
+      await presaleToken.connect(owner).approve(perShareAddress, TOKENS(500));
+      await perShare.connect(owner).depositTokens(id, TOKENS(500));
       await perShare.connect(alice).validateDistribution(id, presaleTokenAddress);
 
       // Le token est maintenant isExpectedToken = true
@@ -774,7 +719,8 @@ describe("PerShare V1 — Full Test Suite (Audit-Ready)", function () {
     });
 
     it("releases expected token registry after all tokens are claimed", async function () {
-      await presaleToken.sendToShare(perShareAddress, TOKENS(500));
+      await presaleToken.connect(owner).approve(perShareAddress, TOKENS(500));
+      await perShare.connect(owner).depositTokens(id, TOKENS(500));
       await perShare.connect(alice).validateDistribution(id, presaleTokenAddress);
 
       // Alice et Bob réclament
@@ -787,7 +733,8 @@ describe("PerShare V1 — Full Test Suite (Audit-Ready)", function () {
     });
 
     it("does NOT release if tokens remain unclaimed", async function () {
-      await presaleToken.sendToShare(perShareAddress, TOKENS(500));
+      await presaleToken.connect(owner).approve(perShareAddress, TOKENS(500));
+      await perShare.connect(owner).depositTokens(id, TOKENS(500));
       await perShare.connect(alice).validateDistribution(id, presaleTokenAddress);
 
       // Seul Alice réclame, Bob ne réclame pas
@@ -830,7 +777,8 @@ describe("PerShare V1 — Full Test Suite (Audit-Ready)", function () {
 
     it("returns hasValidatedDist correctly", async function () {
       await perShare.connect(owner).setExpectedToken(id, presaleTokenAddress);
-      await presaleToken.sendToShare(perShareAddress, TOKENS(500));
+      await presaleToken.connect(owner).approve(perShareAddress, TOKENS(500));
+      await perShare.connect(owner).depositTokens(id, TOKENS(500));
       await perShare.connect(alice).validateDistribution(id, presaleTokenAddress);
 
       expect(await perShare.hasValidatedDist(id, alice.address)).to.be.true;
@@ -1046,7 +994,8 @@ describe("PerShare V1 — Full Test Suite (Audit-Ready)", function () {
       await perShare.connect(owner).setExpectedToken(id, presaleTokenAddress);
 
       // 5. Envoyer les tokens du presale
-      await presaleToken.sendToShare(perShareAddress, TOKENS(1000));
+      await presaleToken.connect(owner).approve(perShareAddress, TOKENS(1000));
+      await perShare.connect(owner).depositTokens(id, TOKENS(1000));
 
       // 6. Validation Phase 2
       await perShare.connect(alice).validateDistribution(id, presaleTokenAddress);

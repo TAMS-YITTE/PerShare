@@ -10,55 +10,44 @@ pragma solidity ^0.8.20;
 // PHASE 1 - USDT Collection + collective validation + sending to destination
 // PHASE 2 - BEP-20 presale tokens reception + validation + redistribution
 //
-// Intentionally excluded:
-//   - Cancel / Pause (V2)
-//   - Internal USDT distribution to members (V2)
-//   - Vesting (V2)
-//   - DeFi Integration (permanently excluded)
-//   - Non-BEP-20 Tokens: Solana, SUI, TON (out of scope)
-//   - ERC-721 NFT (V1.5 if market demands)
-//
 // "SHARE - every member gets their share. Automatically."
 // ─────────────────────────────────────────────────────────────────────────────
 
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/utils/Pausable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-
-interface IERC20 {
-    function transfer(address to, uint256 amount) external returns (bool);
-    function transferFrom(address from, address to, uint256 amount) external returns (bool);
-    function balanceOf(address account) external view returns (uint256);
-}
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 
 contract PerShare is ReentrancyGuard, Pausable, Ownable {
+    using SafeERC20 for IERC20;
 
-    // ─── Constantes ───────────────────────────────────────────────────────────
+    // ─── Constants ────────────────────────────────────────────────────────────
 
     uint256 public constant MAX_MEMBERS    = 50;
     uint256 public feeBPS = 100; // 100 BPS = 1%
     address public feeRecipient;
 
-    // Platform Token (dormant pour V1)
+    // Platform Token (dormant for V1)
     address public platformToken;
     uint256 public discountThreshold = 10_000 ether;
 
-    // ─── Main structure - a SHARE ─────────────────────────────────────
+    // ─── Main structure - a SHARE ────────────────────────────────────────────
 
     struct Share {
-        string    name;              // "Voyage Lisbonne" / "Presale XYZ"
-        address   creator;           // SHARE creator wallet
-        address[] members;           // List of members (2 a 50)
-        address   stablecoin;        // USDT or USDC (BEP-20 address)
-        address   destination;       // External wallet - presale or third party
-        uint256   targetAmount;      // Stablecoin target
-        uint256   deadline;          // Unix Timestamp - end of collection
-        uint256   threshold;         // Number of validations to trigger sending
-        uint256   totalReceived;     // Total stablecoin collected
-        bool      sent;              // Phase 1 finished
-        bool      refunded;          // SHARE refunded
-        bool      tokensDistributed; // Phase 2 finished
-        address   expectedToken;     // Expected BEP-20 token for Phase 2
+        string    name;
+        address   creator;
+        address[] members;
+        address   stablecoin;
+        address   destination;
+        uint256   targetAmount;
+        uint256   deadline;
+        uint256   threshold;
+        uint256   totalReceived;
+        uint256   totalTokensReceived; // Snapshot of tokens available for this share (Phase 2)
+        bool      sent;
+        bool      refunded;
+        bool      tokensDistributed;
+        address   expectedToken;
     }
 
     // ─── Storage ──────────────────────────────────────────────────────────────
@@ -71,10 +60,17 @@ contract PerShare is ReentrancyGuard, Pausable, Ownable {
     mapping(uint256 => mapping(address => bool))    public isMember;
     mapping(uint256 => mapping(address => bool))    public validations;
     mapping(uint256 => uint256)                     public validationCount;
+    mapping(uint256 => mapping(address => bool))    public hasClaimedRefund;
 
     // Phase 2
-    mapping(uint256 => mapping(address => bool)) public distValidations;
-    mapping(uint256 => uint256)                  public distValidationCount;
+    mapping(uint256 => mapping(address => bool))   public distValidations;
+    mapping(uint256 => uint256)                    public distValidationCount;
+    mapping(uint256 => mapping(address => uint256)) public tokensClaimed;
+    mapping(uint256 => uint256)                    public globalTokensClaimed;
+
+    // Global registry to prevent token reuse/cross-share attacks
+    mapping(address => bool) public isExpectedToken;
+    mapping(address => bool) public isStablecoin;
 
     // ─── Events ───────────────────────────────────────────────────────────────
 
@@ -109,9 +105,12 @@ contract PerShare is ReentrancyGuard, Pausable, Ownable {
         uint256 commission
     );
 
-    event FundsRefunded(
+    event FundsRefunded(uint256 indexed id);
+
+    event RefundClaimed(
         uint256 indexed id,
-        uint256 totalRefunded
+        address indexed member,
+        uint256 amount
     );
 
     event DistValidationAdded(
@@ -125,6 +124,19 @@ contract PerShare is ReentrancyGuard, Pausable, Ownable {
         uint256 indexed id,
         address indexed token,
         uint256 totalAmount
+    );
+
+    event DistributionClaimed(
+        uint256 indexed id,
+        address indexed member,
+        uint256 amount
+    );
+
+    event TokensDeposited(
+        uint256 indexed id,
+        address indexed from,
+        uint256 amount,
+        uint256 totalTokensReceived
     );
 
     event ExpectedTokenSet(
@@ -150,12 +162,19 @@ contract PerShare is ReentrancyGuard, Pausable, Ownable {
         _;
     }
 
+    modifier onlyShareCreator(uint256 id) {
+        require(msg.sender == shares[id].creator, "PerShare: not the creator");
+        _;
+    }
+
     // ─── Constructor ──────────────────────────────────────────────────────────
 
     constructor(address _feeRecipient) Ownable(msg.sender) {
         require(_feeRecipient != address(0), "PerShare: invalid feeRecipient");
         feeRecipient = _feeRecipient;
     }
+
+    // ─── Admin functions ─────────────────────────────────────────────────────
 
     function setFeeBPS(uint256 _feeBPS) external onlyOwner {
         require(_feeBPS <= 200, "PerShare: fee max 200 BPS");
@@ -231,11 +250,11 @@ contract PerShare is ReentrancyGuard, Pausable, Ownable {
         s.targetAmount      = targetAmount;
         s.deadline          = deadline;
         s.threshold         = threshold;
-        s.totalReceived     = 0;
-        s.sent              = false;
-        s.refunded          = false;
-        s.tokensDistributed = false;
-        s.expectedToken     = address(0);
+
+        // Register stablecoin globally to prevent it from being swept
+        if (!isStablecoin[stablecoin]) {
+            isStablecoin[stablecoin] = true;
+        }
 
         shareCount++;
 
@@ -257,15 +276,17 @@ contract PerShare is ReentrancyGuard, Pausable, Ownable {
         require(block.timestamp <= s.deadline, "PerShare: deadline passed");
         require(amount > 0,                    "PerShare: amount required");
 
-        require(
-            IERC20(s.stablecoin).transferFrom(msg.sender, address(this), amount),
-            "PerShare: transfer failed"
-        );
+        // Measure actual received amount (protects against fee-on-transfer tokens)
+        uint256 balanceBefore = IERC20(s.stablecoin).balanceOf(address(this));
+        IERC20(s.stablecoin).safeTransferFrom(msg.sender, address(this), amount);
+        uint256 received = IERC20(s.stablecoin).balanceOf(address(this)) - balanceBefore;
 
-        contributions[id][msg.sender] += amount;
-        s.totalReceived               += amount;
+        require(received > 0, "PerShare: zero tokens received");
 
-        emit ContributionReceived(id, msg.sender, amount, s.totalReceived);
+        contributions[id][msg.sender] += received;
+        s.totalReceived               += received;
+
+        emit ContributionReceived(id, msg.sender, received, s.totalReceived);
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -276,6 +297,8 @@ contract PerShare is ReentrancyGuard, Pausable, Ownable {
 
         Share storage s = shares[id];
 
+        // 🔒 FIX: Sending only allowed before deadline (prevents post-deadline race)
+        require(block.timestamp <= s.deadline, "PerShare: deadline passed");
         require(
             s.totalReceived >= s.targetAmount,
             "PerShare: target not reached"
@@ -302,6 +325,7 @@ contract PerShare is ReentrancyGuard, Pausable, Ownable {
     function _sendFunds(uint256 id) internal {
 
         Share storage s = shares[id];
+        require(!s.sent, "PerShare: already sent");
         s.sent = true;
 
         uint256 total      = s.totalReceived;
@@ -309,19 +333,46 @@ contract PerShare is ReentrancyGuard, Pausable, Ownable {
         uint256 commission = (total * effectiveFee) / 10000;
         uint256 toSend     = total - commission;
 
-        require(
-            IERC20(s.stablecoin).transfer(s.destination, toSend),
-            "PerShare: destination transfer failed"
-        );
+        IERC20(s.stablecoin).safeTransfer(s.destination, toSend);
 
         if (commission > 0) {
-            require(
-                IERC20(s.stablecoin).transfer(feeRecipient, commission),
-                "PerShare: commission transfer failed"
-            );
+            IERC20(s.stablecoin).safeTransfer(feeRecipient, commission);
         }
 
         emit FundsSent(id, s.destination, toSend, commission);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // FUNCTION 4b - Deposit presale tokens for a share (explicit accounting)
+    //
+    // 🔒 HERMETIC CORE: tokens are credited to a share ONLY through this function,
+    // via an accounted transferFrom. The contract therefore knows EXACTLY how many
+    // tokens belong to each share and never has to infer it from its global balance.
+    // The depositor (the share creator who claimed/received from the presale, or the
+    // presale itself if it can approve) must approve this contract first, then call
+    // depositTokens. Raw transfers to the contract are NOT credited (use sweepLostTokens).
+    //
+    // Callable for late tranches too (even after distribution): it simply increases
+    // totalTokensReceived, and members can then claim the additional pro-rata amount.
+    // ─────────────────────────────────────────────────────────────────────────
+
+    function depositTokens(uint256 id, uint256 amount) external whenNotPaused nonReentrant {
+        Share storage s = shares[id];
+
+        require(s.sent,                        "PerShare: phase 1 not finished");
+        require(s.expectedToken != address(0), "PerShare: expected token not set");
+        require(amount > 0,                    "PerShare: amount required");
+
+        // Measure actual received (protects against fee-on-transfer tokens)
+        uint256 balanceBefore = IERC20(s.expectedToken).balanceOf(address(this));
+        IERC20(s.expectedToken).safeTransferFrom(msg.sender, address(this), amount);
+        uint256 received = IERC20(s.expectedToken).balanceOf(address(this)) - balanceBefore;
+
+        require(received > 0, "PerShare: zero tokens received");
+
+        s.totalTokensReceived += received;
+
+        emit TokensDeposited(id, msg.sender, received, s.totalTokensReceived);
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -342,71 +393,62 @@ contract PerShare is ReentrancyGuard, Pausable, Ownable {
         require(tokenAddress == s.expectedToken,  "PerShare: wrong token");
         require(!distValidations[id][msg.sender], "PerShare: already validated dist");
 
-        uint256 tokenBalance = IERC20(tokenAddress).balanceOf(address(this));
-        require(tokenBalance > 0, "PerShare: no tokens received");
-
         distValidations[id][msg.sender] = true;
         distValidationCount[id]++;
 
         emit DistValidationAdded(id, msg.sender, distValidationCount[id], s.threshold);
 
         if (distValidationCount[id] >= s.threshold) {
-            _distributeTokens(id, tokenAddress, tokenBalance);
+            // 🔒 HERMETIC FIX: distribute ONLY what was explicitly deposited for THIS share
+            // via depositTokens(). NEVER read balanceOf(address(this)) — that is the global
+            // balance and would let one share capture another share's tokens.
+            require(s.totalTokensReceived > 0, "PerShare: no tokens deposited for this share");
+
+            s.tokensDistributed = true;
+
+            emit TokensDistributed(id, tokenAddress, s.totalTokensReceived);
         }
     }
 
     // ─────────────────────────────────────────────────────────────────────────
-    // FUNCTION 6 - Token redistribution (Internal Phase 2)
+    // FUNCTION 6 - Claim tokens (Phase 2 - Pull Pattern)
     // ─────────────────────────────────────────────────────────────────────────
 
-    function _distributeTokens(
-        uint256 id,
-        address tokenAddress,
-        uint256 totalTokens
-    ) internal {
-
+    function claimDistribution(uint256 id) external whenNotPaused nonReentrant {
         Share storage s = shares[id];
-        s.tokensDistributed = true;
+        require(s.tokensDistributed, "PerShare: distribution not finalized");
 
-        uint256 totalContrib = s.totalReceived;
-        uint256 distributed = 0;
-        address firstContributor = address(0);
+        uint256 contribution = contributions[id][msg.sender];
+        require(contribution > 0, "PerShare: no contribution");
 
-        for (uint256 i = 0; i < s.members.length; i++) {
-            address member       = s.members[i];
-            uint256 contribution = contributions[id][member];
+        // Total owed based on final snapshot
+        uint256 totalOwed = (s.totalTokensReceived * contribution) / s.totalReceived;
+        uint256 alreadyClaimed = tokensClaimed[id][msg.sender];
+        uint256 toClaim = totalOwed - alreadyClaimed;
 
-            if (contribution > 0) {
-                if (firstContributor == address(0)) {
-                    firstContributor = member;
-                }
-                uint256 memberTokens = (totalTokens * contribution) / totalContrib;
-                if (memberTokens > 0) {
-                    distributed += memberTokens;
-                    require(
-                        IERC20(tokenAddress).transfer(member, memberTokens),
-                        "PerShare: redistribution failed"
-                    );
-                }
-            }
-        }
+        require(toClaim > 0, "PerShare: nothing to claim");
 
-        uint256 dust = totalTokens - distributed;
-        if (dust > 0 && firstContributor != address(0)) {
-            require(
-                IERC20(tokenAddress).transfer(firstContributor, dust),
-                "PerShare: dust redistribution failed"
-            );
-        }
+        tokensClaimed[id][msg.sender] += toClaim;
+        globalTokensClaimed[id] += toClaim;
 
-        emit TokensDistributed(id, tokenAddress, totalTokens);
+        IERC20(s.expectedToken).safeTransfer(msg.sender, toClaim);
+
+        emit DistributionClaimed(id, msg.sender, toClaim);
     }
 
     // ─────────────────────────────────────────────────────────────────────────
-    // FUNCTION 7 - Refund if deadline expired
+    // FUNCTION 7 - Late token tranches
+    //
+    // Late tranches are handled by calling depositTokens(id, amount) again — even
+    // after distribution. It increases totalTokensReceived and members can then
+    // claim the additional pro-rata amount via claimDistribution. No balanceOf read.
     // ─────────────────────────────────────────────────────────────────────────
 
-    function refund(uint256 id) external onlyMember(id) notClosed(id) whenNotPaused nonReentrant {
+    // ─────────────────────────────────────────────────────────────────────────
+    // FUNCTION 8 - Mark refund state (Phase 1 - Pull Pattern)
+    // ─────────────────────────────────────────────────────────────────────────
+
+    function markRefunded(uint256 id) external onlyMember(id) notClosed(id) whenNotPaused nonReentrant {
 
         Share storage s = shares[id];
 
@@ -415,27 +457,40 @@ contract PerShare is ReentrancyGuard, Pausable, Ownable {
 
         s.refunded = true;
 
-        uint256 totalRefunded = 0;
-
-        for (uint256 i = 0; i < s.members.length; i++) {
-            address member = s.members[i];
-            uint256 amount = contributions[id][member];
-
-            if (amount > 0) {
-                contributions[id][member] = 0;
-                require(
-                    IERC20(s.stablecoin).transfer(member, amount),
-                    "PerShare: refund failed"
-                );
-                totalRefunded += amount;
-            }
-        }
-
-        emit FundsRefunded(id, totalRefunded);
+        emit FundsRefunded(id);
     }
 
     // ─────────────────────────────────────────────────────────────────────────
-    // ADMIN AND CONFIGURATION FUNCTIONS
+    // FUNCTION 9 - Claim refund (Phase 1 - Pull Pattern)
+    // ─────────────────────────────────────────────────────────────────────────
+
+    function claimRefund(uint256 id) external whenNotPaused nonReentrant {
+        Share storage s = shares[id];
+        require(s.refunded, "PerShare: not in refund state");
+        require(!hasClaimedRefund[id][msg.sender], "PerShare: already claimed");
+
+        uint256 amount = contributions[id][msg.sender];
+        require(amount > 0, "PerShare: no contribution");
+
+        hasClaimedRefund[id][msg.sender] = true;
+
+        IERC20(s.stablecoin).safeTransfer(msg.sender, amount);
+
+        emit RefundClaimed(id, msg.sender, amount);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // NOTE: expectedToken registry is PERMANENT by design.
+    //
+    // 🔒 Once a token is assigned to a share via setExpectedToken, isExpectedToken
+    // stays true forever. A token can therefore be the subject of only ONE share in
+    // this contract's lifetime. This is a deliberate hermetic guarantee: it makes it
+    // impossible for a later share to ever capture tokens — including late tranches —
+    // that belong to the original share. There is intentionally no release function.
+    // ─────────────────────────────────────────────────────────────────────────
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // ADMIN FUNCTIONS
     // ─────────────────────────────────────────────────────────────────────────
 
     function pause() external onlyOwner {
@@ -452,8 +507,31 @@ contract PerShare is ReentrancyGuard, Pausable, Ownable {
         require(s.sent, "PerShare: phase 1 not finished");
         require(!s.tokensDistributed, "PerShare: already distributed");
         require(tokenAddress != address(0), "PerShare: invalid token");
+        require(tokenAddress != s.stablecoin, "PerShare: cannot be stablecoin");
+
+        // 🔒 SECURITY: Prevent using a token already claimed by another active share
+        require(!isExpectedToken[tokenAddress], "PerShare: token already assigned to another share");
+
         s.expectedToken = tokenAddress;
+        isExpectedToken[tokenAddress] = true;
+
         emit ExpectedTokenSet(id, tokenAddress);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // RECOVERY FUNCTION - Sweep tokens sent by mistake (owner only)
+    // ─────────────────────────────────────────────────────────────────────────
+
+    function sweepLostTokens(address token, address to) external onlyOwner {
+        require(token != address(0), "PerShare: invalid token");
+        require(to != address(0), "PerShare: invalid recipient");
+        require(!isExpectedToken[token], "PerShare: token is reserved for a share");
+        require(!isStablecoin[token], "PerShare: token is a stablecoin");
+
+        uint256 balance = IERC20(token).balanceOf(address(this));
+        require(balance > 0, "PerShare: no tokens to sweep");
+
+        IERC20(token).safeTransfer(to, balance);
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -533,9 +611,5 @@ contract PerShare is ReentrancyGuard, Pausable, Ownable {
 
     function getTokenBalance(address tokenAddress) external view returns (uint256) {
         return IERC20(tokenAddress).balanceOf(address(this));
-    }
-
-    function getMembers(uint256 id) external view returns (address[] memory) {
-        return shares[id].members;
     }
 }
