@@ -9,13 +9,16 @@ export function ShareCard({ id, share, userAddress }: { id: bigint; share: any; 
   const { data: myContribution } = useContribution(id, (userAddress as `0x${string}`) || '0x0000000000000000000000000000000000000000');
 
   return (
-    <Link href={`/share?id=${id.toString()}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
+    <Link href={`/share?id=${id.toString()}`} style={{ textDecoration: 'none', color: 'inherit', display: 'block', height: '100%' }}>
       <div style={{
         background: 'var(--surface)',
         border: '1px solid var(--border)',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        border: '1px solid var(--border)',
       borderRadius: '12px',
       padding: '24px',
-      marginBottom: '16px',
       transition: 'all 0.2s ease',
       cursor: 'pointer'
     }}>
@@ -48,7 +51,7 @@ export function ShareCard({ id, share, userAddress }: { id: bigint; share: any; 
         </div>
       </div>
 
-      <div style={{ fontSize: '13px', color: 'var(--muted)', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginTop: '16px', paddingTop: '16px', borderTop: '1px solid var(--surface2)' }}>
+      <div style={{ fontSize: '13px', color: 'var(--muted)', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginTop: 'auto', paddingTop: '16px', borderTop: '1px solid var(--surface2)' }}>
         <div>
           <span>Members:</span> <span style={{ color: 'var(--text)' }}>{share.members.length}</span>
         </div>

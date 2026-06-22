@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useAccount } from 'wagmi';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { Suspense, useEffect } from 'react';
@@ -87,7 +86,8 @@ function SharePageContent() {
             Project <span style={{ color: 'var(--purple)' }}>#{idParam}</span>
           </h1>
         </div>
-        <ConnectButton />
+        {/* @ts-ignore */}
+        <appkit-button />
       </header>
 
       {/* En-tête (Statut & Jauge) */}

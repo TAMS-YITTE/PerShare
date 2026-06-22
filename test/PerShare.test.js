@@ -742,16 +742,20 @@ describe("PerShare V1 — Full Test Suite (Audit-Ready)", function () {
       );
       id = 0;
       await approveAndContribute(alice, id, USDT(500));
-      await approveAndContribute(bob, id, USDT(500));
-      await perShare.connect(alice).validate(id);
     });
 
     it("returns hasValidated correctly", async function () {
+      await approveAndContribute(bob, id, USDT(500));
+      await perShare.connect(alice).validate(id);
+      
       expect(await perShare.hasValidated(id, alice.address)).to.be.true;
       expect(await perShare.hasValidated(id, bob.address)).to.be.false;
     });
 
     it("returns hasValidatedDist correctly", async function () {
+      await approveAndContribute(bob, id, USDT(500));
+      await perShare.connect(alice).validate(id);
+      
       await perShare.connect(owner).setExpectedToken(id, presaleTokenAddress);
       await presaleToken.connect(owner).approve(perShareAddress, TOKENS(500));
       await perShare.connect(owner).depositTokens(id, TOKENS(500));
