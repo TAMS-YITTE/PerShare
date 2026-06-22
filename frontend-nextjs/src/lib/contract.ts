@@ -30,7 +30,23 @@ export const PERSHARE_ABI = [
     inputs: [{ name: "id", type: "uint256" }, { name: "tokenAddress", type: "address" }],
     outputs: []
   },
-  { name: "refund", type: "function", stateMutability: "nonpayable",
+  { name: "markRefunded", type: "function", stateMutability: "nonpayable",
+    inputs: [{ name: "id", type: "uint256" }],
+    outputs: []
+  },
+  { name: "claimRefund", type: "function", stateMutability: "nonpayable",
+    inputs: [{ name: "id", type: "uint256" }],
+    outputs: []
+  },
+  { name: "depositTokens", type: "function", stateMutability: "nonpayable",
+    inputs: [{ name: "id", type: "uint256" }, { name: "amount", type: "uint256" }],
+    outputs: []
+  },
+  { name: "claimDistribution", type: "function", stateMutability: "nonpayable",
+    inputs: [{ name: "id", type: "uint256" }],
+    outputs: []
+  },
+  { name: "sweepDust", type: "function", stateMutability: "nonpayable",
     inputs: [{ name: "id", type: "uint256" }],
     outputs: []
   },
@@ -104,9 +120,9 @@ export const ERC20_ABI = [
 
 export const ADDRESSES = {
   bscTestnet: {
-    perShare: "0xdeA0c7Ecbe2d6fCF732ebEbbE2c383A1FEe1E023" as `0x${string}`,
-    usdt:     "0x33DBE4D8D4BCc21DC0EB25F97234F91cD0a32D17" as `0x${string}`,
-    presaleToken: "0x53cd2Bc7F6ab3D6B1F28150d43393e8032928596" as `0x${string}`,
+    perShare: "0x4315b0696ECe5157a3640cd6DbD99C69c2B138a2" as `0x${string}`,
+    usdt:     "0x652C1cAEE755ec3b8b033D65e0EA4E5bf336DA3B" as `0x${string}`,
+    presaleToken: "0x6D0fDAdC0f21F3A0c534D506FE71253cF2ebC76d" as `0x${string}`,
   },
   bsc: {
     perShare: "" as `0x${string}`,
