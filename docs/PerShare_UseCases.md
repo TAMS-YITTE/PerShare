@@ -5,13 +5,13 @@
 
 ---
 
-## 1. Déclinaison "Social & Charity" (Frais : 0%)
-*Instance déployée avec `feeBPS = 0`. But : Acquisition utilisateur de masse, image de marque, onboarding Web3.*
+## 1. Déclinaison "Social & Charity" (Frais : 0.5%)
+*Instance déployée avec \`feeBPS = 50\`. But : Acquisition utilisateur, projets solidaires, tout en gardant une valeur perçue (le 100% gratuit attire le spam).*
 
 | Cas d'Usage | Description |
 |:---|:---|
-| **Cagnotte Publique / Caritative** | Financer un projet caritatif, associatif ou personnel. L'équivalent de Leetchi Web3, gratuit, pour attirer le grand public. |
-| **Distribution de Hackathon** | Répartir automatiquement la prime (Bounty) gagnée entre les développeurs d'une équipe sans frais, pour attirer les builders. |
+| **Cagnotte Publique / Caritative** | Financer un projet caritatif, associatif ou personnel. Très accessible (0.5%) face aux plateformes traditionnelles (qui prennent 5 à 8%), évitant ainsi les abus. |
+| **Distribution de Hackathon** | Répartir automatiquement la prime (Bounty) gagnée entre les développeurs d'une équipe avec un minimum de frais, pour attirer les builders. |
 | **Impact Investing (Carbone)** | Financer des projets écologiques. La gratuité encourage la participation à des causes à impact (avec jetons "Crédits Carbone" en retour). |
 
 ## 2. Déclinaison "Standard / Communauté" (Frais : 1%)
