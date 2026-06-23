@@ -12,6 +12,12 @@ async function main() {
   console.log("Network    :", network.name);
   console.log("Deployer   :", deployer.address);
 
+  const feeRecipient = process.env.FEE_RECIPIENT_ADDRESS || deployer.address;
+  console.log("Fee Recip. :", feeRecipient);
+  if (!process.env.FEE_RECIPIENT_ADDRESS && network.name === "bscMainnet") {
+    console.warn("⚠️ WARNING: FEE_RECIPIENT_ADDRESS not set in .env! Using deployer address as fee recipient.");
+  }
+
   const balance = await ethers.provider.getBalance(deployer.address);
   console.log("Balance    :", ethers.formatEther(balance), "BNB");
   console.log("");
@@ -49,14 +55,23 @@ async function main() {
 
   console.log("3. Deploiement PerShare...");
   const PerShare = await ethers.getContractFactory("PerShare");
-  const perShare = await PerShare.deploy(deployer.address);
+  const perShare = await PerShare.deploy(feeRecipient);
   await perShare.waitForDeployment();
   const perShareAddress = await perShare.getAddress();
   console.log("   PerShare           :", perShareAddress);
 
+  // Configuration optionnelle du taux de frais depuis le .env
+  if (process.env.INITIAL_FEE_BPS) {
+      console.log(`4. Configuration des frais a ${process.env.INITIAL_FEE_BPS} bps...`);
+      const tx = await perShare.setFeeBPS(process.env.INITIAL_FEE_BPS);
+      await tx.wait();
+      console.log("   Frais mis a jour !");
+  }
+
   // ── Verification ──────────────────────────────────────────────────────────
 
   const deployedOwner = await perShare.owner();
+  const deployedFeeRecipient = await perShare.feeRecipient();
   const maxMembers    = await perShare.MAX_MEMBERS();
   const commission    = await perShare.feeBPS();
 
@@ -66,6 +81,7 @@ async function main() {
   console.log("─────────────────────────────────────────");
   console.log("PerShare address  :", perShareAddress);
   console.log("Owner             :", deployedOwner);
+  console.log("Fee Recipient     :", deployedFeeRecipient);
   console.log("Max membres       :", maxMembers.toString());
   console.log("Commission        :", commission.toString(), "bps");
   console.log("");

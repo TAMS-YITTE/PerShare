@@ -118,6 +118,15 @@ export const ERC20_ABI = [
 
 // ── Adresses — remplir apres deploiement ─────────────────────────────────────
 
+// BSC Mainnet — 3 contract instances by fee tier
+export const PERSHARE_CONTRACTS = {
+  social:   "0x646D044703a80E424E20fe78d10ED624383Fa303" as `0x${string}`, // 0.5%
+  standard: "0x35B4BAf4Af02151A76e4e00eA3411EDe495f463a" as `0x${string}`, // 1%
+  premium:  "0xCA962143652fC02476501f5d32901E5aaaC9F1aD" as `0x${string}`, // 2%
+} as const;
+
+export type PerShareTier = keyof typeof PERSHARE_CONTRACTS;
+
 export const ADDRESSES = {
   bscTestnet: {
     perShare: "0x4315b0696ECe5157a3640cd6DbD99C69c2B138a2" as `0x${string}`,
@@ -125,7 +134,7 @@ export const ADDRESSES = {
     presaleToken: "0x6D0fDAdC0f21F3A0c534D506FE71253cF2ebC76d" as `0x${string}`,
   },
   bsc: {
-    perShare: "" as `0x${string}`,
+    perShare: PERSHARE_CONTRACTS.standard, // default: Standard 1%
     usdt:     "0x55d398326f99059fF775485246999027B3197955" as `0x${string}`,
     usdc:     "0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d" as `0x${string}`,
   }
