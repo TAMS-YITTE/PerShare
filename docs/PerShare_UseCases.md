@@ -1,38 +1,39 @@
-# PerShare — Cas d'Usage & Vision (Focus Collectif)
+# PerShare — Cas d'Usage & Stratégie de Déploiement (Par Taux de Frais)
 > Document consolidé — Juin 2025
-> **Note Stratégique :** Tous les cas d'usage bilatéraux (1-to-1, Escrow Freelance, P2P, Cautions) ont été retirés de PerShare. Ces fonctionnalités seront le cœur du projet **EscrowX**. PerShare se concentre **exclusivement sur la force du collectif (N-to-1 ou N-to-N)**.
+> **Note Stratégique :** Les cas d'usage bilatéraux (1-to-1) sont exclus (réservés à EscrowX). PerShare se concentre sur l'achat et la collecte de groupe (N-to-1 ou N-to-N). 
+> **Architecture de Frais :** Le smart contract appliquant un taux global, l'offre commerciale est structurée en déployant **différentes instances du contrat PerShare**, chacune configurée avec son propre `feeBPS`.
 
 ---
 
-## 1. Investissement & Web3 Finance (DeFi)
-*Ciblant les investisseurs, "degens", et DAOs.*
+## 1. Déclinaison "Social & Charity" (Frais : 0%)
+*Instance déployée avec `feeBPS = 0`. But : Acquisition utilisateur de masse, image de marque, onboarding Web3.*
 
 | Cas d'Usage | Description |
 |:---|:---|
-| **Syndicat d'Investissement (Presale)** | Se grouper (KOLs, petites communautés) pour atteindre le ticket minimum d'une prévente privée, puis redistribuer les tokens obtenus. |
-| **Achat OTC Communautaire** | Une communauté se cotise pour acheter un gros lot de tokens à prix réduit directement à une "Whale" ou à une DAO. |
-| **Fourniture de Liquidité (LP Pool)** | Rassembler des fonds pour créer la toute première Pool de Liquidité d'un jeton sur un DEX. Les Jetons LP générés sont redistribués proportionnellement. |
-| **Incubateur Décentralisé (Angels)** | Un groupe d'experts finance l'amorçage d'un protocole. Au lancement, le smart contract du projet reverse automatiquement les tokens d'allocation à PerShare. |
+| **Cagnotte Publique / Caritative** | Financer un projet caritatif, associatif ou personnel. L'équivalent de Leetchi Web3, gratuit, pour attirer le grand public. |
+| **Distribution de Hackathon** | Répartir automatiquement la prime (Bounty) gagnée entre les développeurs d'une équipe sans frais, pour attirer les builders. |
+| **Impact Investing (Carbone)** | Financer des projets écologiques. La gratuité encourage la participation à des causes à impact (avec jetons "Crédits Carbone" en retour). |
 
-## 2. Financement de Projets & Crowdfunding
-*Ciblant les fondateurs, les créateurs et les causes.*
-
-| Cas d'Usage | Description |
-|:---|:---|
-| **Token Sale Natif (Launchpad)** | Les fondateurs utilisent PerShare pour faire leur propre levée de fonds communautaire de manière décentralisée (PerShare finance PerShare). |
-| **Cagnotte Publique (Leetchi Web3)** | Rassembler des fonds pour financer un projet personnel, caritatif ou associatif sans frais d'intermédiaire. |
-| **Impact Investing (Crédits Carbone)** | Financer un projet écologique en groupe. En contrepartie, le projet émet et renvoie des "Crédits Carbone" tokenisés redistribués aux donneurs. |
-
-## 3. Mutualisation d'Actifs & Rendement
-*Ciblant les guildes, les groupes d'amis et les investisseurs RWA.*
+## 2. Déclinaison "Standard / Communauté" (Frais : 1%)
+*Instance déployée avec `feeBPS = 100` (1%). But : Volume transactionnel régulier et génération de revenus de base.*
 
 | Cas d'Usage | Description |
 |:---|:---|
-| **Immobilier Tokenisé (RWA)** | Acheter en groupe un actif immobilier tokenisé (ex: RealT). PerShare distribue les jetons représentatifs de l'immeuble aux contributeurs. |
-| **Cloud Mining Communautaire** | Se cotiser pour louer ou acheter des machines de minage ASIC. Les revenus minés sont renvoyés mensuellement sur PerShare pour distribution. |
-| **Achat d'Actif / Node très cher** | Mutualiser les fonds pour acheter un Node validateur (Gala, XAI) à 50k$ ou un NFT "Blue Chip", géré ensuite par un multisig communautaire. |
-| **Trésorerie de Guilde Gaming** | Les joueurs se cotisent pour acheter des assets in-game. Les rendements (tokens Play-to-Earn) gagnés par la guilde sont redistribués aux financeurs. |
-| **Distribution de Hackathon** | Rassembler un "Bounty" gagné et le distribuer automatiquement et proportionnellement aux membres de l'équipe gagnante. |
+| **Syndicat d'Investissement (Presale)** | Se grouper (KOLs, communautés) pour atteindre le ticket minimum d'une prévente privée. Le cas d'usage "star" à forte demande. |
+| **Achat OTC Communautaire** | Une communauté achète un gros lot de tokens à prix réduit directement à une "Whale" pour contourner le marché public. |
+| **Achat de Node / Actif Cher** | Mutualiser les fonds pour acheter un Node validateur (ex: Gala) ou un NFT Blue Chip (géré par un multisig ensuite). |
+| **Guilde Gaming (Play-to-Earn)** | Les joueurs se cotisent pour acheter des actifs *in-game*. Les rendements Play-to-Earn générés sont redistribués. |
+
+## 3. Déclinaison "Premium / DeFi & Finance" (Frais : 2%)
+*Instance déployée avec `feeBPS = 200` (2%). But : Cas d'usage complexes, générateurs de rendements ou pour professionnels.*
+
+| Cas d'Usage | Description |
+|:---|:---|
+| **Token Sale Natif (Launchpad)** | Les fondateurs utilisent PerShare pour lever des fonds directement auprès de leur communauté. La plateforme prend 2% de "success fee" sur la levée. |
+| **Fourniture de Liquidité (LP Pool)** | Création de la première Pool de Liquidité d'un DEX en groupe. Cas financier avancé justifiant un premium. |
+| **Incubateur Décentralisé (Angels)** | Des experts financent l'amorçage d'un projet ; les tokens sont renvoyés automatiquement à PerShare au lancement. |
+| **Cloud Mining Communautaire** | Louer/acheter des ASIC de minage en groupe. Les revenus minés sont reversés mensuellement (génération de revenus passifs). |
+| **Immobilier Tokenisé (RWA)** | Acheter en groupe une part d'immeuble (ex: RealT) et distribuer les jetons associés. Achat lié à des actifs réels à haut rendement. |
 
 ---
-*PerShare — La puissance de l'achat groupé, sans tiers de confiance.*
+*Chaque déclinaison nécessitera le déploiement d'une nouvelle adresse de contrat PerShare configurée avec le bon taux de commission.*
