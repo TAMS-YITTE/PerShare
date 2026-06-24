@@ -13,8 +13,10 @@ export default function FAQ() {
         <div style={{ background: 'var(--surface)', padding: '24px', borderRadius: '12px', border: '1px solid var(--border)' }}>
           <h3 style={{ color: '#fff', fontSize: '18px', marginBottom: '8px' }}>Is my money safe?</h3>
           <p style={{ color: 'var(--muted)', margin: 0 }}>
-            Yes. PerShare is a non-custodial smart contract. We never hold your funds. The funds are locked in the blockchain 
-            and can only move if the majority of the members in your SHARE validate the transaction. Even the developers of PerShare cannot access your money.
+            Your funds are not held by us — they are locked in the smart contract and can only move to the destination once your SHARE reaches its
+            validation threshold, or back to you as a refund after the deadline. We cannot redirect or withdraw your funds to ourselves. For security,
+            the contract does include an owner-controlled pause (kill-switch) that can temporarily halt transactions if a vulnerability is detected — it
+            cannot divert funds, but it can delay their movement while active.
           </p>
         </div>
 
@@ -29,16 +31,16 @@ export default function FAQ() {
         <div style={{ background: 'var(--surface)', padding: '24px', borderRadius: '12px', border: '1px solid var(--border)' }}>
           <h3 style={{ color: '#fff', fontSize: '18px', marginBottom: '8px' }}>What are the fees?</h3>
           <p style={{ color: 'var(--muted)', margin: 0 }}>
-            PerShare takes a small protocol fee (currently set to 0% during the launch phase) on the stablecoin deposits to support future development. 
-            There are NO fees during the token distribution phase. You only pay the standard BNB Chain network gas fees.
+            PerShare applies a protocol fee on the stablecoin payout only — 0.5% (Social), 1% (Standard) or 2% (Premium), depending on which contract you use.
+            The fee is charged only when a pool succeeds: there are NO fees on refunds and NO fees during the token distribution phase. You only pay the standard BNB Chain network gas fees.
           </p>
         </div>
 
         <div style={{ background: 'var(--surface)', padding: '24px', borderRadius: '12px', border: '1px solid var(--border)' }}>
           <h3 style={{ color: '#fff', fontSize: '18px', marginBottom: '8px' }}>Can someone kick me out of a SHARE?</h3>
           <p style={{ color: 'var(--muted)', margin: 0 }}>
-            No. Immutability is our core feature. Once a SHARE is deployed, its members are written into the blockchain permanently. 
-            Nobody can kick you out or steal your allocation.
+            No. Once a SHARE is created, its member list is fixed onchain and cannot be edited. Nobody — not other members, not the team —
+            can remove you or reassign your allocation.
           </p>
         </div>
 
@@ -46,10 +48,10 @@ export default function FAQ() {
           <h3 style={{ color: '#fff', fontSize: '18px', marginBottom: '8px' }}>What are the main use cases for PerShare?</h3>
           <p style={{ color: 'var(--muted)', margin: 0 }}>
             PerShare is incredibly versatile. The most common use cases include: <br/><br/>
-            • <b>Crypto Presales & IDOs:</b> Grouping funds to hit high minimum investment tiers.<br/>
-            • <b>OTC Deals:</b> Buying vested tokens from early investors safely.<br/>
-            • <b>NFT Fractionalization:</b> Pooling money to buy an expensive NFT (coming in V2).<br/>
-            • <b>Web3 Tontines:</b> Creating savings pools with friends or community members.
+            • <b>Group Buys & Presales:</b> Pooling with your group to reach a high minimum ticket together.<br/>
+            • <b>OTC Group Purchases:</b> Buying a large token lot together directly from a counterparty.<br/>
+            • <b>NFT Fractionalization:</b> Pooling to co-acquire an expensive NFT (coming in V2).<br/>
+            • <b>Web3 Tontines:</b> Transparent savings pools among friends or community members.
           </p>
         </div>
 
