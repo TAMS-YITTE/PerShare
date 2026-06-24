@@ -34,7 +34,7 @@ PerShare **unifie** ces usages, les **simplifie**, et les déploie sur **BNB Cha
 
 | Fonctionnalité | PerShare | Fiverr / Upwork | Leetchi / GoFundMe | PayPal |
 |:---|:---:|:---:|:---:|:---:|
-| **Frais globaux moyens** | **1% (Max 5%)** | **20% à 30%** | **3% à 5%** | **3% à 6%** |
+| **Frais globaux moyens** | **1% (Max 2%)** | **20% à 30%** | **3% à 5%** | **3% à 6%** |
 | Dépositaire des fonds | **Code (Smart Contract)** | L'entreprise | L'entreprise | L'entreprise |
 | Blocage abusif possible | ❌ **Impossible** | ✅ Oui | ✅ Oui | ✅ Oui |
 | Compte bancaire requis | ❌ **Non** | ✅ Oui | ✅ Oui | ✅ Oui |
@@ -77,7 +77,7 @@ PerShare **unifies** these use cases, **simplifies** them, and deploys them on *
 
 | Feature | PerShare | Fiverr / Upwork | Leetchi / GoFundMe | PayPal |
 |:---|:---:|:---:|:---:|:---:|
-| **Average Global Fees** | **1% (Max 5%)** | **20% to 30%** | **3% to 5%** | **3% to 6%** |
+| **Average Global Fees** | **1% (Max 2%)** | **20% to 30%** | **3% to 5%** | **3% to 6%** |
 | Custodian of funds | **Code (Smart Contract)** | The Company | The Company | The Company |
 | Account freezing possible | ❌ **Impossible** | ✅ Yes | ✅ Yes | ✅ Yes |
 | Bank account required | ❌ **No** | ✅ Yes | ✅ Yes | ✅ Yes |

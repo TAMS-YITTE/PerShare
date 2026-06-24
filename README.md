@@ -33,7 +33,7 @@ docs/
 - **Phase 1 (Collection) & Phase 2 (Redistribution)**
 - **Anti-Dust Security**: Token dust due to asymmetric division rounding is transferred to the first member.
 - **Anti-Collision Security**: `expectedToken` ensures no malicious token can trigger the Phase 2 validation.
-- **Dynamic & Secure Fees**: Default commission of 1% (maximum 5%), sent to a distinct `feeRecipient` address for added security.
+- **Dynamic & Secure Fees**: Default commission of 1% (maximum 2%, enforced on-chain via `setFeeBPS <= 200`), sent to a distinct `feeRecipient` address for added security.
 - **Tokenomics (Dormant)**: Pre-integration of the future `$SHARE` platform token, which will exempt creators holding a certain threshold from fees (0%).
 - **Public Refund (Permissionless)**: In case of failure (deadline passed), anyone can trigger the `refund` to unlock inactive members' funds.
 - **Kill-Switch (Pausable & Ownable)**: Allows temporary transaction blocking if a vulnerability is detected.
