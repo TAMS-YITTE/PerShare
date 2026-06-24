@@ -12,18 +12,18 @@ const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], variable: '--font-displ
 const spaceGroteskBody = Space_Grotesk({ subsets: ['latin'], variable: '--font-body' });
 
 export const metadata: Metadata = {
-  title: 'PerShare — Trustless Pool, Pay, Invest & Share Automatically',
+  title: 'PerShare — Group Pooling on BNB Chain. Pool, Send & Share Automatically',
   description: 'Chaque membre reçoit sa part. Automatiquement. Onchain.',
   keywords: ['pershare', 'bnb chain', 'pool collective', 'presale', 'group buy', 'tontine'],
   openGraph: {
-    title: 'PerShare — Trustless Pool, Pay, Invest & Share Automatically',
+    title: 'PerShare — Group Pooling on BNB Chain. Pool, Send & Share Automatically',
     description: 'Chaque membre reçoit sa part. Automatiquement. Onchain.',
-    url: 'https://pershare.io',
+    url: 'https://pershare.org',
     siteName: 'PerShare',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'PerShare — Trustless Pool, Pay, Invest & Share Automatically',
+    title: 'PerShare — Group Pooling on BNB Chain. Pool, Send & Share Automatically',
     description: 'Pool collective, transfert conditionnel, group buy presale. BNB Chain.',
   },
 };

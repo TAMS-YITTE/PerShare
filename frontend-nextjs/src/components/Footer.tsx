@@ -20,7 +20,7 @@ export function Footer() {
             </h2>
           </div>
           <p style={{ color: '#8892b0', fontSize: '15px', lineHeight: '1.6', margin: 0 }}>
-            Automated trustless pooling protocol on BNB Chain. Pool, pay, and share automatically.
+            Automated group pooling protocol on BNB Chain. Pool, send, and share automatically.
           </p>
           {/* Trust Badges */}
           <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginTop: '8px' }}>
@@ -44,8 +44,8 @@ export function Footer() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
             <h4 style={{ color: '#fff', fontSize: '18px', margin: 0, fontWeight: 'bold' }}>Smart Contracts</h4>
-            <a href="https://bscscan.com/" target="_blank" rel="noreferrer" style={{ color: '#8892b0', textDecoration: 'none', fontSize: '15px', display: 'flex', alignItems: 'center', gap: '6px' }}>
-              PerShare Contract 
+            <a href="https://bscscan.com/address/0x35B4BAf4Af02151A76e4e00eA3411EDe495f463a" target="_blank" rel="noreferrer" style={{ color: '#8892b0', textDecoration: 'none', fontSize: '15px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              PerShare Contract (Standard)
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
             </a>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#10b981', fontSize: '14px', marginTop: '8px' }}>
