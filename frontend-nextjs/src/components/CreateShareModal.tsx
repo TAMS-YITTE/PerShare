@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useCreateShare } from '../hooks/useShare';
-import { ADDRESSES } from '../lib/contract';
+import { ADDRESSES, PERSHARE_CONTRACTS, PerShareTier } from '../lib/contract';
 
 export function CreateShareModal({ onClose }: { onClose: () => void }) {
   const { createShare, isPending, isConfirming, isSuccess } = useCreateShare();
@@ -14,6 +14,7 @@ export function CreateShareModal({ onClose }: { onClose: () => void }) {
     d.setDate(d.getDate() + 7); // Default: 7 days
     return d.toISOString().slice(0, 16);
   });
+  const [tier, setTier] = useState<PerShareTier>('standard');
 
   useEffect(() => {
     if (isSuccess) {
@@ -43,10 +44,11 @@ export function CreateShareModal({ onClose }: { onClose: () => void }) {
       return;
     }
     
-    // Assumes BSC Testnet USDT address for now (can dynamically fetch chain)
     const usdtAddress = ADDRESSES.bscTestnet.usdt || '0x337610d27c682E347C9cD60BD4b3b107C9d34dDd'; 
+    const contractAddress = PERSHARE_CONTRACTS[tier];
     
     createShare(
+      contractAddress,
       name,
       memberArray,
       usdtAddress as `0x${string}`,
@@ -70,6 +72,35 @@ export function CreateShareModal({ onClose }: { onClose: () => void }) {
         <h2 style={{ marginBottom: '24px' }}>Create a SHARE</h2>
         
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div>
+            <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: 'var(--muted)' }}>Select Tier</label>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              {(['social', 'standard', 'premium'] as PerShareTier[]).map(t => (
+                <button
+                  key={t}
+                  type="button"
+                  onClick={() => setTier(t)}
+                  style={{
+                    flex: 1,
+                    padding: '10px',
+                    borderRadius: '8px',
+                    border: tier === t ? '1px solid var(--purple2)' : '1px solid var(--border)',
+                    background: tier === t ? 'rgba(0, 210, 255, 0.1)' : 'var(--bg)',
+                    color: tier === t ? 'var(--purple2)' : 'var(--muted)',
+                    cursor: 'pointer',
+                    fontWeight: tier === t ? 'bold' : 'normal',
+                    textTransform: 'capitalize'
+                  }}
+                >
+                  {t}
+                  <div style={{ fontSize: '11px', marginTop: '4px', color: 'var(--muted)', fontWeight: 'normal' }}>
+                    {t === 'social' ? '0.5%' : t === 'standard' ? '1%' : '2%'} fee
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+
           <div>
             <label htmlFor="name-input" style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: 'var(--muted)' }}>SHARE Name</label>
             <input 
