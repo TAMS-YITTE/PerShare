@@ -133,6 +133,7 @@ export function useCreateShare() {
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash });
 
   const createShare = (
+    contractAddress: `0x${string}`,
     name: string,
     members: `0x${string}`[],
     stablecoin: `0x${string}`,
@@ -142,7 +143,7 @@ export function useCreateShare() {
     threshold: number
   ) => {
     writeContract({
-      address: CONTRACT,
+      address: contractAddress,
       abi: PERSHARE_ABI,
       functionName: 'createShare',
       args: [
