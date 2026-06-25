@@ -21,7 +21,7 @@ export default function Security() {
             <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#00D2FF', marginBottom: '12px' }}>Audited by SpyWolf</h3>
             <p style={{ color: 'var(--muted)', lineHeight: 1.6 }}>
               The PerShare contracts were audited by SpyWolf. The latest report (R2) lists no critical vulnerabilities outstanding. An audit reduces risk but never guarantees the absence of bugs — read the full report and judge for yourself:{' '}
-              <a href="/PerShare_Audit_R2.pdf" target="_blank" rel="noreferrer" style={{ color: '#00D2FF' }}>PerShare Audit R2 (PDF) →</a>
+              <a href="https://spywolf.co/audits/PerShare_Audit.pdf" target="_blank" rel="noreferrer" style={{ color: '#00D2FF' }}>SpyWolf Audit Report (PDF) →</a>
             </p>
           </div>
 

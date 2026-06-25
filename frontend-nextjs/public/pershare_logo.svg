@@ -1,0 +1,26 @@
+<svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="PerShare">
+  <defs>
+    <linearGradient id="psGrad" x1="20" y1="20" x2="180" y2="180" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#22D3EE"/>
+      <stop offset="1" stop-color="#A78BFA"/>
+    </linearGradient>
+    <filter id="psGlow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="2.2" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <circle cx="100" cy="100" r="86" stroke="url(#psGrad)" stroke-width="4" filter="url(#psGlow)"/>
+  <g filter="url(#psGlow)" stroke="url(#psGrad)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M84 74 H54 L74 100 L54 126 H84"/>
+    <path d="M96 100 H126"/>
+    <path d="M117 91 L127 100 L117 109"/>
+  </g>
+  <g filter="url(#psGlow)" fill="url(#psGrad)">
+    <circle cx="151" cy="85" r="5.5"/>
+    <rect x="137" y="96.5" width="28" height="7" rx="3.5"/>
+    <circle cx="151" cy="115" r="5.5"/>
+  </g>
+</svg>
