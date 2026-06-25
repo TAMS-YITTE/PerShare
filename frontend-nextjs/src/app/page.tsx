@@ -150,14 +150,15 @@ export default function Home() {
             <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'rgba(16,185,129,0.1)', color: '#10B981', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '24px' }}>
               <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
             </div>
-            <h3 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '12px' }}>2. Group Buy</h3>
-            <p style={{ color: 'var(--muted)', lineHeight: 1.6, fontSize: '14px' }}>Once the target is met, the group validates the transfer and USDT is sent to the seller.</p>
+            <h3 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '12px' }}>2. Approve &amp; Send</h3>
+            <p style={{ color: 'var(--muted)', lineHeight: 1.6, fontSize: '14px' }}>Once the target is met, the group validates and USDT is released to the destination — a token seller, or a vendor for goods &amp; services.</p>
           </div>
           {/* Step 3 */}
           <div className="glass-panel" style={{ padding: '32px', textAlign: 'left' }}>
             <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'rgba(167,139,250,0.1)', color: '#a78bfa', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '24px' }}>
               <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
             </div>
+            <span style={{ display: 'inline-block', fontSize: '10px', fontWeight: 700, color: '#a78bfa', background: 'rgba(167,139,250,0.12)', border: '1px solid rgba(167,139,250,0.25)', borderRadius: '6px', padding: '2px 8px', marginBottom: '10px', letterSpacing: '0.04em' }}>TOKEN POOLS</span>
             <h3 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '12px' }}>3. Receive Tokens</h3>
             <p style={{ color: 'var(--muted)', lineHeight: 1.6, fontSize: '14px' }}>The seller deposits the acquired tokens back into the PerShare smart contract.</p>
           </div>
@@ -166,8 +167,9 @@ export default function Home() {
             <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'rgba(0,210,255,0.1)', color: '#00D2FF', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '24px' }}>
               <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
             </div>
+            <span style={{ display: 'inline-block', fontSize: '10px', fontWeight: 700, color: '#a78bfa', background: 'rgba(167,139,250,0.12)', border: '1px solid rgba(167,139,250,0.25)', borderRadius: '6px', padding: '2px 8px', marginBottom: '10px', letterSpacing: '0.04em' }}>TOKEN POOLS</span>
             <h3 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '12px' }}>4. Auto-Distribute</h3>
-            <p style={{ color: 'var(--muted)', lineHeight: 1.6, fontSize: '14px' }}>Tokens are automatically fractionalized and distributed to each member, perfectly pro-rata.</p>
+            <p style={{ color: 'var(--muted)', lineHeight: 1.6, fontSize: '14px' }}>Tokens are automatically fractionalized and distributed to each member, perfectly pro-rata. <span style={{ color: '#10B981' }}>Goods &amp; services pools finish at step 2.</span></p>
           </div>
         </div>
 
