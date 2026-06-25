@@ -81,11 +81,7 @@ export function Header() {
   const [showGuide, setShowGuide] = useState(false);
   const [showComparison, setShowComparison] = useState(false);
   
-  const navLinks = [
-    { name: 'Whitepaper', href: '/whitepaper' },
-    { name: 'Roadmap', href: '/roadmap' },
-    { name: 'FAQ', href: '/faq' },
-  ];
+
 
   return (
     <>
@@ -144,24 +140,7 @@ export function Header() {
               How it works?
             </button>
             
-            {navLinks.map((link) => {
-              const isActive = pathname === link.href;
-              return (
-                <Link 
-                  key={link.name} 
-                  href={link.href}
-                  style={{
-                    color: isActive ? '#fff' : '#8892b0',
-                    textDecoration: 'none',
-                    fontSize: '15px',
-                    fontWeight: isActive ? '600' : '400',
-                    transition: 'color 0.2s'
-                  }}
-                >
-                  {link.name}
-                </Link>
-              );
-            })}
+
           </nav>
 
           {/* Right: Reown Wallet Button */}
