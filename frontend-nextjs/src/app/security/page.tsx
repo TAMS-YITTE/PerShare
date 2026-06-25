@@ -11,16 +11,17 @@ export default function Security() {
 
         <div style={{ display: 'grid', gap: '32px' }}>
           <div style={{ background: 'rgba(20, 28, 47, 0.4)', padding: '32px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)' }}>
-            <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#10B981', marginBottom: '12px' }}>100% Non-Custodial</h3>
+            <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#10B981', marginBottom: '12px' }}>Self-Custodial by Design</h3>
             <p style={{ color: 'var(--muted)', lineHeight: 1.6 }}>
-              PerShare is entirely non-custodial. The development team has no access to your funds. All deposits, consensus validations, and fractional distributions are governed entirely by immutable smart contracts on the BNB Chain.
+              PerShare never takes custody of your money. Deposits, consensus validations and pro-rata distributions are governed by the smart contracts on BNB Chain — the team cannot redirect or withdraw your funds to itself. For emergencies, an admin pause can temporarily halt transactions (see <a href="/risks" style={{ color: '#00D2FF' }}>Risks &amp; Disclaimers</a>); it can never seize or divert deposits.
             </p>
           </div>
 
           <div style={{ background: 'rgba(20, 28, 47, 0.4)', padding: '32px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)' }}>
             <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#00D2FF', marginBottom: '12px' }}>Audited by SpyWolf</h3>
             <p style={{ color: 'var(--muted)', lineHeight: 1.6 }}>
-              Our smart contracts have undergone rigorous security audits by industry-leading firms, including SpyWolf. No critical vulnerabilities were found. You can view the full audit report using the link in the footer.
+              The PerShare contracts were audited by SpyWolf. The latest report (R2) lists no critical vulnerabilities outstanding. An audit reduces risk but never guarantees the absence of bugs — read the full report and judge for yourself:{' '}
+              <a href="/PerShare_Audit_R2.pdf" target="_blank" rel="noreferrer" style={{ color: '#00D2FF' }}>PerShare Audit R2 (PDF) →</a>
             </p>
           </div>
 

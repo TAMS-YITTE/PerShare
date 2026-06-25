@@ -30,6 +30,51 @@ export default function HowPoolsWork() {
             <p style={{ color: 'var(--muted)', lineHeight: 1.6 }}>The seller sends the purchased tokens (or assets) back to the PerShare contract. The contract automatically calculates each member's exact fractional share based on their initial deposit, allowing them to claim their tokens instantly.</p>
           </div>
         </div>
+
+        {/* ── WORKED EXAMPLE ──────────────────────────────────────────── */}
+        <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(26px, 4vw, 36px)', fontWeight: 800, marginTop: '72px', marginBottom: '16px' }}>A worked example</h2>
+        <p style={{ color: 'var(--muted)', fontSize: '16px', lineHeight: 1.6, marginBottom: '24px' }}>
+          Three members pool <strong style={{ color: '#fff' }}>10,000 USDT</strong> to enter a presale together. The seller returns <strong style={{ color: '#fff' }}>1,000,000 ABC</strong> into the contract. Each member&apos;s share is computed directly from their own deposit:
+        </p>
+        <pre style={{ background: 'rgba(0,0,0,0.5)', padding: '16px', borderRadius: '10px', color: '#fff', fontSize: '14px', marginBottom: '24px', overflowX: 'auto' }}>
+          <code>yourTokens = totalTokensReceived × yourDeposit ÷ poolTotal</code>
+        </pre>
+        <div className="glass-panel" style={{ background: 'rgba(20, 28, 47, 0.4)', padding: '24px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)', marginBottom: '24px' }}>
+          {[
+            { name: 'Alice', dep: '5,000', pct: '50%', tok: '500,000', color: '#00D2FF' },
+            { name: 'Bob', dep: '3,000', pct: '30%', tok: '300,000', color: '#10B981' },
+            { name: 'Carol', dep: '2,000', pct: '20%', tok: '200,000', color: '#a78bfa' },
+          ].map(m => (
+            <div key={m.name} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: m.color }} />
+                <span style={{ fontWeight: 600 }}>{m.name}</span>
+                <span style={{ color: 'var(--muted)', fontSize: '13px' }}>{m.dep} USDT · {m.pct}</span>
+              </div>
+              <span style={{ fontWeight: 700, color: m.color }}>{m.tok} ABC</span>
+            </div>
+          ))}
+          <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '14px', color: 'var(--muted)', fontSize: '14px' }}>
+            <span>Auto-distributed pro-rata</span>
+            <span style={{ color: '#10B981', fontWeight: 700 }}>1,000,000 ABC total ✓</span>
+          </div>
+        </div>
+
+        {/* ── EXTRA MECHANICS ─────────────────────────────────────────── */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', marginTop: '48px' }}>
+          <div className="glass-panel" style={{ background: 'rgba(20, 28, 47, 0.4)', padding: '32px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)' }}>
+            <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#00D2FF', marginBottom: '12px' }}>Vesting &amp; late tranches</h3>
+            <p style={{ color: 'var(--muted)', lineHeight: 1.6 }}>Many presales release tokens over time. When a later tranche arrives, anyone can deposit it into the same pool — the contract increases the total received and every member can claim their additional pro-rata amount. The split stays correct across unlimited tranches.</p>
+          </div>
+          <div className="glass-panel" style={{ background: 'rgba(20, 28, 47, 0.4)', padding: '32px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)' }}>
+            <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#a78bfa', marginBottom: '12px' }}>Pull pattern &amp; dust</h3>
+            <p style={{ color: 'var(--muted)', lineHeight: 1.6 }}>Each member pulls their own tokens — no batch payout that could fail or be front-run. Integer division can leave microscopic remainders (&quot;dust&quot;); the pool creator can sweep this dust, defined strictly as the total minus the sum of every member&apos;s theoretical claim, so nothing stays locked.</p>
+          </div>
+          <div className="glass-panel" style={{ background: 'rgba(16, 185, 129, 0.06)', padding: '32px', borderRadius: '16px', border: '1px solid rgba(16, 185, 129, 0.2)' }}>
+            <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#10B981', marginBottom: '12px' }}>Built-in safety net</h3>
+            <p style={{ color: 'var(--muted)', lineHeight: 1.6 }}>Until the group validates the transfer, the USDT stays locked in the contract. Any doubt before the deadline? Don&apos;t validate — and every member is refunded 100% once the deadline passes. The protocol takes no fee on refunds. Please review the <a href="/risks" style={{ color: '#10B981' }}>Risks &amp; Disclaimers</a> before participating.</p>
+          </div>
+        </div>
       </div>
     </main>
   );

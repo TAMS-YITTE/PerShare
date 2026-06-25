@@ -140,6 +140,78 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── AUTOMATIC DISTRIBUTION (DEEP DIVE) ────────────────────────────── */}
+      <section style={{ background: 'rgba(167,139,250,0.03)', borderTop: '1px solid rgba(255,255,255,0.05)', borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '100px 24px' }}>
+        <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+            <span style={{ fontSize: '12px', fontWeight: 700, color: '#a78bfa', textTransform: 'uppercase', letterSpacing: '0.12em' }}>Collective pooling, settled by code</span>
+            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px, 4vw, 44px)', fontWeight: 800, margin: '12px 0 16px' }}>
+              Everyone receives their <span className="text-gradient">exact share</span>.
+            </h2>
+            <p style={{ color: 'var(--muted)', fontSize: '17px', lineHeight: 1.6, maxWidth: '620px', margin: '0 auto' }}>
+              The hardest part of investing as a group has always been splitting the result fairly. PerShare records every member&apos;s deposit on-chain and computes their fraction automatically — so each person claims exactly what they are owed. No treasurer, no spreadsheet, no trust.
+            </p>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px', alignItems: 'stretch' }}>
+            {/* Left: formula + properties */}
+            <div className="glass-panel" style={{ padding: '32px', display: 'flex', flexDirection: 'column', gap: '20px' }}>
+              <div>
+                <span style={{ fontSize: '13px', color: 'var(--muted)', fontWeight: 600 }}>The on-chain formula</span>
+                <pre style={{ background: 'rgba(0,0,0,0.5)', padding: '16px', borderRadius: '10px', color: '#fff', fontSize: '13px', marginTop: '10px', overflowX: 'auto', lineHeight: 1.5 }}>
+<code>yourTokens = totalReceived
+             × yourDeposit
+             ÷ poolTotal</code>
+                </pre>
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <div>
+                  <div style={{ fontWeight: 700, color: '#10B981', marginBottom: '4px', fontSize: '15px' }}>Pull pattern</div>
+                  <p style={{ color: 'var(--muted)', fontSize: '14px', lineHeight: 1.5, margin: 0 }}>Each member claims their own tokens directly. No one can ever claim your share, and the team can&apos;t touch it.</p>
+                </div>
+                <div>
+                  <div style={{ fontWeight: 700, color: '#00D2FF', marginBottom: '4px', fontSize: '15px' }}>Vesting-ready</div>
+                  <p style={{ color: 'var(--muted)', fontSize: '14px', lineHeight: 1.5, margin: 0 }}>When later token tranches arrive, the same math tops up everyone&apos;s claim automatically — pro-rata, every time.</p>
+                </div>
+                <div>
+                  <div style={{ fontWeight: 700, color: '#a78bfa', marginBottom: '4px', fontSize: '15px' }}>Dust-safe</div>
+                  <p style={{ color: 'var(--muted)', fontSize: '14px', lineHeight: 1.5, margin: 0 }}>Rounding remainders are swept cleanly by the pool creator, never left stuck in the contract.</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Right: worked example */}
+            <div className="glass-panel" style={{ padding: '32px', display: 'flex', flexDirection: 'column' }}>
+              <div style={{ fontSize: '13px', fontWeight: 700, color: '#a78bfa', marginBottom: '4px' }}>WORKED EXAMPLE · Presale syndicate</div>
+              <p style={{ color: 'var(--muted)', fontSize: '13px', lineHeight: 1.5, marginBottom: '20px' }}>
+                3 members pool <strong style={{ color: '#fff' }}>10,000 USDT</strong> to buy a presale ticket. The seller returns <strong style={{ color: '#fff' }}>1,000,000 ABC</strong> into the contract.
+              </p>
+              {[
+                { name: 'Alice', dep: '5,000', pct: '50%', tok: '500,000', color: '#00D2FF' },
+                { name: 'Bob', dep: '3,000', pct: '30%', tok: '300,000', color: '#10B981' },
+                { name: 'Carol', dep: '2,000', pct: '20%', tok: '200,000', color: '#a78bfa' },
+              ].map(m => (
+                <div key={m.name} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '12px 0', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: m.color }} />
+                    <span style={{ fontWeight: 600, fontSize: '14px' }}>{m.name}</span>
+                    <span style={{ color: 'var(--muted)', fontSize: '12px' }}>{m.dep} USDT · {m.pct}</span>
+                  </div>
+                  <span style={{ fontWeight: 700, fontSize: '14px', color: m.color }}>{m.tok} ABC</span>
+                </div>
+              ))}
+              <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '16px', fontSize: '13px', color: 'var(--muted)' }}>
+                <span>Auto-distributed pro-rata</span>
+                <span style={{ color: '#10B981', fontWeight: 700 }}>1,000,000 ABC total ✓</span>
+              </div>
+              <Link href="/how-pools-work" className="text-gradient" style={{ fontWeight: 600, textDecoration: 'none', fontSize: '14px', marginTop: '24px' }}>
+                See the full mechanics →
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── TRANSPARENT FEES (CALCULATOR) ─────────────────────────────────── */}
       <section style={{ background: 'rgba(0,0,0,0.4)', borderTop: '1px solid rgba(255,255,255,0.05)', borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '100px 24px' }}>
         <div className="glass-panel" style={{ maxWidth: '500px', margin: '0 auto', padding: '32px' }}>
