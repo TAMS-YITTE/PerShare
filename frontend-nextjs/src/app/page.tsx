@@ -66,8 +66,8 @@ export default function Home() {
         <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(40px, 6vw, 72px)', fontWeight: 800, letterSpacing: '-2px', lineHeight: 1.1, marginBottom: '24px', maxWidth: '800px' }}>
           The Onchain <span className="text-gradient">Group Buy</span> Protocol.
         </h1>
-        <p style={{ fontSize: 'clamp(16px, 2vw, 20px)', color: 'var(--muted)', maxWidth: '600px', lineHeight: 1.6, marginBottom: '48px' }}>
-          Pool USDT securely, acquire assets together, and let the smart contract automatically distribute the tokens pro-rata.
+        <p style={{ fontSize: 'clamp(16px, 2vw, 20px)', color: 'var(--muted)', maxWidth: '640px', lineHeight: 1.6, marginBottom: '48px' }}>
+          Securely pool USDT to acquire tokens or fund shared goods & services. The smart contract automatically settles payments and distributes assets pro-rata.
         </p>
 
         <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', justifyContent: 'center', marginBottom: '48px' }}>
