@@ -70,12 +70,21 @@ export default function Home() {
           Pool USDT securely, acquire assets together, and let the smart contract automatically distribute the tokens pro-rata.
         </p>
 
-        <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', justifyContent: 'center' }}>
+        <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', justifyContent: 'center', marginBottom: '48px' }}>
           <Link href="/app" className="btn-primary" style={{ padding: '14px 32px', fontSize: '1.1rem' }}>
             Launch App
           </Link>
           <a href="#how" className="btn-outline" style={{ padding: '14px 32px', fontSize: '1.1rem' }}>
             How it works
+          </a>
+        </div>
+
+        {/* Compact Audit Banner */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255, 255, 255, 0.05)', borderRadius: '16px', padding: '20px 40px', zIndex: 10 }}>
+          <svg width="24" height="24" fill="none" stroke="#10B981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 800, color: '#fff' }}>Smart Contract Audited</h3>
+          <a href="https://spywolf.co/audits/PerShare_Audit.pdf" target="_blank" rel="noreferrer" style={{ color: '#10B981', fontSize: '15px', textDecoration: 'none', fontWeight: 500, transition: 'opacity 0.2s' }} onMouseOver={e => e.currentTarget.style.opacity = '0.8'} onMouseOut={e => e.currentTarget.style.opacity = '1'}>
+            View the full report →
           </a>
         </div>
       </section>
@@ -186,15 +195,6 @@ export default function Home() {
           <Link href="/how-pools-work" className="text-gradient" style={{ fontWeight: 700, textDecoration: 'none', fontSize: '15px' }}>
             See the full walkthrough →
           </Link>
-        </div>
-
-        {/* Audit Banner */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px', background: 'rgba(0, 210, 255, 0.05)', border: '1px solid rgba(0, 210, 255, 0.2)', borderRadius: '16px', padding: '24px', flexWrap: 'wrap' }}>
-          <svg width="32" height="32" fill="none" stroke="#00D2FF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
-          <h3 style={{ margin: 0, fontSize: '20px', fontWeight: 700 }}>Smart Contract Audited</h3>
-          <a href="https://spywolf.co/audits/PerShare_Audit.pdf" target="_blank" rel="noreferrer" className="text-gradient" style={{ fontWeight: 600, textDecoration: 'none', marginLeft: 'auto' }}>
-            View the full report →
-          </a>
         </div>
       </section>
 
