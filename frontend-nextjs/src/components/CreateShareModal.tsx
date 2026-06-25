@@ -195,8 +195,13 @@ export function CreateShareModal({ onClose }: { onClose: () => void }) {
               <label style={{ fontSize: '14px', color: 'var(--muted)' }}>Member Addresses ({members.length})</label>
               <div>
                 <input type="file" id="csv-upload" accept=".csv,.txt" style={{ display: 'none' }} onChange={handleFileUpload} />
-                <label htmlFor="csv-upload" style={{ fontSize: '12px', color: 'var(--purple2)', cursor: 'pointer', textDecoration: 'underline' }}>Import CSV</label>
+                <label htmlFor="csv-upload" style={{ fontSize: '12px', background: 'rgba(0, 210, 255, 0.1)', padding: '4px 8px', borderRadius: '4px', color: 'var(--purple2)', cursor: 'pointer', fontWeight: 'bold' }}>📁 Import CSV</label>
               </div>
+            </div>
+
+            {/* Pre-SHARE Tip */}
+            <div style={{ background: 'var(--surface2)', padding: '12px', borderRadius: '8px', marginBottom: '16px', fontSize: '13px', color: 'var(--muted)', borderLeft: '3px solid var(--purple)' }}>
+              <strong>💡 Pre-SHARE Phase:</strong> Building a large pool? Collect your community's wallet addresses beforehand (via Google Forms, Telegram, etc.), save them in a .csv or .txt file, and upload them all at once using the import button above.
             </div>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '150px', overflowY: 'auto', paddingRight: '8px' }}>
