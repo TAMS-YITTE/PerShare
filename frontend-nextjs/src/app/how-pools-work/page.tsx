@@ -31,8 +31,23 @@ export default function HowPoolsWork() {
           </div>
         </div>
 
+        {/* ── POOL & PAY (GOODS & SERVICES) ───────────────────────────── */}
+        <div style={{ marginTop: '64px', background: 'rgba(16, 185, 129, 0.06)', border: '1px solid rgba(16, 185, 129, 0.2)', borderRadius: '16px', padding: '32px' }}>
+          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(24px, 4vw, 32px)', fontWeight: 800, marginBottom: '12px' }}>
+            Not buying tokens? <span style={{ color: '#10B981' }}>Pool &amp; Pay</span> for goods &amp; services
+          </h2>
+          <p style={{ color: 'var(--muted)', fontSize: '16px', lineHeight: 1.6, marginBottom: '16px' }}>
+            The same pool works when a group simply needs to pay one vendor together — a bulk order, shared equipment, a group booking, or hiring a contractor. The flow stops at step 2: the USDT is released to the vendor on the group&apos;s approval, and there are no tokens to redistribute (no Phase 2).
+          </p>
+          <ul style={{ color: 'var(--muted)', fontSize: '15px', lineHeight: 1.7, paddingLeft: '20px', margin: 0 }}>
+            <li><strong style={{ color: '#fff' }}>Same safety net:</strong> if the group doesn&apos;t approve before the deadline, everyone is refunded 100%.</li>
+            <li><strong style={{ color: '#fff' }}>One destination:</strong> the vendor receives a single, transparent on-chain payment — no bank, no 20–30% platform cut.</li>
+            <li><strong style={{ color: '#fff' }}>Delivery stays off-chain:</strong> PerShare guarantees the payment logic, not the delivery. Choose a vendor you trust — see <a href="/risks" style={{ color: '#10B981' }}>Risks &amp; Disclaimers</a>.</li>
+          </ul>
+        </div>
+
         {/* ── WORKED EXAMPLE ──────────────────────────────────────────── */}
-        <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(26px, 4vw, 36px)', fontWeight: 800, marginTop: '72px', marginBottom: '16px' }}>A worked example</h2>
+        <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(26px, 4vw, 36px)', fontWeight: 800, marginTop: '72px', marginBottom: '16px' }}>A worked example <span style={{ fontSize: '15px', color: 'var(--muted)', fontWeight: 500 }}>· Pool &amp; Distribute</span></h2>
         <p style={{ color: 'var(--muted)', fontSize: '16px', lineHeight: 1.6, marginBottom: '24px' }}>
           Three members pool <strong style={{ color: '#fff' }}>10,000 USDT</strong> to enter a presale together. The seller returns <strong style={{ color: '#fff' }}>1,000,000 ABC</strong> into the contract. Each member&apos;s share is computed directly from their own deposit:
         </p>

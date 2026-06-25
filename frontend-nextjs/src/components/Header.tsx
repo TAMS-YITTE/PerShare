@@ -1,10 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { GuideModal } from './GuideModal';
-import { ComparisonModal } from './ComparisonModal';
 import { useAppKit } from '@reown/appkit/react';
 import { useAccount, useDisconnect } from 'wagmi';
 
@@ -77,10 +74,6 @@ function CustomConnectButton() {
 }
 
 export function Header() {
-  const pathname = usePathname();
-  const [showGuide, setShowGuide] = useState(false);
-  const [showComparison, setShowComparison] = useState(false);
-  
 
 
   return (
@@ -112,7 +105,10 @@ export function Header() {
           </Link>
 
           {/* Center: Navigation */}
-          <nav style={{ display: 'flex', gap: '24px', alignItems: 'center' }} className="desktop-nav">
+          <nav style={{ display: 'flex', gap: '28px', alignItems: 'center' }} className="desktop-nav">
+            <Link href="/how-pools-work" style={{ color: '#cbd5e1', textDecoration: 'none', fontSize: '14px', fontWeight: 500 }}>How it works</Link>
+            <a href="/#why" style={{ color: '#cbd5e1', textDecoration: 'none', fontSize: '14px', fontWeight: 500 }}>Why PerShare</a>
+            <Link href="/security" style={{ color: '#cbd5e1', textDecoration: 'none', fontSize: '14px', fontWeight: 500 }}>Security</Link>
             <Link href="/app" style={{
               background: 'linear-gradient(135deg, #06b6d4, #3b82f6)',
               color: '#fff',
@@ -124,23 +120,8 @@ export function Header() {
               boxShadow: '0 4px 14px rgba(6, 182, 212, 0.4)',
               transition: 'transform 0.2s',
             }}>
-              App
+              Launch App
             </Link>
-
-            <button
-              onClick={() => setShowComparison(true)}
-              style={{ background: 'transparent', border: '1px solid #06b6d4', color: '#06b6d4', padding: '6px 14px', borderRadius: '24px', fontSize: '13px', cursor: 'pointer', fontWeight: '500', transition: 'all 0.2s' }}
-            >
-              Why PerShare?
-            </button>
-            <button
-              onClick={() => setShowGuide(true)}
-              style={{ background: 'transparent', border: '1px solid #06b6d4', color: '#06b6d4', padding: '6px 14px', borderRadius: '24px', fontSize: '13px', cursor: 'pointer', fontWeight: '500', transition: 'all 0.2s' }}
-            >
-              How it works?
-            </button>
-            
-
           </nav>
 
           {/* Right: Reown Wallet Button */}
@@ -159,9 +140,6 @@ export function Header() {
           }
         `}} />
       </header>
-
-      {showGuide && <GuideModal onClose={() => setShowGuide(false)} />}
-      {showComparison && <ComparisonModal onClose={() => setShowComparison(false)} />}
     </>
   );
 }
