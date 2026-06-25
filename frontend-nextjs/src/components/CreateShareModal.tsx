@@ -1,9 +1,18 @@
 import { useState, useEffect } from 'react';
+import { useAccount } from 'wagmi';
 import { useCreateShare } from '../hooks/useShare';
 import { ADDRESSES, PERSHARE_CONTRACTS, PerShareTier } from '../lib/contract';
 import { toast } from 'sonner';
 
+// Liste des adresses autorisées à créer un pool "Social" (en minuscules)
+const VIP_WALLETS = [
+  '0xVotreAdresseAdminIci'
+].map(a => a.toLowerCase());
+
 export function CreateShareModal({ onClose }: { onClose: () => void }) {
+  const { address } = useAccount();
+  const isVIP = address ? VIP_WALLETS.includes(address.toLowerCase()) : false;
+  
   const { createShare, isPending, isConfirming, isSuccess } = useCreateShare();
   const [name, setName] = useState('');
   const [targetAmount, setTargetAmount] = useState('1000');
@@ -57,6 +66,16 @@ export function CreateShareModal({ onClose }: { onClose: () => void }) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Verifications des Tiers
+    if (tier === 'social' && !isVIP) {
+      toast.error("The Social tier is strictly reserved for verified partners.");
+      return;
+    }
+    if (tier === 'standard' && parseFloat(targetAmount) > 10000) {
+      toast.error("Standard tier is limited to 10,000 USDT. Please select Premium.");
+      return;
+    }
     
     // Cleanup empty fields
     const cleanedMembers = members.filter(m => m !== '');
@@ -115,29 +134,40 @@ export function CreateShareModal({ onClose }: { onClose: () => void }) {
           <div>
             <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: 'var(--muted)' }}>Select Tier</label>
             <div style={{ display: 'flex', gap: '8px' }}>
-              {(['social', 'standard', 'premium'] as PerShareTier[]).map(t => (
-                <button
-                  key={t}
-                  type="button"
-                  onClick={() => setTier(t)}
-                  style={{
-                    flex: 1,
-                    padding: '10px',
-                    borderRadius: '8px',
-                    border: tier === t ? '1px solid var(--purple2)' : '1px solid var(--border)',
-                    background: tier === t ? 'rgba(0, 210, 255, 0.1)' : 'var(--bg)',
-                    color: tier === t ? 'var(--purple2)' : 'var(--muted)',
-                    cursor: 'pointer',
-                    fontWeight: tier === t ? 'bold' : 'normal',
-                    textTransform: 'capitalize'
-                  }}
-                >
-                  {t}
-                  <div style={{ fontSize: '11px', marginTop: '4px', color: 'var(--muted)', fontWeight: 'normal' }}>
-                    {t === 'social' ? '0.5%' : t === 'standard' ? '1%' : '2%'} fee
-                  </div>
-                </button>
-              ))}
+              {(['social', 'standard', 'premium'] as PerShareTier[]).map(t => {
+                const isLocked = t === 'social' && !isVIP;
+                return (
+                  <button
+                    key={t}
+                    type="button"
+                    onClick={() => {
+                      if (isLocked) {
+                        toast.error("Social tier is reserved. Contact admin on Twitter to whitelist your wallet.");
+                        return;
+                      }
+                      setTier(t);
+                    }}
+                    style={{
+                      flex: 1,
+                      padding: '10px',
+                      borderRadius: '8px',
+                      border: tier === t ? '1px solid var(--purple2)' : '1px solid var(--border)',
+                      background: tier === t ? 'rgba(0, 210, 255, 0.1)' : 'var(--bg)',
+                      color: tier === t ? 'var(--purple2)' : 'var(--muted)',
+                      cursor: isLocked ? 'not-allowed' : 'pointer',
+                      fontWeight: tier === t ? 'bold' : 'normal',
+                      textTransform: 'capitalize',
+                      opacity: isLocked ? 0.5 : 1
+                    }}
+                  >
+                    {isLocked && <span style={{marginRight: '4px'}}>🔒</span>}
+                    {t}
+                    <div style={{ fontSize: '11px', marginTop: '4px', color: 'var(--muted)', fontWeight: 'normal' }}>
+                      {t === 'social' ? '0.5%' : t === 'standard' ? '1%' : '2%'} fee
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           </div>
 
