@@ -48,6 +48,15 @@ export default function Home() {
         .btn-outline:hover {
           background: rgba(255, 255, 255, 0.05);
         }
+        .why-grid {
+          display: grid;
+          grid-template-columns: 1.5fr 1fr;
+          gap: 24px;
+          align-items: start;
+        }
+        @media (max-width: 760px) {
+          .why-grid { grid-template-columns: 1fr; }
+        }
       `}</style>
 
       {/* ── HERO ──────────────────────────────────────────────────────────── */}
@@ -271,101 +280,85 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="glass-panel" style={{ padding: '8px', overflowX: 'auto' }}>
-          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '560px' }}>
-            <thead>
-              <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-                {['', 'PerShare', 'Freelance platforms', 'Crowdfunding', 'PayPal'].map((h, i) => (
-                  <th key={i} style={{ padding: '16px', fontSize: '13px', color: i === 1 ? '#00D2FF' : 'var(--muted)', fontWeight: 700, whiteSpace: 'nowrap' }}>{h}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                ['Average fees', '0.5% – 2%', '20% – 30%', '3% – 5%', '3% – 6%'],
-                ['Funds held by', 'Smart-contract code', 'The company', 'The company', 'The company'],
-                ['Bank account required', 'No', 'Yes', 'Yes', 'Yes'],
-                ['Instant global payout', 'Yes', 'No (days)', 'No (days)', 'Partial (FX)'],
-                ['Automatic pro-rata split', 'Yes', 'No', 'No', 'No'],
-              ].map((row, r) => (
-                <tr key={r} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                  {row.map((cell, c) => (
-                    <td key={c} style={{ padding: '16px', fontSize: '14px', fontWeight: c === 1 ? 700 : 400, color: c === 0 ? 'var(--text)' : c === 1 ? '#10B981' : 'var(--muted)' }}>{cell}</td>
+        <div className="why-grid">
+          {/* Left: comparison table */}
+          <div className="glass-panel" style={{ padding: '8px', overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '520px' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+                  {['', 'PerShare', 'Freelance platforms', 'Crowdfunding', 'PayPal'].map((h, i) => (
+                    <th key={i} style={{ padding: '14px', fontSize: '13px', color: i === 1 ? '#00D2FF' : 'var(--muted)', fontWeight: 700, whiteSpace: 'nowrap' }}>{h}</th>
                   ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {[
+                  ['Average fees', '0.5% – 2%', '20% – 30%', '3% – 5%', '3% – 6%'],
+                  ['Funds held by', 'Smart-contract code', 'The company', 'The company', 'The company'],
+                  ['Bank account required', 'No', 'Yes', 'Yes', 'Yes'],
+                  ['Instant global payout', 'Yes', 'No (days)', 'No (days)', 'Partial (FX)'],
+                  ['Automatic pro-rata split', 'Yes', 'No', 'No', 'No'],
+                ].map((row, r) => (
+                  <tr key={r} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                    {row.map((cell, c) => (
+                      <td key={c} style={{ padding: '14px', fontSize: '14px', fontWeight: c === 1 ? 700 : 400, color: c === 0 ? 'var(--text)' : c === 1 ? '#10B981' : 'var(--muted)' }}>{cell}</td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Right: slim fee calculator */}
+          <div className="glass-panel" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div style={{ fontSize: '13px', fontWeight: 700, color: '#00D2FF', letterSpacing: '0.04em' }}>FEE CALCULATOR</div>
+            <div>
+              <label style={{ display: 'block', fontSize: '12px', color: 'var(--muted)', marginBottom: '6px' }}>Pool amount (USDT)</label>
+              <div style={{ position: 'relative' }}>
+                <span style={{ position: 'absolute', left: '14px', top: '12px', color: 'var(--muted)', fontWeight: 700 }}>$</span>
+                <input
+                  type="number"
+                  value={calcAmount}
+                  onChange={e => setCalcAmount(e.target.value)}
+                  style={{ width: '100%', background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '10px', padding: '12px 14px 12px 32px', color: '#fff', fontSize: '18px', fontWeight: 700, outline: 'none' }}
+                />
+              </div>
+            </div>
+            <div>
+              <label style={{ display: 'block', fontSize: '12px', color: 'var(--muted)', marginBottom: '6px' }}>Tier</label>
+              <div style={{ display: 'flex', gap: '6px' }}>
+                {[
+                  { val: 0.005, label: 'Social', sub: '0.5%' },
+                  { val: 0.01, label: 'Standard', sub: '1%' },
+                  { val: 0.02, label: 'Premium', sub: '2%' },
+                ].map(t => (
+                  <button
+                    key={t.val}
+                    onClick={() => setCalcTier(t.val as any)}
+                    style={{ flex: 1, padding: '8px 4px', background: calcTier === t.val ? 'rgba(0,210,255,0.15)' : 'rgba(0,0,0,0.3)', border: calcTier === t.val ? '1px solid #00D2FF' : '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: calcTier === t.val ? '#00D2FF' : 'var(--muted)', fontSize: '12px', fontWeight: calcTier === t.val ? 700 : 500, cursor: 'pointer', lineHeight: 1.3 }}
+                  >
+                    {t.label}<br /><span style={{ fontSize: '10px', opacity: 0.8 }}>{t.sub}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: '#a78bfa' }}>
+              <span>PerShare fee</span>
+              <span style={{ fontWeight: 700 }}>-{feeAmount.toFixed(2)} USDT</span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 16px', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.3)', borderRadius: '10px' }}>
+              <span style={{ color: '#10B981', fontWeight: 700, fontSize: '13px' }}>Destination gets</span>
+              <span style={{ color: '#10B981', fontWeight: 800, fontSize: '18px' }}>{receiveAmount.toFixed(2)}</span>
+            </div>
+          </div>
         </div>
-        <p style={{ textAlign: 'center', fontSize: '12px', color: 'var(--muted)', marginTop: '16px' }}>
-          Indicative public fees, June 2026. PerShare is non-custodial infrastructure — an admin pause exists for emergencies (see <a href="/risks" className="text-gradient" style={{ textDecoration: 'none' }}>Risks &amp; Disclaimers</a>).
+        <p style={{ textAlign: 'center', fontSize: '12px', color: 'var(--muted)', marginTop: '24px' }}>
+          Indicative public fees, June 2026. Fee is deducted from the destination payout on success only — 100% refund if the pool is cancelled or expires. PerShare is non-custodial infrastructure; an admin pause exists for emergencies (see <a href="/risks" className="text-gradient" style={{ textDecoration: 'none' }}>Risks &amp; Disclaimers</a>).
         </p>
       </section>
 
-      {/* ── TRANSPARENT FEES (CALCULATOR) ─────────────────────────────────── */}
-      <section style={{ background: 'rgba(0,0,0,0.4)', borderTop: '1px solid rgba(255,255,255,0.05)', borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '100px 24px' }}>
-        <div className="glass-panel" style={{ maxWidth: '500px', margin: '0 auto', padding: '32px' }}>
-          <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-            <h3 style={{ fontSize: '24px', fontWeight: 800, marginBottom: '8px' }}>Transparent Fees</h3>
-            <p style={{ color: 'var(--muted)', fontSize: '14px' }}>Calculate exactly what you pool and what reaches the destination.</p>
-          </div>
-
-          <div style={{ marginBottom: '24px' }}>
-            <label style={{ display: 'block', fontSize: '13px', color: 'var(--muted)', marginBottom: '8px' }}>Pool Amount (USDT)</label>
-            <div style={{ position: 'relative' }}>
-              <span style={{ position: 'absolute', left: '16px', top: '14px', color: 'var(--muted)', fontWeight: 700 }}>$</span>
-              <input 
-                type="number" 
-                value={calcAmount}
-                onChange={e => setCalcAmount(e.target.value)}
-                style={{ width: '100%', background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', padding: '14px 16px 14px 36px', color: '#fff', fontSize: '20px', fontWeight: 700, outline: 'none' }}
-              />
-            </div>
-          </div>
-
-          <div style={{ marginBottom: '32px' }}>
-            <label style={{ display: 'block', fontSize: '13px', color: 'var(--muted)', marginBottom: '8px' }}>Select Tier</label>
-            <div style={{ display: 'flex', gap: '8px' }}>
-              {[
-                { val: 0.005, label: 'Social (0.5%)' },
-                { val: 0.01, label: 'Standard (1%)' },
-                { val: 0.02, label: 'Premium (2%)' }
-              ].map(t => (
-                <button
-                  key={t.val}
-                  onClick={() => setCalcTier(t.val as any)}
-                  style={{ flex: 1, padding: '10px 4px', background: calcTier === t.val ? 'rgba(0,210,255,0.15)' : 'rgba(0,0,0,0.3)', border: calcTier === t.val ? '1px solid #00D2FF' : '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: calcTier === t.val ? '#00D2FF' : 'var(--muted)', fontSize: '12px', fontWeight: calcTier === t.val ? 700 : 500, cursor: 'pointer' }}
-                >
-                  {t.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', padding: '16px', background: 'rgba(0,0,0,0.4)', borderRadius: '12px' }}>
-              <span style={{ color: 'var(--muted)' }}>Members deposit:</span>
-              <span style={{ fontWeight: 700 }}>{amount.toFixed(2)} USDT</span>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', padding: '16px', background: 'rgba(167, 139, 250, 0.1)', border: '1px solid rgba(167, 139, 250, 0.2)', borderRadius: '12px' }}>
-              <span style={{ color: '#a78bfa', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                PerShare Fee
-              </span>
-              <span style={{ color: '#a78bfa', fontWeight: 700 }}>-{feeAmount.toFixed(2)} USDT</span>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', padding: '20px', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.3)', borderRadius: '12px' }}>
-              <span style={{ color: '#10B981', fontWeight: 700 }}>Destination receives:</span>
-              <span style={{ color: '#10B981', fontWeight: 800, fontSize: '20px' }}>{receiveAmount.toFixed(2)} USDT</span>
-            </div>
-          </div>
+      {/* (Fee calculator moved into the Why PerShare section) */}
           
-          <p style={{ fontSize: '12px', color: 'var(--muted)', textAlign: 'center', marginTop: '24px', lineHeight: 1.5 }}>
-            The fee is only deducted from the destination payout upon successful validation. 100% refund to contributors if the pool is cancelled or expires.
-          </p>
-        </div>
-      </section>
-
-
     </>
   );
 }
