@@ -2,319 +2,218 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { PERSHARE_CONTRACTS } from '@/lib/contract';
-
-// ── Data ──────────────────────────────────────────────────────────────────────
-
-const TIERS = [
-  {
-    id: 'social',
-    label: 'Social',
-    fee: '0.5%',
-    bps: 50,
-    color: '#10B981',
-    glow: 'rgba(16,185,129,0.15)',
-    border: 'rgba(16,185,129,0.3)',
-    description: 'Charitable & community pools. Maximum accessibility.',
-    address: PERSHARE_CONTRACTS.social,
-    useCases: ['Charitable fundraising', 'Hackathon prize split', 'Community grant'],
-    icon: '🤝',
-  },
-  {
-    id: 'standard',
-    label: 'Standard',
-    fee: '1%',
-    bps: 100,
-    color: '#00D2FF',
-    glow: 'rgba(0,210,255,0.15)',
-    border: 'rgba(0,210,255,0.3)',
-    description: 'The core product. Group buys, presales & community pools.',
-    address: PERSHARE_CONTRACTS.standard,
-    useCases: ['Presale syndicate', 'OTC group buy', 'Node purchase', 'Gaming guild'],
-    icon: '🌊',
-    popular: true,
-  },
-  {
-    id: 'premium',
-    label: 'Premium',
-    fee: '2%',
-    bps: 200,
-    color: '#a78bfa',
-    glow: 'rgba(167,139,250,0.15)',
-    border: 'rgba(167,139,250,0.3)',
-    description: 'High-value group operations: large co-purchases & shared assets.',
-    address: PERSHARE_CONTRACTS.premium,
-    useCases: ['Project treasury', 'Co-owned assets', 'Infra cost-sharing', 'Group co-purchase'],
-    icon: '🚀',
-  },
-];
-
-const USE_CASES = [
-  { icon: '💸', tag: 'Standard', title: 'Presale Syndicate', desc: 'Minimum ticket too high? Pool with up to 50 wallets, reach any presale threshold. Tokens auto-distributed proportionally.' },
-  { icon: '🪙', tag: 'Standard', title: 'OTC Group Buy', desc: 'Buy large token lots at discount directly from a whale or DAO — bypassing public markets entirely.' },
-  { icon: '🌊', tag: 'Standard', title: 'Community Tontine', desc: "The digital ROSCA. Transparent, onchain, automatic. Each member's share is enforced by code — not a treasurer." },
-  { icon: '🤝', tag: 'Social', title: 'Charity Pool', desc: 'Launch a GoFundMe-equivalent on BNB Chain. 100% transparent. Automatic refund if target is missed.' },
-  { icon: '🏢', tag: 'Premium', title: 'Co-Owned Assets', desc: 'A group pools to co-acquire a tokenized asset together, then splits the resulting asset tokens proportionally to each contribution.' },
-  { icon: '⛏️', tag: 'Premium', title: 'Infra Cost-Sharing', desc: 'Split the cost of shared infrastructure (e.g. ASIC miners) across a group, and distribute the outputs proportionally.' },
-  { icon: '🎮', tag: 'Standard', title: 'Gaming Guild', desc: 'Fund expensive in-game assets together. Play-to-Earn revenues flow back to contributors via PerShare.' },
-  { icon: '🚀', tag: 'Premium', title: 'Project Treasury Pool', desc: "A project's core contributors pool capital toward a shared on-chain goal. Funds release only when the group validates the threshold." },
-  { icon: '🏆', tag: 'Social', title: 'Hackathon Prize', desc: 'Win a bounty as a team and split it instantly and proportionally, no bank required.' },
-];
-
-const HOW_STEPS = [
-  { n: '1', title: 'Create the SHARE', desc: 'Name, members (up to 50), stablecoin, destination, target amount, deadline, and validation threshold.' },
-  { n: '2', title: 'Members contribute', desc: 'Each member sends their share in USDT from their own wallet. Multiple contributions allowed.' },
-  { n: '3', title: 'Collective validation', desc: 'Once the target is reached, members validate. The threshold is configurable — majority or unanimity.' },
-  { n: '4', title: 'Automatic send', desc: 'The contract sends to the destination. If the deadline expires without send — automatic full refund.' },
-];
-
-const TAG_COLORS: Record<string, string> = {
-  Social: '#10B981',
-  Standard: '#00D2FF',
-  Premium: '#a78bfa',
-};
-
-// ── Component ─────────────────────────────────────────────────────────────────
 
 export default function Home() {
-  const [activeTier, setActiveTier] = useState(1);
+  const [calcAmount, setCalcAmount] = useState('1000');
+  const [calcTier, setCalcTier] = useState<0.005 | 0.01 | 0.02>(0.01);
+
+  const amount = parseFloat(calcAmount) || 0;
+  const feeAmount = amount * calcTier;
+  const receiveAmount = amount - feeAmount;
 
   return (
     <>
+      <style>{`
+        .glass-panel {
+          background: rgba(20, 28, 47, 0.4);
+          backdrop-filter: blur(12px);
+          border: 1px solid rgba(255, 255, 255, 0.05);
+          border-radius: 16px;
+        }
+        .text-gradient {
+          background: linear-gradient(135deg, #00D2FF, #a78bfa);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+        .btn-primary {
+          background: linear-gradient(135deg, #00D2FF, #0284c7);
+          color: #000;
+          font-weight: 700;
+          border-radius: 12px;
+          text-decoration: none;
+          transition: all 0.2s;
+        }
+        .btn-primary:hover {
+          box-shadow: 0 8px 32px rgba(0, 210, 255, 0.3);
+        }
+        .btn-outline {
+          background: transparent;
+          color: var(--text);
+          border: 1px solid rgba(255, 255, 255, 0.15);
+          font-weight: 600;
+          border-radius: 12px;
+          text-decoration: none;
+          transition: all 0.2s;
+        }
+        .btn-outline:hover {
+          background: rgba(255, 255, 255, 0.05);
+        }
+      `}</style>
+
       {/* ── HERO ──────────────────────────────────────────────────────────── */}
-      <section style={{ minHeight: '92vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '120px 24px 80px', position: 'relative', overflow: 'hidden' }}>
-        {/* Radial glow bg */}
+      <section style={{ minHeight: '85vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '120px 24px 60px', position: 'relative' }}>
         <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 70% 60% at 50% 0%, rgba(0,210,255,0.08), transparent)', pointerEvents: 'none' }} />
-        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 40% 40% at 80% 80%, rgba(167,139,250,0.06), transparent)', pointerEvents: 'none' }} />
-
-        {/* Live badge */}
-        <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.25)', borderRadius: '20px', padding: '6px 16px', fontSize: '13px', color: '#10B981', marginBottom: '32px', fontWeight: 600 }}>
-          <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#10B981', boxShadow: '0 0 8px #10B981', animation: 'pulse 2s infinite' }} />
-          Live on BSC Mainnet · Audited by SpyWolf
-        </div>
-
-        <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(48px, 8vw, 88px)', fontWeight: 800, letterSpacing: '-3px', lineHeight: 1.02, marginBottom: '24px', maxWidth: '900px' }}>
-          Every member receives<br />their{' '}
-          <span style={{ background: 'linear-gradient(135deg, #00D2FF, #a78bfa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-            fair share
-          </span>.
-          <span style={{ WebkitTextFillColor: 'unset', color: 'inherit' }} />
+        
+        <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(40px, 6vw, 72px)', fontWeight: 800, letterSpacing: '-2px', lineHeight: 1.1, marginBottom: '24px', maxWidth: '800px' }}>
+          Secure every pool. <br/>Pay only on <span className="text-gradient">success</span>.
         </h1>
-
-        <p style={{ fontSize: 'clamp(16px, 2vw, 20px)', color: 'var(--muted)', maxWidth: '560px', lineHeight: 1.65, marginBottom: '48px' }}>
-          Group pooling on BNB Chain. Pool funds, send collectively, and distribute tokens — automatically. Deposits stay locked in the audited contract until the group validates — or are fully refunded at the deadline.
+        <p style={{ fontSize: 'clamp(16px, 2vw, 20px)', color: 'var(--muted)', maxWidth: '600px', lineHeight: 1.6, marginBottom: '48px' }}>
+          The universal decentralized pooling platform for communities, DAOs, and group buys. Self-custodial deposits, automatic refunds.
         </p>
 
-        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'center', marginBottom: '72px' }}>
-          <Link href="/app" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'linear-gradient(135deg, #00D2FF, #0284c7)', color: '#000', padding: '14px 28px', borderRadius: '12px', fontWeight: 700, fontSize: '16px', textDecoration: 'none', boxShadow: '0 8px 32px rgba(0,210,255,0.3)', transition: 'all 0.2s' }}>
-            Launch App →
+        <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', justifyContent: 'center' }}>
+          <Link href="/app" className="btn-primary" style={{ padding: '14px 32px', fontSize: '1.1rem' }}>
+            Launch App
           </Link>
-          <a href="#how" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'transparent', color: 'var(--text)', padding: '14px 28px', borderRadius: '12px', fontWeight: 600, fontSize: '16px', textDecoration: 'none', border: '1px solid rgba(255,255,255,0.15)', transition: 'all 0.2s' }}>
+          <a href="#how" className="btn-outline" style={{ padding: '14px 32px', fontSize: '1.1rem' }}>
             How it works
           </a>
         </div>
-
-        {/* Stats */}
-        <div style={{ display: 'flex', gap: '56px', flexWrap: 'wrap', justifyContent: 'center' }}>
-          {[
-            { val: '0.5–2%', label: 'Fee on success only' },
-            { val: '100%', label: 'Refund if target missed' },
-            { val: '50', label: 'Max members per pool' },
-            { val: 'Onchain', label: 'Verifiable on BscScan' },
-          ].map(s => (
-            <div key={s.label} style={{ textAlign: 'center' }}>
-              <div style={{ fontFamily: 'var(--font-display)', fontSize: '32px', fontWeight: 800, color: 'var(--text)', letterSpacing: '-1px' }}>{s.val}</div>
-              <div style={{ fontSize: '13px', color: 'var(--muted)', marginTop: '4px' }}>{s.label}</div>
-            </div>
-          ))}
-        </div>
       </section>
 
-      {/* ── FEE TIERS ─────────────────────────────────────────────────────── */}
-      <section id="tiers" style={{ padding: '100px 24px', maxWidth: '1100px', margin: '0 auto' }}>
-        <div style={{ textAlign: 'center', marginBottom: '56px' }}>
-          <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--purple2)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '12px' }}>Pricing</div>
-          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(32px, 4vw, 52px)', fontWeight: 800, letterSpacing: '-2px', marginBottom: '16px' }}>One contract. Three tiers.</h2>
-          <p style={{ color: 'var(--muted)', fontSize: '18px', maxWidth: '520px', margin: '0 auto', lineHeight: 1.6 }}>
-            Three independent deployments of the same audited contract — each optimised for a use case.
-          </p>
-        </div>
-
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' }}>
-          {TIERS.map((tier, i) => (
-            <div
-              key={tier.id}
-              onClick={() => setActiveTier(i)}
-              style={{
-                background: activeTier === i ? `linear-gradient(145deg, ${tier.glow}, rgba(20,28,47,0.8))` : 'var(--surface)',
-                border: `1px solid ${activeTier === i ? tier.border : 'rgba(255,255,255,0.08)'}`,
-                borderRadius: '20px',
-                padding: '32px',
-                cursor: 'pointer',
-                transition: 'all 0.2s',
-                position: 'relative',
-                transform: activeTier === i ? 'translateY(-4px)' : 'none',
-                boxShadow: activeTier === i ? `0 20px 60px ${tier.glow}` : 'none',
-              }}
-            >
-              {tier.popular && (
-                <div style={{ position: 'absolute', top: '-12px', left: '50%', transform: 'translateX(-50%)', background: 'linear-gradient(135deg, #00D2FF, #0284c7)', color: '#000', fontSize: '11px', fontWeight: 800, padding: '4px 14px', borderRadius: '20px', whiteSpace: 'nowrap', letterSpacing: '0.05em' }}>
-                  MOST POPULAR
-                </div>
-              )}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '20px' }}>
-                <div style={{ fontSize: '32px' }}>{tier.icon}</div>
-                <div style={{ background: `${tier.glow}`, border: `1px solid ${tier.border}`, color: tier.color, fontSize: '11px', fontWeight: 700, padding: '4px 10px', borderRadius: '20px', letterSpacing: '0.05em' }}>
-                  {tier.label.toUpperCase()}
-                </div>
-              </div>
-              <div style={{ fontFamily: 'var(--font-display)', fontSize: '52px', fontWeight: 800, color: tier.color, lineHeight: 1, marginBottom: '8px', letterSpacing: '-2px' }}>{tier.fee}</div>
-              <div style={{ fontSize: '13px', color: 'var(--muted)', marginBottom: '20px' }}>fee on success only</div>
-              <p style={{ fontSize: '14px', color: 'var(--muted)', lineHeight: 1.6, marginBottom: '20px' }}>{tier.description}</p>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '24px' }}>
-                {tier.useCases.map(uc => (
-                  <span key={uc} style={{ fontSize: '11px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '6px', padding: '4px 8px', color: 'var(--muted)' }}>{uc}</span>
-                ))}
-              </div>
-              <a
-                href={`https://bscscan.com/address/${tier.address}`}
-                target="_blank"
-                rel="noreferrer"
-                onClick={e => e.stopPropagation()}
-                style={{ fontSize: '11px', color: 'var(--muted)', fontFamily: 'monospace', display: 'flex', alignItems: 'center', gap: '6px', textDecoration: 'none', transition: 'color 0.2s' }}
-              >
-                <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10B981', flexShrink: 0 }} />
-                {tier.address.slice(0, 10)}...{tier.address.slice(-6)} ↗
-              </a>
+      {/* ── STATS BAR ─────────────────────────────────────────────────────── */}
+      <section style={{ background: 'rgba(0,0,0,0.3)', borderTop: '1px solid rgba(255,255,255,0.05)', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+        <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '32px 24px' }}>
+          <div className="glass-panel" style={{ padding: '24px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '24px', textAlign: 'center' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <span style={{ fontSize: '12px', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 600 }}>Refund Guarantee</span>
+              <div style={{ fontSize: '24px', fontWeight: 800, color: 'var(--text)' }}>100% on failure</div>
             </div>
-          ))}
-        </div>
-        <p style={{ textAlign: 'center', fontSize: '13px', color: 'var(--muted)', marginTop: '24px' }}>
-          ✓ Fee on payout only &nbsp;·&nbsp; ✓ Zero fee on refunds &nbsp;·&nbsp; ✓ Zero subscription &nbsp;·&nbsp; ✓ Verifiable onchain
-        </p>
-      </section>
-
-      {/* ── USE CASES ─────────────────────────────────────────────────────── */}
-      <section id="usages" style={{ padding: '100px 24px', background: 'rgba(0,210,255,0.02)', borderTop: '1px solid rgba(255,255,255,0.05)', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-        <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: '56px' }}>
-            <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--purple2)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '12px' }}>Use Cases</div>
-            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(32px, 4vw, 52px)', fontWeight: 800, letterSpacing: '-2px', marginBottom: '16px' }}>Built for every collective.</h2>
-            <p style={{ color: 'var(--muted)', fontSize: '18px', maxWidth: '480px', margin: '0 auto', lineHeight: 1.6 }}>
-              One contract. Infinite use cases. Any group, any goal, any token.
-            </p>
-          </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '20px' }}>
-            {USE_CASES.map(uc => (
-              <div key={uc.title} style={{ background: 'var(--surface)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '20px', padding: '28px', transition: 'all 0.2s', cursor: 'default' }}
-                onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.borderColor = `${TAG_COLORS[uc.tag]}44`; (e.currentTarget as HTMLDivElement).style.transform = 'translateY(-2px)'; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.borderColor = 'rgba(255,255,255,0.07)'; (e.currentTarget as HTMLDivElement).style.transform = 'none'; }}
-              >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                  <span style={{ fontSize: '32px' }}>{uc.icon}</span>
-                  <span style={{ fontSize: '11px', fontWeight: 700, padding: '3px 10px', borderRadius: '20px', background: `${TAG_COLORS[uc.tag]}18`, color: TAG_COLORS[uc.tag], letterSpacing: '0.05em' }}>{uc.tag.toUpperCase()}</span>
-                </div>
-                <div style={{ fontFamily: 'var(--font-display)', fontSize: '18px', fontWeight: 700, marginBottom: '10px' }}>{uc.title}</div>
-                <p style={{ fontSize: '14px', color: 'var(--muted)', lineHeight: 1.6, margin: 0 }}>{uc.desc}</p>
-              </div>
-            ))}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <span style={{ fontSize: '12px', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 600 }}>Max Pool Members</span>
+              <div style={{ fontSize: '24px', fontWeight: 800, color: 'var(--text)' }}>Up to 50</div>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <span style={{ fontSize: '12px', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 600 }}>Success Fee</span>
+              <div style={{ fontSize: '24px', fontWeight: 800, color: 'var(--text)' }}>0.5% – 2.0%</div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* ── HOW IT WORKS ──────────────────────────────────────────────────── */}
-      <section id="how" style={{ padding: '100px 24px', maxWidth: '1100px', margin: '0 auto' }}>
-        <div style={{ textAlign: 'center', marginBottom: '56px' }}>
-          <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--purple2)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '12px' }}>How It Works</div>
-          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(32px, 4vw, 52px)', fontWeight: 800, letterSpacing: '-2px' }}>30 seconds to launch a SHARE.</h2>
-        </div>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '60px', alignItems: 'center' }}>
-          {/* Steps */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '28px' }}>
-            {HOW_STEPS.map((step, i) => (
-              <div key={i} style={{ display: 'flex', gap: '16px' }}>
-                <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'linear-gradient(135deg, #00D2FF, #0284c7)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-display)', fontSize: '15px', fontWeight: 800, color: '#000', flexShrink: 0 }}>{step.n}</div>
-                <div>
-                  <h4 style={{ fontFamily: 'var(--font-display)', fontSize: '16px', fontWeight: 700, marginBottom: '6px' }}>{step.title}</h4>
-                  <p style={{ fontSize: '14px', color: 'var(--muted)', lineHeight: 1.6, margin: 0 }}>{step.desc}</p>
-                </div>
-              </div>
-            ))}
+      <section id="how" style={{ padding: '100px 24px', maxWidth: '1000px', margin: '0 auto' }}>
+        <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(32px, 4vw, 48px)', fontWeight: 800, textAlign: 'center', marginBottom: '64px' }}>How it works?</h2>
+        
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px', marginBottom: '64px' }}>
+          {/* Step 1 */}
+          <div className="glass-panel" style={{ padding: '32px', textAlign: 'left' }}>
+            <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'rgba(0,210,255,0.1)', color: '#00D2FF', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '24px' }}>
+              <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            </div>
+            <h3 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '12px' }}>1. Secure Deposit</h3>
+            <p style={{ color: 'var(--muted)', lineHeight: 1.6 }}>Members deposit USDT into a tamper-proof smart contract. Funds are locked safely onchain.</p>
           </div>
-          {/* Live visual */}
-          <div style={{ background: 'var(--surface)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '20px', padding: '28px' }}>
-            <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--purple2)', marginBottom: '20px', letterSpacing: '0.06em' }}>SHARE · Presale Round A 🚀</div>
-            {[
-              { dot: '#00D2FF', text: 'Pool created · 4 members', sub: 'Target 10,000 USDT · 14 days', active: true },
-              { dot: '#10B981', text: '7,500 USDT collected', sub: 'alice.eth 2500 · bob.eth 2500 · 2 others...', active: true },
-              { dot: '#F59E0B', text: 'Target reached · Validation', sub: '3/4 validations required', active: true },
-              { dot: '#a78bfa', text: '9,900 USDT → PresaleContract.eth', sub: '100 USDT commission PerShare (1%)', active: false },
-            ].map((item, i) => (
-              <div key={i}>
-                {i > 0 && <div style={{ textAlign: 'center', color: 'var(--purple2)', fontSize: '18px', padding: '4px 0', opacity: 0.5 }}>↓</div>}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '12px', borderRadius: '12px', background: item.active ? 'rgba(0,210,255,0.06)' : 'transparent', border: item.active ? '1px solid rgba(0,210,255,0.15)' : '1px solid transparent' }}>
-                  <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: item.dot, flexShrink: 0 }} />
-                  <div>
-                    <div style={{ fontSize: '13px', fontWeight: 600 }}>{item.text}</div>
-                    <div style={{ fontSize: '11px', color: 'var(--muted)', marginTop: '2px' }}>{item.sub}</div>
-                  </div>
-                </div>
-              </div>
-            ))}
-            <div style={{ fontSize: '11px', color: 'var(--muted)', marginTop: '16px', paddingTop: '16px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-              Every step verifiable on BscScan
+          {/* Step 2 */}
+          <div className="glass-panel" style={{ padding: '32px', textAlign: 'left' }}>
+            <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'rgba(16,185,129,0.1)', color: '#10B981', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '24px' }}>
+              <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+            </div>
+            <h3 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '12px' }}>2. Collective Target</h3>
+            <p style={{ color: 'var(--muted)', lineHeight: 1.6 }}>The pool remains open until the deadline. Everyone tracks progress on BscScan transparently.</p>
+          </div>
+          {/* Step 3 */}
+          <div className="glass-panel" style={{ padding: '32px', textAlign: 'left' }}>
+            <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'rgba(167,139,250,0.1)', color: '#a78bfa', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '24px' }}>
+              <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            </div>
+            <h3 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '12px' }}>3. Release or Refund</h3>
+            <p style={{ color: 'var(--muted)', lineHeight: 1.6 }}>If the target is validated, funds are transferred. If missed by the deadline, automatic refund.</p>
+          </div>
+        </div>
+
+        {/* Audit Banner */}
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px', background: 'rgba(0, 210, 255, 0.05)', border: '1px solid rgba(0, 210, 255, 0.2)', borderRadius: '16px', padding: '24px', flexWrap: 'wrap' }}>
+          <svg width="32" height="32" fill="none" stroke="#00D2FF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          <h3 style={{ margin: 0, fontSize: '20px', fontWeight: 700 }}>Smart Contract Audited</h3>
+          <a href="/PerShare_Audit_R2.pdf" target="_blank" className="text-gradient" style={{ fontWeight: 600, textDecoration: 'none', marginLeft: 'auto' }}>
+            View the full report →
+          </a>
+        </div>
+      </section>
+
+      {/* ── TRANSPARENT FEES (CALCULATOR) ─────────────────────────────────── */}
+      <section style={{ background: 'rgba(0,0,0,0.4)', borderTop: '1px solid rgba(255,255,255,0.05)', borderBottom: '1px solid rgba(255,255,255,0.05)', padding: '100px 24px' }}>
+        <div className="glass-panel" style={{ maxWidth: '500px', margin: '0 auto', padding: '32px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+            <h3 style={{ fontSize: '24px', fontWeight: 800, marginBottom: '8px' }}>Transparent Fees</h3>
+            <p style={{ color: 'var(--muted)', fontSize: '14px' }}>Calculate exactly what you pool and what reaches the destination.</p>
+          </div>
+
+          <div style={{ marginBottom: '24px' }}>
+            <label style={{ display: 'block', fontSize: '13px', color: 'var(--muted)', marginBottom: '8px' }}>Pool Amount (USDT)</label>
+            <div style={{ position: 'relative' }}>
+              <span style={{ position: 'absolute', left: '16px', top: '14px', color: 'var(--muted)', fontWeight: 700 }}>$</span>
+              <input 
+                type="number" 
+                value={calcAmount}
+                onChange={e => setCalcAmount(e.target.value)}
+                style={{ width: '100%', background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', padding: '14px 16px 14px 36px', color: '#fff', fontSize: '20px', fontWeight: 700, outline: 'none' }}
+              />
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* ── GETTING STARTED ───────────────────────────────────────────────── */}
-      <section id="global" style={{ padding: '100px 24px', background: 'rgba(167,139,250,0.02)', borderTop: '1px solid rgba(255,255,255,0.05)', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-        <div style={{ maxWidth: '760px', margin: '0 auto', textAlign: 'center' }}>
-          <div style={{ fontSize: '12px', fontWeight: 700, color: 'var(--purple2)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '12px' }}>Getting Started</div>
-          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(32px, 4vw, 52px)', fontWeight: 800, letterSpacing: '-2px', marginBottom: '16px' }}>All you need is USDT on BNB Chain.</h2>
-          <p style={{ color: 'var(--muted)', fontSize: '18px', lineHeight: 1.6, marginBottom: '12px' }}>
-            PerShare works with any wallet holding USDT on BNB Chain. Already have funds in your wallet? Connect and launch a SHARE in seconds.
-          </p>
-          <p style={{ color: 'var(--muted)', fontSize: '13px', lineHeight: 1.6 }}>
-            Need USDT first? Use any exchange or on-ramp of your choice and withdraw to your wallet. PerShare does not handle on-ramps, fiat conversion, or custody.
-          </p>
-        </div>
-      </section>
-
-      {/* ── CTA ───────────────────────────────────────────────────────────── */}
-      <section style={{ padding: '120px 24px', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 60% 60% at 50% 50%, rgba(0,210,255,0.06), transparent)', pointerEvents: 'none' }} />
-        <div style={{ maxWidth: '640px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
-          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(36px, 5vw, 64px)', fontWeight: 800, letterSpacing: '-2.5px', marginBottom: '20px', lineHeight: 1.05 }}>
-            Ready to create your first SHARE?
-          </h2>
-          <p style={{ fontSize: '18px', color: 'var(--muted)', marginBottom: '48px', lineHeight: 1.6 }}>
-            PerShare is live on BSC Mainnet. Connect your wallet and launch your first pool in 30 seconds.
-          </p>
-          <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <Link href="/app" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'linear-gradient(135deg, #00D2FF, #0284c7)', color: '#000', padding: '16px 36px', borderRadius: '14px', fontWeight: 800, fontSize: '17px', textDecoration: 'none', boxShadow: '0 12px 40px rgba(0,210,255,0.35)', letterSpacing: '-0.3px' }}>
-              Launch App →
-            </Link>
-            <a href="https://t.me/pershare_org" target="_blank" rel="noreferrer" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: 'transparent', color: 'var(--text)', padding: '16px 36px', borderRadius: '14px', fontWeight: 600, fontSize: '17px', textDecoration: 'none', border: '1px solid rgba(255,255,255,0.15)' }}>
-              Join Telegram
-            </a>
+          <div style={{ marginBottom: '32px' }}>
+            <label style={{ display: 'block', fontSize: '13px', color: 'var(--muted)', marginBottom: '8px' }}>Select Tier</label>
+            <div style={{ display: 'flex', gap: '8px' }}>
+              {[
+                { val: 0.005, label: 'Social (0.5%)' },
+                { val: 0.01, label: 'Standard (1%)' },
+                { val: 0.02, label: 'Premium (2%)' }
+              ].map(t => (
+                <button
+                  key={t.val}
+                  onClick={() => setCalcTier(t.val as any)}
+                  style={{ flex: 1, padding: '10px 4px', background: calcTier === t.val ? 'rgba(0,210,255,0.15)' : 'rgba(0,0,0,0.3)', border: calcTier === t.val ? '1px solid #00D2FF' : '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: calcTier === t.val ? '#00D2FF' : 'var(--muted)', fontSize: '12px', fontWeight: calcTier === t.val ? 700 : 500, cursor: 'pointer' }}
+                >
+                  {t.label}
+                </button>
+              ))}
+            </div>
           </div>
-          <p style={{ fontSize: '12px', color: 'var(--muted)', marginTop: '24px' }}>
-            Audited by SpyWolf · Automatic refunds · Live on BNB Chain
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', padding: '16px', background: 'rgba(0,0,0,0.4)', borderRadius: '12px' }}>
+              <span style={{ color: 'var(--muted)' }}>Members deposit:</span>
+              <span style={{ fontWeight: 700 }}>{amount.toFixed(2)} USDT</span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', padding: '16px', background: 'rgba(167, 139, 250, 0.1)', border: '1px solid rgba(167, 139, 250, 0.2)', borderRadius: '12px' }}>
+              <span style={{ color: '#a78bfa', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                PerShare Fee
+              </span>
+              <span style={{ color: '#a78bfa', fontWeight: 700 }}>-{feeAmount.toFixed(2)} USDT</span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', padding: '20px', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.3)', borderRadius: '12px' }}>
+              <span style={{ color: '#10B981', fontWeight: 700 }}>Destination receives:</span>
+              <span style={{ color: '#10B981', fontWeight: 800, fontSize: '20px' }}>{receiveAmount.toFixed(2)} USDT</span>
+            </div>
+          </div>
+          
+          <p style={{ fontSize: '12px', color: 'var(--muted)', textAlign: 'center', marginTop: '24px', lineHeight: 1.5 }}>
+            The fee is only deducted from the destination payout upon successful validation. 100% refund to contributors if the pool is cancelled or expires.
           </p>
         </div>
       </section>
 
-      <style>{`
-        @keyframes pulse {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.4; }
-        }
-        @media (max-width: 768px) {
-          #how > div > div:last-child > div:last-child { display: none; }
-        }
-      `}</style>
+      {/* ── FAQ ───────────────────────────────────────────────────────────── */}
+      <section style={{ padding: '100px 24px', maxWidth: '800px', margin: '0 auto' }}>
+        <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px, 4vw, 40px)', fontWeight: 800, textAlign: 'center', marginBottom: '64px' }}>Frequently Asked Questions</h2>
+        
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div className="glass-panel" style={{ padding: '32px' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '12px' }}>Is my money safe?</h3>
+            <p style={{ color: 'var(--muted)', lineHeight: 1.6 }}>Your funds are locked in a self-custodial smart contract deployed on BNB Chain. The contract ensures that funds can only be released to the predefined destination upon group approval, or fully refunded if the deadline passes. The contract is admin-pausable purely for emergency security.</p>
+          </div>
+          <div className="glass-panel" style={{ padding: '32px' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '12px' }}>Who controls the funds?</h3>
+            <p style={{ color: 'var(--muted)', lineHeight: 1.6 }}>No single person. The pool requires collective validation from its members to authorize the final transfer. If the group does not reach consensus before the expiration date, every member can autonomously withdraw their exact contribution.</p>
+          </div>
+          <div className="glass-panel" style={{ padding: '32px' }}>
+            <h3 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '12px' }}>What fees do I pay?</h3>
+            <p style={{ color: 'var(--muted)', lineHeight: 1.6 }}>You pay absolutely nothing to create a pool or to deposit funds. The protocol only deducts a success fee (0.5% to 2% depending on the tier chosen) from the final destination payout. If the pool fails, 100% of your deposit is refunded with zero fees.</p>
+          </div>
+        </div>
+      </section>
     </>
   );
 }
