@@ -98,7 +98,7 @@ export function Header() {
         }}>
           {/* Left: Logo */}
           <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '12px', textDecoration: 'none' }}>
-            <img src="/pershare_logo.png" alt="PerShare" style={{ width: '36px', height: '36px', borderRadius: '6px' }} />
+            <img src="/pershare_logo.svg" alt="PerShare" style={{ width: '40px', height: '40px' }} />
             <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '22px', margin: 0, fontWeight: 'bold', color: '#fff' }}>
               Per<span style={{ color: 'var(--purple)' }}>Share</span>
             </h1>

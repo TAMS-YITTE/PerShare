@@ -183,7 +183,7 @@ export default function Home() {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '16px', background: 'rgba(0, 210, 255, 0.05)', border: '1px solid rgba(0, 210, 255, 0.2)', borderRadius: '16px', padding: '24px', flexWrap: 'wrap' }}>
           <svg width="32" height="32" fill="none" stroke="#00D2FF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
           <h3 style={{ margin: 0, fontSize: '20px', fontWeight: 700 }}>Smart Contract Audited</h3>
-          <a href="/PerShare_Audit_R2.pdf" target="_blank" className="text-gradient" style={{ fontWeight: 600, textDecoration: 'none', marginLeft: 'auto' }}>
+          <a href="https://spywolf.co/audits/PerShare_Audit.pdf" target="_blank" rel="noreferrer" className="text-gradient" style={{ fontWeight: 600, textDecoration: 'none', marginLeft: 'auto' }}>
             View the full report →
           </a>
         </div>

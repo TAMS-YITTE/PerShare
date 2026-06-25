@@ -43,7 +43,7 @@ createAppKit({
   projectId,
   metadata: {
     name: 'PerShare',
-    description: 'Trustless Pool, Pay, Invest & Share Automatically',
+    description: 'Group pooling on BNB Chain — pool, send & distribute automatically',
     url: 'https://pershare.org',
     icons: ['/pershare_logo.png']
   },
