@@ -2,53 +2,40 @@ import React from 'react';
 
 export default function Roadmap() {
   return (
-    <main style={{ padding: '40px 24px', maxWidth: '800px', margin: '0 auto', lineHeight: 1.6 }}>
-      <header style={{ marginBottom: '40px', textAlign: 'center' }}>
-        <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '40px', color: '#fff' }}>Roadmap</h1>
-        <p style={{ color: 'var(--purple)', fontSize: '18px' }}>The future of PerShare</p>
-      </header>
+    <main style={{ minHeight: '100vh', background: 'var(--bg)', color: 'var(--text)', padding: '120px 24px', fontFamily: 'var(--font-body)' }}>
+      <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+        <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(32px, 5vw, 48px)', fontWeight: 800, marginBottom: '24px' }}>Roadmap</h1>
+        <p style={{ color: 'var(--muted)', fontSize: '18px', lineHeight: 1.6, marginBottom: '48px' }}>
+          The future of decentralized group pooling.
+        </p>
 
-      <div style={{ position: 'relative', borderLeft: '2px solid var(--purple)', paddingLeft: '24px', marginLeft: '12px' }}>
-        
-        {/* V1 */}
-        <div style={{ marginBottom: '40px', position: 'relative' }}>
-          <div style={{ position: 'absolute', left: '-33px', top: '0', width: '16px', height: '16px', borderRadius: '50%', background: 'var(--purple)', border: '4px solid var(--bg)' }}></div>
-          <h2 style={{ fontSize: '24px', color: '#fff', marginTop: '-4px' }}>V1: The Foundation <span style={{ fontSize: '14px', background: 'var(--purple)', padding: '2px 8px', borderRadius: '12px', marginLeft: '12px', verticalAlign: 'middle' }}>Live</span></h2>
-          <ul style={{ color: 'var(--muted)', marginTop: '16px', paddingLeft: '20px' }}>
-            <li>Smart Contract deployed on BNB Smart Chain.</li>
-            <li>Trustless Escrow for Stablecoins (USDT/USDC).</li>
-            <li>Proportional Distribution of BEP-20 Tokens.</li>
-            <li>Multi-signature consensus for funds movement.</li>
-            <li>Security Audit (In Progress).</li>
-          </ul>
+        <div style={{ position: 'relative', paddingLeft: '32px', borderLeft: '2px solid rgba(0, 210, 255, 0.2)' }}>
+          
+          <div style={{ position: 'relative', marginBottom: '48px' }}>
+            <div style={{ position: 'absolute', left: '-41px', top: '0', width: '20px', height: '20px', borderRadius: '50%', background: '#00D2FF', border: '4px solid var(--bg)' }}></div>
+            <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#00D2FF', marginBottom: '8px' }}>Q2 2026 - Mainnet Launch (Current)</h3>
+            <p style={{ color: 'var(--muted)', lineHeight: 1.6 }}>Deployment of PerShare V1 on BNB Chain. Launch of the App UI for OTC deals and automated fractional distribution.</p>
+          </div>
+
+          <div style={{ position: 'relative', marginBottom: '48px' }}>
+            <div style={{ position: 'absolute', left: '-41px', top: '0', width: '20px', height: '20px', borderRadius: '50%', background: 'rgba(255,255,255,0.2)', border: '4px solid var(--bg)' }}></div>
+            <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#fff', marginBottom: '8px' }}>Q4 2026 - NFT Fractionalization</h3>
+            <p style={{ color: 'var(--muted)', lineHeight: 1.6 }}>Extending Phase 2 logic to support ERC-721 and ERC-1155. Groups will be able to pool funds to acquire high-value NFTs and automatically receive fractionalized shares.</p>
+          </div>
+
+          <div style={{ position: 'relative', marginBottom: '48px' }}>
+            <div style={{ position: 'absolute', left: '-41px', top: '0', width: '20px', height: '20px', borderRadius: '50%', background: 'rgba(255,255,255,0.2)', border: '4px solid var(--bg)' }}></div>
+            <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#fff', marginBottom: '8px' }}>Q1 2027 - Cross-Chain Expansion</h3>
+            <p style={{ color: 'var(--muted)', lineHeight: 1.6 }}>Deploying PerShare smart contracts on Arbitrum, Base, and Polygon to reduce fees and capture cross-chain communities.</p>
+          </div>
+
+          <div style={{ position: 'relative' }}>
+            <div style={{ position: 'absolute', left: '-41px', top: '0', width: '20px', height: '20px', borderRadius: '50%', background: 'rgba(255,255,255,0.2)', border: '4px solid var(--bg)' }}></div>
+            <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#fff', marginBottom: '8px' }}>Q2 2027 - Decentralized Governance</h3>
+            <p style={{ color: 'var(--muted)', lineHeight: 1.6 }}>Introduction of the SHARE token for platform governance, fee redistribution, and premium pool features.</p>
+          </div>
+
         </div>
-
-        {/* V2 */}
-        <div style={{ marginBottom: '40px', position: 'relative' }}>
-          <div style={{ position: 'absolute', left: '-33px', top: '0', width: '16px', height: '16px', borderRadius: '50%', background: 'var(--border)', border: '4px solid var(--bg)' }}></div>
-          <h2 style={{ fontSize: '24px', color: '#fff', marginTop: '-4px' }}>V2: Advanced Tokenomics <span style={{ fontSize: '14px', color: 'var(--muted)', border: '1px solid var(--border)', padding: '2px 8px', borderRadius: '12px', marginLeft: '12px', verticalAlign: 'middle' }}>Upcoming</span></h2>
-          <ul style={{ color: 'var(--muted)', marginTop: '16px', paddingLeft: '20px' }}>
-            <li><strong>Onchain Vesting:</strong> Automatic time-locked distributions for presale tokens (Cliff + Linear vesting support).</li>
-            <li><strong>Internal Swaps:</strong> Integration with PancakeSwap to allow members to swap their share of tokens immediately upon receipt.</li>
-            <li><strong>Fiat On-Ramp:</strong> Buy stablecoins directly via credit card on the PerShare Dashboard.</li>
-          </ul>
-        </div>
-
-        {/* V3 */}
-        <div style={{ position: 'relative' }}>
-          <div style={{ position: 'absolute', left: '-33px', top: '0', width: '16px', height: '16px', borderRadius: '50%', background: 'var(--border)', border: '4px solid var(--bg)' }}></div>
-          <h2 style={{ fontSize: '24px', color: '#fff', marginTop: '-4px' }}>V3: The Omnichain Protocol <span style={{ fontSize: '14px', color: 'var(--muted)', border: '1px solid var(--border)', padding: '2px 8px', borderRadius: '12px', marginLeft: '12px', verticalAlign: 'middle' }}>Future</span></h2>
-          <ul style={{ color: 'var(--muted)', marginTop: '16px', paddingLeft: '20px' }}>
-            <li><strong>Cross-chain Pooling:</strong> Create a SHARE on BSC, buy tokens on Ethereum, and distribute on Arbitrum.</li>
-            <li><strong>NFT Group Buying:</strong> Pool funds to acquire high-value ERC-721 NFTs and fractionalize ownership among members.</li>
-            <li><strong>DAO Integration:</strong> Allow DAOs to use PerShare as their primary treasury diversification tool.</li>
-          </ul>
-        </div>
-
-      </div>
-      
-      <div style={{ marginTop: '48px', textAlign: 'center' }}>
-        <a href="/" style={{ color: 'var(--purple)', textDecoration: 'none', fontWeight: 'bold' }}>&larr; Back to Home</a>
       </div>
     </main>
   );

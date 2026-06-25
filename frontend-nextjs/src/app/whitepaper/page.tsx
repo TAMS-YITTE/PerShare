@@ -2,62 +2,59 @@ import React from 'react';
 
 export default function Whitepaper() {
   return (
-    <main style={{ padding: '40px 24px', maxWidth: '800px', margin: '0 auto', lineHeight: 1.6 }}>
-      <header style={{ marginBottom: '40px' }}>
-        <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '40px', color: '#fff' }}>Whitepaper</h1>
-        <p style={{ color: 'var(--purple)', fontSize: '18px' }}>PerShare: Trustless Collective Pooling Protocol</p>
-      </header>
-
-      <section style={{ marginBottom: '32px' }}>
-        <h2 style={{ fontSize: '24px', color: '#fff', borderBottom: '1px solid var(--border)', paddingBottom: '8px' }}>Abstract</h2>
-        <p style={{ color: 'var(--muted)', marginTop: '16px' }}>
-          PerShare is a decentralized, trustless, and automated collective pooling protocol deployed on the BNB Smart Chain (BSC). 
-          It bridges the gap between fragmented Web3 payment tools and expensive Web2 escrow services by providing an all-in-one 
-          smart contract architecture for group buying, presale allocations, and conditional payouts.
+    <main style={{ minHeight: '100vh', background: 'var(--bg)', color: 'var(--text)', padding: '120px 24px', fontFamily: 'var(--font-body)' }}>
+      <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+        <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(32px, 5vw, 48px)', fontWeight: 800, marginBottom: '24px' }}>PerShare Whitepaper</h1>
+        <p style={{ color: 'var(--muted)', fontSize: '18px', lineHeight: 1.6, marginBottom: '48px' }}>
+          Version 1.0 — The Onchain Group Buy Protocol
         </p>
-      </section>
 
-      <section style={{ marginBottom: '32px' }}>
-        <h2 style={{ fontSize: '24px', color: '#fff', borderBottom: '1px solid var(--border)', paddingBottom: '8px' }}>1. The Problem</h2>
-        <p style={{ color: 'var(--muted)', marginTop: '16px' }}>
-          Traditional group investments and OTC (Over The Counter) deals suffer from a fundamental trust issue. One individual must 
-          act as the custodian of funds, creating a single point of failure and a massive counterparty risk. Existing solutions are either:
-        </p>
-        <ul style={{ color: 'var(--muted)', marginTop: '8px', paddingLeft: '20px' }}>
-          <li style={{ marginBottom: '8px' }}><strong>Web2 (TradFi):</strong> Expensive (up to 30% fees), slow, and heavily censored.</li>
-          <li style={{ marginBottom: '8px' }}><strong>Web3 (DeFi):</strong> Overly complex, requiring deep technical knowledge, or heavily fragmented across multiple Ethereum L2s.</li>
-        </ul>
-      </section>
-
-      <section style={{ marginBottom: '32px' }}>
-        <h2 style={{ fontSize: '24px', color: '#fff', borderBottom: '1px solid var(--border)', paddingBottom: '8px' }}>2. The PerShare Solution</h2>
-        <p style={{ color: 'var(--muted)', marginTop: '16px' }}>
-          PerShare solves this by utilizing a trustless smart contract that acts as an immutable escrow. A "SHARE" is created by an initiator, 
-          defining the members, the target stablecoin amount, and the destination address.
-        </p>
-        <div style={{ background: 'var(--surface)', padding: '24px', borderRadius: '12px', marginTop: '16px', border: '1px solid var(--border)' }}>
-          <h3 style={{ color: 'var(--purple)', fontSize: '18px', marginBottom: '12px' }}>The 2-Phase Lifecycle</h3>
-          <ol style={{ color: 'var(--muted)', paddingLeft: '20px', margin: 0 }}>
-            <li style={{ marginBottom: '12px' }}><strong>Phase 1 (Collection):</strong> Members deposit stablecoins into the SHARE. Once the target is met and consensus is reached, the funds are automatically sent to the destination (e.g., a Presale wallet).</li>
-            <li><strong>Phase 2 (Distribution):</strong> The destination wallet sends the purchased BEP-20 tokens back to the SHARE. Upon member consensus, the tokens are distributed proportionally to each member based on their initial contribution. Zero rounding errors, zero manual work.</li>
-          </ol>
+        <div style={{ background: 'rgba(20, 28, 47, 0.4)', padding: '40px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)', marginBottom: '32px' }}>
+          <h2 style={{ fontSize: '24px', fontWeight: 700, marginBottom: '16px', color: '#00D2FF' }}>1. Introduction</h2>
+          <p style={{ color: 'var(--muted)', lineHeight: 1.7, marginBottom: '16px' }}>
+            PerShare is a decentralized, self-custodial smart contract protocol built on the BNB Chain. It enables communities, DAOs, and investors to safely pool capital for group purchases (such as OTC deals or presales) and automates the fractional distribution of the acquired assets.
+          </p>
+          <p style={{ color: 'var(--muted)', lineHeight: 1.7 }}>
+            Traditional group buys require trusting a central administrator to hold funds, send them to the seller, and manually distribute the tokens back to contributors. PerShare eliminates this counterparty risk through a dual-phase cryptographic architecture.
+          </p>
         </div>
-      </section>
 
-      <section style={{ marginBottom: '32px' }}>
-        <h2 style={{ fontSize: '24px', color: '#fff', borderBottom: '1px solid var(--border)', paddingBottom: '8px' }}>3. Architecture & Security</h2>
-        <p style={{ color: 'var(--muted)', marginTop: '16px' }}>
-          Security is the core pillar of PerShare. The protocol is built with the following immutable rules:
-        </p>
-        <ul style={{ color: 'var(--muted)', marginTop: '8px', paddingLeft: '20px' }}>
-          <li style={{ marginBottom: '8px' }}><strong>Immutability:</strong> Once a SHARE is deployed, its rules (members, destination, target) cannot be altered by anyone, not even the creator.</li>
-          <li style={{ marginBottom: '8px' }}><strong>Consensus Mechanism:</strong> Funds and tokens cannot move without meeting the predefined validation threshold from the members.</li>
-          <li style={{ marginBottom: '8px' }}><strong>Reentrancy Protection:</strong> Fully guarded against reentrancy attacks using OpenZeppelin standards.</li>
-        </ul>
-      </section>
-      
-      <div style={{ marginTop: '48px', textAlign: 'center' }}>
-        <a href="/" style={{ color: 'var(--purple)', textDecoration: 'none', fontWeight: 'bold' }}>&larr; Back to Home</a>
+        <div style={{ background: 'rgba(20, 28, 47, 0.4)', padding: '40px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)', marginBottom: '32px' }}>
+          <h2 style={{ fontSize: '24px', fontWeight: 700, marginBottom: '16px', color: '#10B981' }}>2. Phase 1: Capital Collection & Consensus</h2>
+          <p style={{ color: 'var(--muted)', lineHeight: 1.7, marginBottom: '16px' }}>
+            In the first phase, a Pool Creator initiates a SHARE with a specific USDT target, a deadline, and a designated destination address. Members deposit USDT directly into the tamper-proof contract.
+          </p>
+          <ul style={{ color: 'var(--muted)', lineHeight: 1.7, marginBottom: '16px', paddingLeft: '20px' }}>
+            <li><strong>Target Reached:</strong> If the pool hits its target, a predefined threshold of members must validate the transfer. Once consensus is reached, the funds are sent to the destination.</li>
+            <li><strong>Target Missed:</strong> If the deadline passes without the target being met, the pool automatically switches to refund mode. Members withdraw 100% of their initial deposit. No fees are taken.</li>
+          </ul>
+        </div>
+
+        <div style={{ background: 'rgba(20, 28, 47, 0.4)', padding: '40px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)', marginBottom: '32px' }}>
+          <h2 style={{ fontSize: '24px', fontWeight: 700, marginBottom: '16px', color: '#a78bfa' }}>3. Phase 2: Token Reception & Auto-Distribution</h2>
+          <p style={{ color: 'var(--muted)', lineHeight: 1.7, marginBottom: '16px' }}>
+            The core innovation of PerShare lies in Phase 2. Once the OTC seller receives the USDT, they send the agreed-upon tokens (e.g., presale tokens) back to the PerShare contract.
+          </p>
+          <p style={{ color: 'var(--muted)', lineHeight: 1.7, marginBottom: '16px' }}>
+            The protocol employs a perfectly pro-rata fractionalization engine. The math is simple and immutable:
+          </p>
+          <pre style={{ background: 'rgba(0,0,0,0.5)', padding: '16px', borderRadius: '8px', color: '#fff', fontSize: '14px', marginBottom: '16px', overflowX: 'auto' }}>
+            <code>totalOwed = (totalTokensReceived * userContribution) / poolTotal</code>
+          </pre>
+          <p style={{ color: 'var(--muted)', lineHeight: 1.7 }}>
+            Members simply call the `claimDistribution` function to pull their exact share of the tokens. Late token tranches (vesting) are fully supported.
+          </p>
+        </div>
+
+        <div style={{ background: 'rgba(20, 28, 47, 0.4)', padding: '40px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)', marginBottom: '32px' }}>
+          <h2 style={{ fontSize: '24px', fontWeight: 700, marginBottom: '16px', color: '#f59e0b' }}>4. Security & Edge Cases</h2>
+          <p style={{ color: 'var(--muted)', lineHeight: 1.7, marginBottom: '16px' }}>
+            <strong>Hermetic Token Registry:</strong> To prevent cross-pool token contamination, a token contract can only be bound to a single SHARE in its lifetime via the `expectedToken` immutable registry.
+          </p>
+          <p style={{ color: 'var(--muted)', lineHeight: 1.7 }}>
+            <strong>Dust Sweeping:</strong> Division rounding in Solidity can leave microscopic token fractions (dust) in the contract. PerShare allows the creator to sweep this dust, defined strictly as `totalTokens - sum(theoreticalClaims)`.
+          </p>
+        </div>
       </div>
     </main>
   );

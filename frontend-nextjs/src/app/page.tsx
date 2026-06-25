@@ -55,10 +55,10 @@ export default function Home() {
         <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 70% 60% at 50% 0%, rgba(0,210,255,0.08), transparent)', pointerEvents: 'none' }} />
         
         <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(40px, 6vw, 72px)', fontWeight: 800, letterSpacing: '-2px', lineHeight: 1.1, marginBottom: '24px', maxWidth: '800px' }}>
-          Secure every pool. <br/>Pay only on <span className="text-gradient">success</span>.
+          The Onchain <span className="text-gradient">Group Buy</span> Protocol.
         </h1>
         <p style={{ fontSize: 'clamp(16px, 2vw, 20px)', color: 'var(--muted)', maxWidth: '600px', lineHeight: 1.6, marginBottom: '48px' }}>
-          The universal decentralized pooling platform for communities, DAOs, and group buys. Self-custodial deposits, automatic refunds.
+          Pool USDT securely, acquire assets together, and let the smart contract automatically distribute the tokens pro-rata.
         </p>
 
         <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', justifyContent: 'center' }}>
@@ -95,30 +95,38 @@ export default function Home() {
       <section id="how" style={{ padding: '100px 24px', maxWidth: '1000px', margin: '0 auto' }}>
         <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(32px, 4vw, 48px)', fontWeight: 800, textAlign: 'center', marginBottom: '64px' }}>How it works?</h2>
         
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px', marginBottom: '64px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '24px', marginBottom: '64px' }}>
           {/* Step 1 */}
           <div className="glass-panel" style={{ padding: '32px', textAlign: 'left' }}>
             <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'rgba(0,210,255,0.1)', color: '#00D2FF', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '24px' }}>
               <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
             </div>
-            <h3 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '12px' }}>1. Secure Deposit</h3>
-            <p style={{ color: 'var(--muted)', lineHeight: 1.6 }}>Members deposit USDT into a tamper-proof smart contract. Funds are locked safely onchain.</p>
+            <h3 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '12px' }}>1. Pool Funds</h3>
+            <p style={{ color: 'var(--muted)', lineHeight: 1.6, fontSize: '14px' }}>Members deposit USDT. If the target isn't reached, everyone gets a 100% refund.</p>
           </div>
           {/* Step 2 */}
           <div className="glass-panel" style={{ padding: '32px', textAlign: 'left' }}>
             <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'rgba(16,185,129,0.1)', color: '#10B981', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '24px' }}>
               <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
             </div>
-            <h3 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '12px' }}>2. Collective Target</h3>
-            <p style={{ color: 'var(--muted)', lineHeight: 1.6 }}>The pool remains open until the deadline. Everyone tracks progress on BscScan transparently.</p>
+            <h3 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '12px' }}>2. Group Buy</h3>
+            <p style={{ color: 'var(--muted)', lineHeight: 1.6, fontSize: '14px' }}>Once the target is met, the group validates the transfer and USDT is sent to the seller.</p>
           </div>
           {/* Step 3 */}
           <div className="glass-panel" style={{ padding: '32px', textAlign: 'left' }}>
             <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'rgba(167,139,250,0.1)', color: '#a78bfa', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '24px' }}>
               <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
             </div>
-            <h3 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '12px' }}>3. Release or Refund</h3>
-            <p style={{ color: 'var(--muted)', lineHeight: 1.6 }}>If the target is validated, funds are transferred. If missed by the deadline, automatic refund.</p>
+            <h3 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '12px' }}>3. Receive Tokens</h3>
+            <p style={{ color: 'var(--muted)', lineHeight: 1.6, fontSize: '14px' }}>The seller deposits the acquired tokens back into the PerShare smart contract.</p>
+          </div>
+          {/* Step 4 */}
+          <div className="glass-panel" style={{ padding: '32px', textAlign: 'left', border: '1px solid rgba(0,210,255,0.4)', boxShadow: '0 0 20px rgba(0, 210, 255, 0.1)' }}>
+            <div style={{ width: '48px', height: '48px', borderRadius: '12px', background: 'rgba(0,210,255,0.1)', color: '#00D2FF', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '24px' }}>
+              <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            </div>
+            <h3 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '12px' }}>4. Auto-Distribute</h3>
+            <p style={{ color: 'var(--muted)', lineHeight: 1.6, fontSize: '14px' }}>Tokens are automatically fractionalized and distributed to each member, perfectly pro-rata.</p>
           </div>
         </div>
 
