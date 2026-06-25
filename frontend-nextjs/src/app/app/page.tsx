@@ -45,7 +45,10 @@ export default function Dashboard() {
   
   const { data: shareCount } = useShareCount();
   const count = shareCount ? Number(shareCount) : 0;
-  const shareIds = Array.from({ length: count }, (_, i) => BigInt(i));
+  
+  // Pagination : only fetch the latest 12 shares to prevent RPC rate limits
+  const maxToFetch = Math.min(count, 12);
+  const shareIds = Array.from({ length: maxToFetch }, (_, i) => BigInt(count - i - 1));
 
   if (!isConnected) {
     return (
@@ -77,27 +80,25 @@ export default function Dashboard() {
         </button>
       </header>
 
-      {/* Badge was here */}
-
-      <div style={{ display: 'flex', gap: '32px', borderBottom: '1px solid #1a233a', marginBottom: '24px' }}>
+      <div style={{ display: 'flex', gap: '32px', borderBottom: '1px solid var(--border)', marginBottom: '24px' }}>
         <button
           onClick={() => setActiveTab('dashboard')}
           style={{
             background: 'none', border: 'none', padding: '12px 0', fontSize: '18px', cursor: 'pointer',
-            color: activeTab === 'dashboard' ? '#fff' : '#8892b0',
-            borderBottom: activeTab === 'dashboard' ? '2px solid #06b6d4' : '2px solid transparent',
+            color: activeTab === 'dashboard' ? '#fff' : 'var(--muted)',
+            borderBottom: activeTab === 'dashboard' ? '2px solid var(--purple2)' : '2px solid transparent',
             fontWeight: activeTab === 'dashboard' ? 'bold' : 'normal',
             transition: 'color 0.2s'
           }}
         >
-          Dashboard
+          Latest Pools
         </button>
         <button
           onClick={() => setActiveTab('myShares')}
           style={{
             background: 'none', border: 'none', padding: '12px 0', fontSize: '18px', cursor: 'pointer',
-            color: activeTab === 'myShares' ? '#fff' : '#8892b0',
-            borderBottom: activeTab === 'myShares' ? '2px solid #06b6d4' : '2px solid transparent',
+            color: activeTab === 'myShares' ? '#fff' : 'var(--muted)',
+            borderBottom: activeTab === 'myShares' ? '2px solid var(--purple2)' : '2px solid transparent',
             fontWeight: activeTab === 'myShares' ? 'bold' : 'normal',
             transition: 'color 0.2s'
           }}
@@ -110,16 +111,42 @@ export default function Dashboard() {
         <TotalContributionsBadge shareIds={shareIds} userAddress={address as string} />
       )}
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '24px' }}>
-        {count === 0 && (
-          <div style={{ padding: '40px', textAlign: 'center', background: 'var(--surface)', borderRadius: '12px', border: '1px dashed var(--border)' }}>
-            <p style={{ color: 'var(--muted)' }}>No SHARE found on the platform.</p>
+      {count === 0 ? (
+        <div style={{ padding: '64px 24px', textAlign: 'center', background: 'var(--surface)', borderRadius: '16px', border: '1px dashed var(--border)' }}>
+          <h2 style={{ fontSize: '24px', marginBottom: '16px', color: 'var(--text)' }}>Welcome to PerShare!</h2>
+          <p style={{ color: 'var(--muted)', marginBottom: '32px', maxWidth: '400px', margin: '0 auto 32px' }}>
+            There are no pools on the platform yet. Be the first to create a secure group buy on the BNB Chain.
+          </p>
+          <button 
+            onClick={() => setShowCreate(true)}
+            style={{ 
+              background: 'var(--purple)', 
+              color: '#fff', 
+              border: 'none', 
+              padding: '12px 32px', 
+              borderRadius: '24px', 
+              cursor: 'pointer',
+              fontWeight: 'bold',
+              fontSize: '16px'
+            }}
+          >
+            Create your first SHARE
+          </button>
+        </div>
+      ) : (
+        <>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '24px' }}>
+            {shareIds.map((id) => (
+              <ShareListItem key={id.toString()} id={id} userAddress={address as string} showOnlyMyShares={activeTab === 'myShares'} />
+            ))}
           </div>
-        )}
-        {shareIds.map((id) => (
-          <ShareListItem key={id.toString()} id={id} userAddress={address as string} showOnlyMyShares={activeTab === 'myShares'} />
-        ))}
-      </div>
+          {activeTab === 'dashboard' && count > 12 && (
+             <div style={{ textAlign: 'center', marginTop: '32px' }}>
+               <p style={{ color: 'var(--muted)' }}>Showing the 12 most recent pools. Older pools are archived.</p>
+             </div>
+          )}
+        </>
+      )}
 
       {showCreate && <CreateShareModal onClose={() => setShowCreate(false)} />}
     </main>

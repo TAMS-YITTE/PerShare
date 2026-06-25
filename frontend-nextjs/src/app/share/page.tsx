@@ -1,15 +1,16 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAccount } from 'wagmi';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { Suspense, useEffect } from 'react';
+import { Suspense } from 'react';
 import { 
   useShare, useApprove, useContribute, useValidate, useRefund, 
-  useSetExpectedToken, useValidateDistribution, getShareStatus, formatUSDT,
-  useHasValidated, useHasValidatedDist
+  useSetExpectedToken, useValidateDistribution, useClaimDistribution,
+  getShareStatus, formatUSDT, useHasValidated, useHasValidatedDist, useClaimableAmount
 } from '../../hooks/useShare';
+import { toast } from 'sonner';
 
 function MemberItem({ member, shareId, currentUser, activeTab }: { member: string, shareId: bigint, currentUser?: string, activeTab: 'collecte'|'envoi'|'distribution' }) {
   const { data: hasValidatedP1 } = useHasValidated(shareId, member as `0x${string}`);
@@ -31,7 +32,38 @@ function MemberItem({ member, shareId, currentUser, activeTab }: { member: strin
     </div>
   );
 }
-import { ADDRESSES } from '../../lib/contract';
+
+function ClaimableBlock({ shareId, member }: { shareId: bigint, member: string }) {
+  const { data: claimable, refetch } = useClaimableAmount(shareId, member as `0x${string}`);
+  const { claimDistribution, isPending, isConfirming, isSuccess } = useClaimDistribution();
+
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success('Tokens successfully claimed!');
+      refetch();
+    }
+  }, [isSuccess, refetch]);
+
+  if (claimable === undefined) return null;
+  const amount = claimable as bigint;
+
+  return (
+    <div style={{ background: 'var(--bg)', padding: '24px', borderRadius: '12px', border: '1px solid var(--border)', marginTop: '24px' }}>
+      <h4 style={{ marginBottom: '8px', fontSize: '16px', color: 'var(--muted)' }}>Your Claimable Tokens</h4>
+      <div style={{ fontSize: '32px', fontWeight: 'bold', marginBottom: '16px', color: '#10B981' }}>
+        {Number(amount) / 1e18} <span style={{ fontSize: '16px', color: 'var(--muted)' }}>tokens</span>
+      </div>
+      
+      <button 
+        onClick={() => claimDistribution(shareId)}
+        disabled={isPending || isConfirming || amount === BigInt(0)}
+        style={{ width: '100%', padding: '16px', background: '#10B981', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: amount === BigInt(0) ? 'not-allowed' : 'pointer', fontSize: '16px', opacity: amount === BigInt(0) ? 0.5 : 1 }}
+      >
+        {isPending || isConfirming ? 'Claiming...' : amount === BigInt(0) ? 'Nothing to claim' : 'Claim My Tokens'}
+      </button>
+    </div>
+  );
+}
 
 function SharePageContent() {
   const { address } = useAccount();
@@ -53,11 +85,18 @@ function SharePageContent() {
 
   useEffect(() => {
     if (isApproveSuccess && contributeAmount) {
+      toast.success('USDT Approved. Proceeding to contribute...');
       contribute(shareId, contributeAmount);
     }
   }, [isApproveSuccess]);
 
   useEffect(() => {
+    if (isContributeSuccess) toast.success('Successfully contributed to the SHARE!');
+    if (isValidateSuccess) toast.success('Transfer validated!');
+    if (isRefundSuccess) toast.success('Refund successful.');
+    if (isSetTokenSuccess) toast.success('Expected token set!');
+    if (isDistSuccess) toast.success('Address validated for distribution!');
+
     if (isContributeSuccess || isValidateSuccess || isRefundSuccess || isSetTokenSuccess || isDistSuccess) {
       refetch();
     }
@@ -255,6 +294,10 @@ function SharePageContent() {
                   >
                     {isDistPending ? 'Validating...' : 'Validate my Address to Receive my Tokens'}
                   </button>
+                  
+                  {isMember && address && share.sent && (
+                    <ClaimableBlock shareId={shareId} member={address} />
+                  )}
                 </div>
               )}
             </>

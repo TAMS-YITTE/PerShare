@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useCreateShare } from '../hooks/useShare';
 import { ADDRESSES, PERSHARE_CONTRACTS, PerShareTier } from '../lib/contract';
+import { toast } from 'sonner';
 
 export function CreateShareModal({ onClose }: { onClose: () => void }) {
   const { createShare, isPending, isConfirming, isSuccess } = useCreateShare();
   const [name, setName] = useState('');
   const [targetAmount, setTargetAmount] = useState('1000');
   const [threshold, setThreshold] = useState('2');
-  const [members, setMembers] = useState<string>('');
+  const [members, setMembers] = useState<string[]>(['']);
   const [destination, setDestination] = useState('');
   const [deadlineDate, setDeadlineDate] = useState(() => {
     const d = new Date();
@@ -18,29 +19,67 @@ export function CreateShareModal({ onClose }: { onClose: () => void }) {
 
   useEffect(() => {
     if (isSuccess) {
+      toast.success('SHARE successfully created!');
       onClose();
     }
   }, [isSuccess, onClose]);
 
+  const addMemberField = () => setMembers([...members, '']);
+  const updateMember = (index: number, value: string) => {
+    const newMembers = [...members];
+    newMembers[index] = value.trim();
+    setMembers(newMembers);
+  };
+  const removeMemberField = (index: number) => {
+    if (members.length > 1) {
+      const newMembers = members.filter((_, i) => i !== index);
+      setMembers(newMembers);
+    }
+  };
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const content = event.target?.result as string;
+      const addresses = content.split(/[\n,;]+/).map(a => a.trim()).filter(a => a.startsWith('0x'));
+      if (addresses.length > 0) {
+        setMembers(addresses);
+        toast.success(`${addresses.length} addresses imported from CSV!`);
+      } else {
+        toast.error('No valid 0x addresses found in the file.');
+      }
+    };
+    reader.readAsText(file);
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const memberArray = members.split(',').map(m => m.trim() as `0x${string}`);
     
+    // Cleanup empty fields
+    const cleanedMembers = members.filter(m => m !== '');
+
     // Validation des adresses
     const isValidAddress = (a: string) => /^0x[0-9a-fA-F]{40}$/.test(a);
-    if (!memberArray.every(isValidAddress)) {
-      alert("One or more member addresses are invalid. Make sure they start with 0x and are 42 characters long.");
+    if (!cleanedMembers.every(isValidAddress)) {
+      toast.error("One or more member addresses are invalid. Make sure they start with 0x and are 42 characters long.");
+      return;
+    }
+    if (cleanedMembers.length === 0) {
+      toast.error("Please add at least one member address.");
       return;
     }
     if (!isValidAddress(destination)) {
-      alert("The destination address is invalid.");
+      toast.error("The destination address is invalid.");
       return;
     }
 
     // Calculate deadline from ISO string
     const deadline = Math.floor(new Date(deadlineDate).getTime() / 1000);
     if (deadline <= Math.floor(Date.now() / 1000)) {
-      alert("The expiration date must be in the future.");
+      toast.error("The expiration date must be in the future.");
       return;
     }
     
@@ -50,7 +89,7 @@ export function CreateShareModal({ onClose }: { onClose: () => void }) {
     createShare(
       contractAddress,
       name,
-      memberArray,
+      cleanedMembers as `0x${string}`[],
       usdtAddress as `0x${string}`,
       destination as `0x${string}`,
       targetAmount,
@@ -67,7 +106,8 @@ export function CreateShareModal({ onClose }: { onClose: () => void }) {
     }}>
       <div style={{
         background: 'var(--surface)', padding: '32px', borderRadius: '16px',
-        width: '100%', maxWidth: '500px', border: '1px solid var(--border)'
+        width: '100%', maxWidth: '550px', border: '1px solid var(--border)',
+        maxHeight: '90vh', overflowY: 'auto'
       }}>
         <h2 style={{ marginBottom: '24px' }}>Create a SHARE</h2>
         
@@ -121,13 +161,34 @@ export function CreateShareModal({ onClose }: { onClose: () => void }) {
           </div>
 
           <div>
-            <label htmlFor="members-input" style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: 'var(--muted)' }}>Member Addresses (comma separated)</label>
-            <textarea 
-              id="members-input"
-              required value={members} onChange={e => setMembers(e.target.value)}
-              style={{ width: '100%', padding: '12px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)', minHeight: '80px' }} 
-              placeholder="0x123..., 0x456..."
-            />
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+              <label style={{ fontSize: '14px', color: 'var(--muted)' }}>Member Addresses ({members.length})</label>
+              <div>
+                <input type="file" id="csv-upload" accept=".csv,.txt" style={{ display: 'none' }} onChange={handleFileUpload} />
+                <label htmlFor="csv-upload" style={{ fontSize: '12px', color: 'var(--purple2)', cursor: 'pointer', textDecoration: 'underline' }}>Import CSV</label>
+              </div>
+            </div>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxHeight: '150px', overflowY: 'auto', paddingRight: '8px' }}>
+              {members.map((member, index) => (
+                <div key={index} style={{ display: 'flex', gap: '8px' }}>
+                  <input
+                    value={member}
+                    onChange={(e) => updateMember(index, e.target.value)}
+                    placeholder="0x..."
+                    style={{ flex: 1, padding: '10px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)' }}
+                  />
+                  {members.length > 1 && (
+                    <button type="button" onClick={() => removeMemberField(index)} style={{ padding: '0 12px', background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.2)', borderRadius: '8px', cursor: 'pointer' }}>
+                      ✕
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+            <button type="button" onClick={addMemberField} style={{ marginTop: '8px', width: '100%', padding: '10px', background: 'var(--bg)', color: 'var(--muted)', border: '1px dashed var(--border)', borderRadius: '8px', cursor: 'pointer' }}>
+              + Add Member
+            </button>
           </div>
 
           <div>

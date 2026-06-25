@@ -13,21 +13,27 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-display' });
 const interBody = Inter({ subsets: ['latin'], variable: '--font-body' });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://pershare.org'),
   title: 'PerShare — Group Pooling on BNB Chain. Pool, Send & Share Automatically',
   description: 'Chaque membre reçoit sa part. Automatiquement. Onchain.',
   keywords: ['pershare', 'bnb chain', 'pool collective', 'presale', 'group buy', 'tontine'],
+  icons: { icon: '/pershare_logo.svg', shortcut: '/pershare_logo.svg' },
   openGraph: {
     title: 'PerShare — Group Pooling on BNB Chain. Pool, Send & Share Automatically',
     description: 'Chaque membre reçoit sa part. Automatiquement. Onchain.',
     url: 'https://pershare.org',
     siteName: 'PerShare',
+    images: ['/pershare_banner.png'],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'PerShare — Group Pooling on BNB Chain. Pool, Send & Share Automatically',
     description: 'Pool collective, transfert conditionnel, group buy presale. BNB Chain.',
+    images: ['/pershare_banner.png'],
   },
 };
+
+import { Toaster } from 'sonner';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -38,6 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           {children}
           <Footer />
           <CookieConsent />
+          <Toaster theme="dark" position="bottom-right" richColors />
         </Providers>
       </body>
     </html>
