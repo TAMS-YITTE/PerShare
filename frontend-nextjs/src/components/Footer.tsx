@@ -18,8 +18,6 @@ export function Footer() {
         <a href="/how-disputes-work" style={{ color: '#8892b0', textDecoration: 'none', fontSize: '15px', transition: 'color 0.2s' }}>How Pools Work</a>
         <a href="/security" style={{ color: '#8892b0', textDecoration: 'none', fontSize: '15px', transition: 'color 0.2s' }}>Security &amp; Trust</a>
         <a href="/risks" style={{ color: '#8892b0', textDecoration: 'none', fontSize: '15px', transition: 'color 0.2s' }}>Risks &amp; Disclaimers</a>
-        <a href="/bug-bounty" style={{ color: '#8892b0', textDecoration: 'none', fontSize: '15px', transition: 'color 0.2s' }}>Bug Bounty</a>
-        <a href="/blog" style={{ color: '#8892b0', textDecoration: 'none', fontSize: '15px', transition: 'color 0.2s' }}>Blog</a>
         <a href="/PerShare_Audit_R2.pdf" target="_blank" rel="noreferrer" style={{ color: '#8892b0', textDecoration: 'none', fontSize: '15px', transition: 'color 0.2s' }}>Audit Report</a>
       </div>
       <p style={{ color: '#8892b0', fontSize: '14px', margin: 0 }}>
