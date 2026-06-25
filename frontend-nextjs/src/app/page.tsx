@@ -195,25 +195,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── FAQ ───────────────────────────────────────────────────────────── */}
-      <section style={{ padding: '100px 24px', maxWidth: '800px', margin: '0 auto' }}>
-        <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px, 4vw, 40px)', fontWeight: 800, textAlign: 'center', marginBottom: '64px' }}>Frequently Asked Questions</h2>
-        
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <div className="glass-panel" style={{ padding: '32px' }}>
-            <h3 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '12px' }}>Is my money safe?</h3>
-            <p style={{ color: 'var(--muted)', lineHeight: 1.6 }}>Your funds are locked in a self-custodial smart contract deployed on BNB Chain. The contract ensures that funds can only be released to the predefined destination upon group approval, or fully refunded if the deadline passes. The contract is admin-pausable purely for emergency security.</p>
-          </div>
-          <div className="glass-panel" style={{ padding: '32px' }}>
-            <h3 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '12px' }}>Who controls the funds?</h3>
-            <p style={{ color: 'var(--muted)', lineHeight: 1.6 }}>No single person. The pool requires collective validation from its members to authorize the final transfer. If the group does not reach consensus before the expiration date, every member can autonomously withdraw their exact contribution.</p>
-          </div>
-          <div className="glass-panel" style={{ padding: '32px' }}>
-            <h3 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '12px' }}>What fees do I pay?</h3>
-            <p style={{ color: 'var(--muted)', lineHeight: 1.6 }}>You pay absolutely nothing to create a pool or to deposit funds. The protocol only deducts a success fee (0.5% to 2% depending on the tier chosen) from the final destination payout. If the pool fails, 100% of your deposit is refunded with zero fees.</p>
-          </div>
-        </div>
-      </section>
+
     </>
   );
 }
