@@ -11,7 +11,7 @@
   --text:        #F8FAFC;
   --muted:       #94A3B8;
   --border:      rgba(255, 255, 255, 0.1);
-  --font-display: var(--font-display, 'Space Grotesk', sans-serif);
+  --font-display: var(--font-display, 'Inter', sans-serif);
   --font-body:    var(--font-body, 'Inter', sans-serif);
 }
 

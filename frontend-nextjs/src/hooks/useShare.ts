@@ -107,6 +107,16 @@ export function useHasValidatedDist(id: bigint, member: `0x${string}`) {
   });
 }
 
+export function useClaimableAmount(id: bigint, member: `0x${string}`) {
+  return useReadContract({
+    address: CONTRACT,
+    abi: PERSHARE_ABI,
+    functionName: 'getClaimableAmount',
+    args: [id, member],
+    query: { refetchInterval: 5000 }
+  });
+}
+
 export function useShareCount() {
   return useReadContract({
     address: CONTRACT,
@@ -242,6 +252,22 @@ export function useValidateDistribution() {
   };
 
   return { validateDistribution, hash, isPending, isConfirming, isSuccess };
+}
+
+export function useClaimDistribution() {
+  const { writeContract, data: hash, isPending } = useWriteContract();
+  const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash });
+
+  const claimDistribution = (id: bigint) => {
+    writeContract({
+      address: CONTRACT,
+      abi: PERSHARE_ABI,
+      functionName: 'claimDistribution',
+      args: [id],
+    });
+  };
+
+  return { claimDistribution, hash, isPending, isConfirming, isSuccess };
 }
 
 export function useRefund() {
