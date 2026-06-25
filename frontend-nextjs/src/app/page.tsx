@@ -91,6 +91,47 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── TWO WAYS TO USE ───────────────────────────────────────────────── */}
+      <section style={{ padding: '100px 24px', maxWidth: '1000px', margin: '0 auto' }}>
+        <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+          <span style={{ fontSize: '12px', fontWeight: 700, color: '#00D2FF', textTransform: 'uppercase', letterSpacing: '0.12em' }}>One contract, two flows</span>
+          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px, 4vw, 44px)', fontWeight: 800, margin: '12px 0 16px' }}>Two ways to use PerShare</h2>
+          <p style={{ color: 'var(--muted)', fontSize: '17px', lineHeight: 1.6, maxWidth: '620px', margin: '0 auto' }}>
+            Whatever the group is paying for, funds stay locked in the contract until the members approve the transfer — or are refunded at the deadline.
+          </p>
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
+          {/* Branch A */}
+          <div className="glass-panel" style={{ padding: '32px' }}>
+            <div style={{ fontSize: '32px', marginBottom: '16px' }}>🪙</div>
+            <div style={{ fontSize: '12px', fontWeight: 700, color: '#a78bfa', marginBottom: '8px' }}>POOL &amp; DISTRIBUTE · TOKENS &amp; ASSETS</div>
+            <h3 style={{ fontSize: '22px', fontWeight: 700, marginBottom: '12px' }}>Buy together, split automatically</h3>
+            <p style={{ color: 'var(--muted)', lineHeight: 1.6, fontSize: '15px', marginBottom: '16px' }}>
+              A group acquires tokens or assets together. The seller returns them to the contract, which splits them pro-rata to every member — automatically.
+            </p>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+              {['Presale syndicate', 'OTC group buy', 'NFT (soon)'].map(x => (
+                <span key={x} style={{ fontSize: '12px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '6px', padding: '4px 10px', color: 'var(--muted)' }}>{x}</span>
+              ))}
+            </div>
+          </div>
+          {/* Branch B */}
+          <div className="glass-panel" style={{ padding: '32px' }}>
+            <div style={{ fontSize: '32px', marginBottom: '16px' }}>🛒</div>
+            <div style={{ fontSize: '12px', fontWeight: 700, color: '#10B981', marginBottom: '8px' }}>POOL &amp; PAY · GOODS &amp; SERVICES</div>
+            <h3 style={{ fontSize: '22px', fontWeight: 700, marginBottom: '12px' }}>Fund a purchase together</h3>
+            <p style={{ color: 'var(--muted)', lineHeight: 1.6, fontSize: '15px', marginBottom: '16px' }}>
+              A group funds a single purchase or service and pays one vendor together. No tokens to split — just a transparent collective payment, released only on the group&apos;s approval.
+            </p>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+              {['Bulk B2B order', 'Shared equipment', 'Group booking', 'Hire a contractor'].map(x => (
+                <span key={x} style={{ fontSize: '12px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '6px', padding: '4px 10px', color: 'var(--muted)' }}>{x}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── HOW IT WORKS ──────────────────────────────────────────────────── */}
       <section id="how" style={{ padding: '100px 24px', maxWidth: '1000px', margin: '0 auto' }}>
         <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(32px, 4vw, 48px)', fontWeight: 800, textAlign: 'center', marginBottom: '64px' }}>How it works?</h2>
@@ -128,6 +169,12 @@ export default function Home() {
             <h3 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '12px' }}>4. Auto-Distribute</h3>
             <p style={{ color: 'var(--muted)', lineHeight: 1.6, fontSize: '14px' }}>Tokens are automatically fractionalized and distributed to each member, perfectly pro-rata.</p>
           </div>
+        </div>
+
+        <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+          <Link href="/how-pools-work" className="text-gradient" style={{ fontWeight: 700, textDecoration: 'none', fontSize: '15px' }}>
+            See the full walkthrough →
+          </Link>
         </div>
 
         {/* Audit Banner */}
@@ -210,6 +257,47 @@ export default function Home() {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* ── WHY PERSHARE ──────────────────────────────────────────────────── */}
+      <section id="why" style={{ padding: '100px 24px', maxWidth: '1000px', margin: '0 auto' }}>
+        <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+          <span style={{ fontSize: '12px', fontWeight: 700, color: '#10B981', textTransform: 'uppercase', letterSpacing: '0.12em' }}>Why PerShare</span>
+          <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px, 4vw, 44px)', fontWeight: 800, margin: '12px 0 16px' }}>Group payments without the middleman tax</h2>
+          <p style={{ color: 'var(--muted)', fontSize: '17px', lineHeight: 1.6, maxWidth: '640px', margin: '0 auto' }}>
+            Pooling money usually means trusting a platform that holds your funds and takes a heavy cut. PerShare replaces that intermediary with audited code on BNB Chain.
+          </p>
+        </div>
+
+        <div className="glass-panel" style={{ padding: '8px', overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '560px' }}>
+            <thead>
+              <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+                {['', 'PerShare', 'Freelance platforms', 'Crowdfunding', 'PayPal'].map((h, i) => (
+                  <th key={i} style={{ padding: '16px', fontSize: '13px', color: i === 1 ? '#00D2FF' : 'var(--muted)', fontWeight: 700, whiteSpace: 'nowrap' }}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                ['Average fees', '0.5% – 2%', '20% – 30%', '3% – 5%', '3% – 6%'],
+                ['Funds held by', 'Smart-contract code', 'The company', 'The company', 'The company'],
+                ['Bank account required', 'No', 'Yes', 'Yes', 'Yes'],
+                ['Instant global payout', 'Yes', 'No (days)', 'No (days)', 'Partial (FX)'],
+                ['Automatic pro-rata split', 'Yes', 'No', 'No', 'No'],
+              ].map((row, r) => (
+                <tr key={r} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                  {row.map((cell, c) => (
+                    <td key={c} style={{ padding: '16px', fontSize: '14px', fontWeight: c === 1 ? 700 : 400, color: c === 0 ? 'var(--text)' : c === 1 ? '#10B981' : 'var(--muted)' }}>{cell}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p style={{ textAlign: 'center', fontSize: '12px', color: 'var(--muted)', marginTop: '16px' }}>
+          Indicative public fees, June 2026. PerShare is non-custodial infrastructure — an admin pause exists for emergencies (see <a href="/risks" className="text-gradient" style={{ textDecoration: 'none' }}>Risks &amp; Disclaimers</a>).
+        </p>
       </section>
 
       {/* ── TRANSPARENT FEES (CALCULATOR) ─────────────────────────────────── */}
