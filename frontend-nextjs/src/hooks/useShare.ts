@@ -7,7 +7,7 @@ import { useMemo } from 'react';
 import { parseEther, formatEther } from 'viem';
 import { PERSHARE_ABI, ERC20_ABI, ADDRESSES } from '../lib/contract';
 
-const CHAIN = 'bscTestnet'; // Changer en 'bsc' pour mainnet
+const CHAIN = 'bsc'; // Changer en 'bscTestnet' pour testnet
 const CONTRACT = ADDRESSES[CHAIN].perShare;
 
 if (!CONTRACT) {
