@@ -8,13 +8,14 @@ import { Suspense } from 'react';
 import { 
   useShare, useApprove, useContribute, useValidate, useMarkRefunded, useClaimRefund, useDepositTokens,
   useSetExpectedToken, useValidateDistribution, useClaimDistribution,
-  getShareStatus, formatUSDT, useHasValidated, useHasValidatedDist
+  getShareStatus, formatUSDT, useHasValidated, useHasValidatedDist, useContribution
 } from '../../hooks/useShare';
 import { toast } from 'sonner';
 
 function MemberItem({ member, shareId, currentUser, activeTab }: { member: string, shareId: bigint, currentUser?: string, activeTab: 'collecte'|'envoi'|'distribution' }) {
   const { data: hasValidatedP1 } = useHasValidated(shareId, member as `0x${string}`);
   const { data: hasValidatedP2 } = useHasValidatedDist(shareId, member as `0x${string}`);
+  const { data: contribution } = useContribution(shareId, member as `0x${string}`);
   
   const hasValidated = activeTab === 'envoi' ? hasValidatedP1 : activeTab === 'distribution' ? hasValidatedP2 : false;
   const isMe = member.toLowerCase() === currentUser?.toLowerCase();
@@ -24,6 +25,9 @@ function MemberItem({ member, shareId, currentUser, activeTab }: { member: strin
       <span style={{ fontFamily: 'monospace', color: isMe ? 'var(--purple)' : 'var(--text)' }}>
         {member.slice(0, 8)}...{member.slice(-6)} {isMe && '(You)'}
       </span>
+      {activeTab === 'collecte' && contribution !== undefined && contribution > BigInt(0) && (
+        <span style={{ color: '#10B981', fontWeight: 'bold', fontSize: '14px' }}>+{formatUSDT(contribution)} USDT</span>
+      )}
       {hasValidated && (
         <span style={{ color: '#10b981', fontWeight: 'bold', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '6px' }}>
           ✓ Validated
