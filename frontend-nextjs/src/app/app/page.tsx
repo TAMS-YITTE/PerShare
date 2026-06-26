@@ -22,7 +22,7 @@ function TotalContributionsBadge({ shareIds, userAddress }: { shareIds: bigint[]
 
   return (
     <div style={{ background: 'var(--purpleDark)', padding: '16px 24px', borderRadius: '12px', marginBottom: '32px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-      <h3 style={{ margin: 0, color: '#E2E8F0', fontSize: '18px' }}>My Total Investment</h3>
+      <h3 style={{ margin: 0, color: '#E2E8F0', fontSize: '18px' }}>My Total Contribution</h3>
       <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#fff' }}>
         {formatUSDT(total)} <span style={{ fontSize: '16px', color: 'var(--muted)' }}>USDT</span>
       </div>

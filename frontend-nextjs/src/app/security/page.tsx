@@ -26,7 +26,7 @@ export default function Security() {
           </div>
 
           <div style={{ background: 'rgba(20, 28, 47, 0.4)', padding: '32px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)' }}>
-            <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#a78bfa', marginBottom: '12px' }}>Guaranteed Refunds</h3>
+            <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#a78bfa', marginBottom: '12px' }}>Automatic Refunds</h3>
             <p style={{ color: 'var(--muted)', lineHeight: 1.6 }}>
               If a pool fails to reach its target amount before the deadline, the contract automatically enters a refund state. Members can withdraw 100% of their deposited USDT. The protocol takes zero fees on failed or expired pools.
             </p>
