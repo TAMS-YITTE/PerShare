@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 import { 
-  useShare, useApprove, useContribute, useValidate, useRefund, 
+  useShare, useApprove, useContribute, useValidate, useMarkRefunded, useClaimRefund, useDepositTokens,
   useSetExpectedToken, useValidateDistribution, useClaimDistribution,
   getShareStatus, formatUSDT, useHasValidated, useHasValidatedDist, useClaimableAmount
 } from '../../hooks/useShare';
@@ -74,15 +74,19 @@ function SharePageContent() {
 
   const [contributeAmount, setContributeAmount] = useState('');
   const [expectedToken, setExpectedTokenInput] = useState('');
+  const [depositAmount, setDepositAmount] = useState('');
   const [activeTab, setActiveTab] = useState<'collecte'|'envoi'|'distribution'>('collecte');
   const [termsAccepted, setTermsAccepted] = useState(false);
 
   const { approve, isPending: isApprovePending, isConfirming: isApproveConfirming, isSuccess: isApproveSuccess } = useApprove();
   const { contribute, isPending: isContributePending, isConfirming: isContributeConfirming, isSuccess: isContributeSuccess } = useContribute();
   const { validate, isPending: isValidatePending, isConfirming: isValidateConfirming, isSuccess: isValidateSuccess } = useValidate();
-  const { refund, isPending: isRefundPending, isConfirming: isRefundConfirming, isSuccess: isRefundSuccess } = useRefund();
+  const { markRefunded, isPending: isMarkPending, isConfirming: isMarkConfirming, isSuccess: isMarkSuccess } = useMarkRefunded();
+  const { claimRefund, isPending: isClaimPending, isConfirming: isClaimConfirming, isSuccess: isClaimSuccess } = useClaimRefund();
   const { setExpectedToken, isPending: isSetTokenPending, isConfirming: isSetTokenConfirming, isSuccess: isSetTokenSuccess } = useSetExpectedToken();
   const { validateDistribution, isPending: isDistPending, isConfirming: isDistConfirming, isSuccess: isDistSuccess } = useValidateDistribution();
+  const { approve: approveDeposit, isPending: isApproveDepPending, isConfirming: isApproveDepConfirming, isSuccess: isApproveDepSuccess } = useApprove();
+  const { depositTokens, isPending: isDepPending, isConfirming: isDepConfirming, isSuccess: isDepSuccess } = useDepositTokens();
 
   useEffect(() => {
     if (isApproveSuccess && contributeAmount) {
@@ -92,16 +96,25 @@ function SharePageContent() {
   }, [isApproveSuccess]);
 
   useEffect(() => {
+    if (isApproveDepSuccess && depositAmount) {
+      toast.success('Tokens Approved. Proceeding to deposit...');
+      depositTokens(shareId, depositAmount);
+    }
+  }, [isApproveDepSuccess]);
+
+  useEffect(() => {
     if (isContributeSuccess) toast.success('Successfully contributed to the SHARE!');
     if (isValidateSuccess) toast.success('Transfer validated!');
-    if (isRefundSuccess) toast.success('Refund successful.');
+    if (isMarkSuccess) toast.success('Share marked as refunded! You can now claim your refund.');
+    if (isClaimSuccess) toast.success('Refund claimed successfully!');
     if (isSetTokenSuccess) toast.success('Expected token set!');
     if (isDistSuccess) toast.success('Address validated for distribution!');
+    if (isDepSuccess) toast.success('Tokens deposited successfully!');
 
-    if (isContributeSuccess || isValidateSuccess || isRefundSuccess || isSetTokenSuccess || isDistSuccess) {
+    if (isContributeSuccess || isValidateSuccess || isMarkSuccess || isClaimSuccess || isSetTokenSuccess || isDistSuccess || isDepSuccess) {
       refetch();
     }
-  }, [isContributeSuccess, isValidateSuccess, isRefundSuccess, isSetTokenSuccess, isDistSuccess, refetch]);
+  }, [isContributeSuccess, isValidateSuccess, isMarkSuccess, isClaimSuccess, isSetTokenSuccess, isDistSuccess, isDepSuccess, refetch]);
 
   if (!idParam) {
     return <div style={{ padding: '40px', textAlign: 'center' }}>Share ID not found in URL</div>;
@@ -223,13 +236,26 @@ function SharePageContent() {
 
               {/* Rembourser */}
               {!isTargetReached && BigInt(Math.floor(Date.now() / 1000)) > share.deadline && (
-                <button 
-                  onClick={() => refund(shareId)}
-                  disabled={isRefundPending || isRefundConfirming}
-                  style={{ width: '100%', padding: '16px', background: '#EF4444', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px' }}
-                >
-                  {isRefundPending ? 'Refunding...' : 'Request Refund (Deadline expired)'}
-                </button>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {!share.refunded && (
+                    <button 
+                      onClick={() => markRefunded(shareId)}
+                      disabled={isMarkPending || isMarkConfirming}
+                      style={{ width: '100%', padding: '16px', background: '#EF4444', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px' }}
+                    >
+                      {isMarkPending || isMarkConfirming ? 'Marking...' : '1. Mark Share as Refunded (Deadline expired)'}
+                    </button>
+                  )}
+                  {share.refunded && (
+                    <button 
+                      onClick={() => claimRefund(shareId)}
+                      disabled={isClaimPending || isClaimConfirming}
+                      style={{ width: '100%', padding: '16px', background: '#10B981', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px' }}
+                    >
+                      {isClaimPending || isClaimConfirming ? 'Claiming...' : '2. Claim My Refund'}
+                    </button>
+                  )}
+                </div>
               )}
             </div>
           ) : (
@@ -303,6 +329,26 @@ function SharePageContent() {
                     </p>
                   )}
                   
+                  {isCreator && share.sent && !share.tokensDistributed && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '24px', padding: '16px', background: 'rgba(255,255,255,0.03)', borderRadius: '8px', border: '1px solid var(--border)' }}>
+                      <p style={{ margin: '0 0 8px 0', fontSize: '14px', color: 'var(--muted)' }}>Deposit Tokens (Creator only):</p>
+                      <div style={{ display: 'flex', gap: '16px' }}>
+                        <input 
+                          type="number" value={depositAmount} onChange={e => setDepositAmount(e.target.value)}
+                          placeholder="Amount to deposit"
+                          style={{ flex: 1, padding: '12px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)' }}
+                        />
+                        <button 
+                          onClick={() => approveDeposit(share.expectedToken, depositAmount)}
+                          disabled={isApproveDepPending || isApproveDepConfirming || isDepPending || isDepConfirming || !depositAmount}
+                          style={{ padding: '12px 24px', background: '#10B981', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: !depositAmount ? 'not-allowed' : 'pointer', opacity: !depositAmount ? 0.5 : 1 }}
+                        >
+                          {isApproveDepPending || isApproveDepConfirming ? 'Approving...' : isDepPending || isDepConfirming ? 'Depositing...' : 'Approve & Deposit'}
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
                   <button 
                     onClick={() => validateDistribution(shareId, share.expectedToken)}
                     disabled={isDistPending || isDistConfirming || !share.sent}

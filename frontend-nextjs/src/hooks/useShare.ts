@@ -270,20 +270,52 @@ export function useClaimDistribution() {
   return { claimDistribution, hash, isPending, isConfirming, isSuccess };
 }
 
-export function useRefund() {
+export function useMarkRefunded() {
   const { writeContract, data: hash, isPending } = useWriteContract();
   const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash });
 
-  const refund = (id: bigint) => {
+  const markRefunded = (id: bigint) => {
     writeContract({
       address: CONTRACT,
       abi: PERSHARE_ABI,
-      functionName: 'refund',
+      functionName: 'markRefunded',
       args: [id],
     });
   };
 
-  return { refund, hash, isPending, isConfirming, isSuccess };
+  return { markRefunded, hash, isPending, isConfirming, isSuccess };
+}
+
+export function useClaimRefund() {
+  const { writeContract, data: hash, isPending } = useWriteContract();
+  const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash });
+
+  const claimRefund = (id: bigint) => {
+    writeContract({
+      address: CONTRACT,
+      abi: PERSHARE_ABI,
+      functionName: 'claimRefund',
+      args: [id],
+    });
+  };
+
+  return { claimRefund, hash, isPending, isConfirming, isSuccess };
+}
+
+export function useDepositTokens() {
+  const { writeContract, data: hash, isPending } = useWriteContract();
+  const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({ hash });
+
+  const depositTokens = (id: bigint, amount: string) => {
+    writeContract({
+      address: CONTRACT,
+      abi: PERSHARE_ABI,
+      functionName: 'depositTokens',
+      args: [id, parseEther(amount)],
+    });
+  };
+
+  return { depositTokens, hash, isPending, isConfirming, isSuccess };
 }
 
 // ── Utilitaires ───────────────────────────────────────────────────────────────
