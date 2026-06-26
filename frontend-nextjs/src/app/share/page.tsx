@@ -148,6 +148,9 @@ function SharePageContent() {
           <div>
             <h2 style={{ fontSize: '28px', margin: '0 0 8px 0' }}>{share.name}</h2>
             <p style={{ color: 'var(--muted)', margin: 0 }}>Destination : {share.destination}</p>
+            <p style={{ color: 'var(--muted)', margin: '8px 0 0 0', fontSize: '14px' }}>
+              ⏳ Deadline: {new Date(Number(share.deadline) * 1000).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })}
+            </p>
           </div>
           <span style={{ 
             padding: '6px 12px', borderRadius: '6px', fontWeight: 'bold', fontSize: '14px',
