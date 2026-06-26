@@ -293,19 +293,27 @@ function SharePageContent() {
           
           {share.expectedToken === '0x0000000000000000000000000000000000000000' ? (
             isCreator ? (
-              <div style={{ display: 'flex', gap: '16px' }}>
-                <input 
-                  value={expectedToken} onChange={e => setExpectedTokenInput(e.target.value)}
-                  placeholder="Expected Token Address (0x...)"
-                  style={{ flex: 1, padding: '12px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)' }}
-                />
-                <button 
-                  onClick={() => setExpectedToken(shareId, expectedToken as `0x${string}`)}
-                  disabled={isSetTokenPending || isSetTokenConfirming || !expectedToken}
-                  style={{ padding: '12px 24px', background: 'var(--purple)', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}
-                >
-                  Set Token
-                </button>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <div style={{ display: 'flex', gap: '16px' }}>
+                  <input 
+                    value={expectedToken} onChange={e => setExpectedTokenInput(e.target.value)}
+                    placeholder="Expected Token Address (0x...)"
+                    style={{ flex: 1, padding: '12px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)' }}
+                    disabled={!share.sent}
+                  />
+                  <button 
+                    onClick={() => setExpectedToken(shareId, expectedToken as `0x${string}`)}
+                    disabled={isSetTokenPending || isSetTokenConfirming || !expectedToken || !share.sent}
+                    style={{ padding: '12px 24px', background: 'var(--purple)', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: !share.sent ? 'not-allowed' : 'pointer', opacity: !share.sent ? 0.5 : 1 }}
+                  >
+                    Set Token
+                  </button>
+                </div>
+                {!share.sent && (
+                  <p style={{ color: '#EF4444', fontSize: '14px', margin: 0 }}>
+                    ⚠️ You must complete Phase 2 (Send Funds) before setting the expected token.
+                  </p>
+                )}
               </div>
             ) : (
               <p style={{ color: 'var(--muted)' }}>Waiting for the creator to set the expected token for distribution.</p>
