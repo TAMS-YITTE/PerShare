@@ -103,7 +103,7 @@ export function CreateShareModal({ onClose }: { onClose: () => void }) {
       return;
     }
     
-    const usdtAddress = ADDRESSES.bscTestnet.usdt || '0x337610d27c682E347C9cD60BD4b3b107C9d34dDd'; 
+    const usdtAddress = ADDRESSES.bsc.usdt; 
     const contractAddress = PERSHARE_CONTRACTS[tier];
     
     createShare(
