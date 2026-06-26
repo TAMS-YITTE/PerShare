@@ -99,10 +99,6 @@ export const PERSHARE_ABI = [
     inputs: [{ name: "id", type: "uint256" }, { name: "member", type: "address" }],
     outputs: [{ type: "bool" }]
   },
-  { name: "getClaimableAmount", type: "function", stateMutability: "view",
-    inputs: [{ name: "id", type: "uint256" }, { name: "member", type: "address" }],
-    outputs: [{ type: "uint256" }]
-  },
   { name: "shareCount", type: "function", stateMutability: "view",
     inputs: [],
     outputs: [{ type: "uint256" }]
