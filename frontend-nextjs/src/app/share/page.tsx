@@ -75,6 +75,7 @@ function SharePageContent() {
   const [contributeAmount, setContributeAmount] = useState('');
   const [expectedToken, setExpectedTokenInput] = useState('');
   const [activeTab, setActiveTab] = useState<'collecte'|'envoi'|'distribution'>('collecte');
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
   const { approve, isPending: isApprovePending, isConfirming: isApproveConfirming, isSuccess: isApproveSuccess } = useApprove();
   const { contribute, isPending: isContributePending, isConfirming: isContributeConfirming, isSuccess: isContributeSuccess } = useContribute();
@@ -189,19 +190,34 @@ function SharePageContent() {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
               {/* Contribuer */}
               {!isTargetReached && (
-                <div style={{ display: 'flex', gap: '16px' }}>
-                  <input 
-                    type="number" value={contributeAmount} onChange={e => setContributeAmount(e.target.value)}
-                    placeholder="Amount in USDT"
-                    style={{ flex: 1, padding: '12px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)' }}
-                  />
-                  <button 
-                    onClick={() => approve(share.stablecoin, contributeAmount)}
-                    disabled={isApprovePending || isApproveConfirming || isContributePending || isContributeConfirming || !contributeAmount}
-                    style={{ padding: '12px 24px', background: 'var(--purple)', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}
-                  >
-                    {isApprovePending || isApproveConfirming ? 'Approving...' : isContributePending || isContributeConfirming ? 'Transacting...' : 'Contribute'}
-                  </button>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  <div style={{ padding: '16px', background: 'rgba(255, 255, 255, 0.03)', borderRadius: '8px', border: '1px solid var(--border)' }}>
+                    <label style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', cursor: 'pointer' }}>
+                      <input 
+                        type="checkbox" 
+                        checked={termsAccepted} 
+                        onChange={e => setTermsAccepted(e.target.checked)} 
+                        style={{ marginTop: '4px', accentColor: 'var(--purple)' }} 
+                      />
+                      <span style={{ fontSize: '13px', color: 'var(--muted)', lineHeight: 1.5 }}>
+                        I understand that PerShare is a non-custodial software, that I am solely responsible for my legal/tax compliance, that I can lose my funds, and I accept the <a href="/terms" target="_blank" style={{ color: 'var(--purple)' }}>Terms</a> &amp; <a href="/risks" target="_blank" style={{ color: 'var(--purple)' }}>Risks</a>.
+                      </span>
+                    </label>
+                  </div>
+                  <div style={{ display: 'flex', gap: '16px' }}>
+                    <input 
+                      type="number" value={contributeAmount} onChange={e => setContributeAmount(e.target.value)}
+                      placeholder="Amount in USDT"
+                      style={{ flex: 1, padding: '12px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)' }}
+                    />
+                    <button 
+                      onClick={() => approve(share.stablecoin, contributeAmount)}
+                      disabled={isApprovePending || isApproveConfirming || isContributePending || isContributeConfirming || !contributeAmount || !termsAccepted}
+                      style={{ padding: '12px 24px', background: 'var(--purple)', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: (!termsAccepted || isApprovePending || isApproveConfirming || isContributePending || isContributeConfirming || !contributeAmount) ? 'not-allowed' : 'pointer', opacity: (!termsAccepted || isApprovePending || isApproveConfirming || isContributePending || isContributeConfirming || !contributeAmount) ? 0.5 : 1 }}
+                    >
+                      {isApprovePending || isApproveConfirming ? 'Approving...' : isContributePending || isContributeConfirming ? 'Transacting...' : 'Contribute'}
+                    </button>
+                  </div>
                 </div>
               )}
 

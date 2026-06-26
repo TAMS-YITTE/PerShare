@@ -41,7 +41,7 @@ export default function FAQ() {
           <h3 style={{ color: '#fff', fontSize: '18px', marginBottom: '12px', fontWeight: 700 }}>What are the main use cases for PerShare?</h3>
           <p style={{ color: 'var(--muted)', margin: 0 }}>
             PerShare is incredibly versatile. The most common use cases include: <br/><br/>
-            • <b>Group Buys &amp; Presales:</b> Pooling with your group to reach a high minimum ticket together.<br/>
+            • <b>Group Buys &amp; Shared Acquisitions:</b> Pooling with your group to reach a high minimum ticket together.<br/>
             • <b>OTC Group Purchases:</b> Buying a large token lot together directly from a counterparty.<br/>
             • <b>Web3 Tontines:</b> Transparent savings pools among friends or community members.
           </p>
