@@ -8,7 +8,7 @@ import { Suspense } from 'react';
 import { 
   useShare, useApprove, useContribute, useValidate, useMarkRefunded, useClaimRefund, useDepositTokens,
   useSetExpectedToken, useValidateDistribution, useClaimDistribution,
-  getShareStatus, formatUSDT, useHasValidated, useHasValidatedDist, useClaimableAmount
+  getShareStatus, formatUSDT, useHasValidated, useHasValidatedDist
 } from '../../hooks/useShare';
 import { toast } from 'sonner';
 
@@ -34,32 +34,27 @@ function MemberItem({ member, shareId, currentUser, activeTab }: { member: strin
 }
 
 function ClaimableBlock({ shareId, member }: { shareId: bigint, member: string }) {
-  const { data: claimable, refetch } = useClaimableAmount(shareId, member as `0x${string}`);
   const { claimDistribution, isPending, isConfirming, isSuccess } = useClaimDistribution();
 
   useEffect(() => {
     if (isSuccess) {
       toast.success('Tokens successfully claimed!');
-      refetch();
     }
-  }, [isSuccess, refetch]);
-
-  if (claimable === undefined) return null;
-  const amount = claimable as bigint;
+  }, [isSuccess]);
 
   return (
     <div style={{ background: 'var(--bg)', padding: '24px', borderRadius: '12px', border: '1px solid var(--border)', marginTop: '24px' }}>
       <h4 style={{ marginBottom: '8px', fontSize: '16px', color: 'var(--muted)' }}>Your Claimable Tokens</h4>
-      <div style={{ fontSize: '32px', fontWeight: 'bold', marginBottom: '16px', color: '#10B981' }}>
-        {Number(amount) / 1e18} <span style={{ fontSize: '16px', color: 'var(--muted)' }}>tokens</span>
+      <div style={{ fontSize: '14px', marginBottom: '16px', color: 'var(--muted)' }}>
+        Click below to claim your pro-rata share of the deposited tokens.
       </div>
       
       <button 
         onClick={() => claimDistribution(shareId)}
-        disabled={isPending || isConfirming || amount === BigInt(0)}
-        style={{ width: '100%', padding: '16px', background: '#10B981', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: amount === BigInt(0) ? 'not-allowed' : 'pointer', fontSize: '16px', opacity: amount === BigInt(0) ? 0.5 : 1 }}
+        disabled={isPending || isConfirming}
+        style={{ width: '100%', padding: '16px', background: '#10B981', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '16px' }}
       >
-        {isPending || isConfirming ? 'Claiming...' : amount === BigInt(0) ? 'Nothing to claim' : 'Claim My Tokens'}
+        {isPending || isConfirming ? 'Claiming...' : 'Claim My Tokens'}
       </button>
     </div>
   );
@@ -296,73 +291,73 @@ function SharePageContent() {
         <div style={{ background: 'var(--surface)', padding: '32px', borderRadius: '16px', border: '1px solid var(--purpleDark)', marginBottom: '24px' }}>
           <h3 style={{ marginBottom: '16px', fontSize: '20px', color: 'var(--purple)' }}>Phase 3: Token Redistribution</h3>
           
-          {share.tokensDistributed ? (
-            <p style={{ color: 'var(--muted)' }}>Tokens have been successfully distributed to all members.</p>
+          {share.expectedToken === '0x0000000000000000000000000000000000000000' ? (
+            isCreator ? (
+              <div style={{ display: 'flex', gap: '16px' }}>
+                <input 
+                  value={expectedToken} onChange={e => setExpectedTokenInput(e.target.value)}
+                  placeholder="Expected Token Address (0x...)"
+                  style={{ flex: 1, padding: '12px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)' }}
+                />
+                <button 
+                  onClick={() => setExpectedToken(shareId, expectedToken as `0x${string}`)}
+                  disabled={isSetTokenPending || isSetTokenConfirming || !expectedToken}
+                  style={{ padding: '12px 24px', background: 'var(--purple)', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}
+                >
+                  Set Token
+                </button>
+              </div>
+            ) : (
+              <p style={{ color: 'var(--muted)' }}>Waiting for the creator to set the expected token for distribution.</p>
+            )
           ) : (
-            <>
-              {share.expectedToken === '0x0000000000000000000000000000000000000000' ? (
-                isCreator ? (
+            <div>
+              <p style={{ color: 'var(--muted)', marginBottom: '16px' }}>Expected token: <strong style={{color: 'var(--text)'}}>{share.expectedToken}</strong></p>
+              
+              {!share.sent && (
+                <p style={{ color: '#EF4444', marginBottom: '16px', fontSize: '14px' }}>
+                  ⚠️ Fund transfer (Phase 2) is not yet complete. Distribution is blocked.
+                </p>
+              )}
+              
+              {isCreator && share.sent && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '24px', padding: '16px', background: 'rgba(255,255,255,0.03)', borderRadius: '8px', border: '1px solid var(--border)' }}>
+                  <p style={{ margin: '0 0 8px 0', fontSize: '14px', color: 'var(--muted)' }}>Deposit Tokens (Creator only):</p>
                   <div style={{ display: 'flex', gap: '16px' }}>
                     <input 
-                      value={expectedToken} onChange={e => setExpectedTokenInput(e.target.value)}
-                      placeholder="Expected Token Address (0x...)"
+                      type="number" value={depositAmount} onChange={e => setDepositAmount(e.target.value)}
+                      placeholder="Amount to deposit"
                       style={{ flex: 1, padding: '12px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)' }}
                     />
                     <button 
-                      onClick={() => setExpectedToken(shareId, expectedToken as `0x${string}`)}
-                      disabled={isSetTokenPending || isSetTokenConfirming || !expectedToken}
-                      style={{ padding: '12px 24px', background: 'var(--purple)', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}
+                      onClick={() => approveDeposit(share.expectedToken, depositAmount)}
+                      disabled={isApproveDepPending || isApproveDepConfirming || isDepPending || isDepConfirming || !depositAmount}
+                      style={{ padding: '12px 24px', background: '#10B981', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: !depositAmount ? 'not-allowed' : 'pointer', opacity: !depositAmount ? 0.5 : 1 }}
                     >
-                      Set Token
+                      {isApproveDepPending || isApproveDepConfirming ? 'Approving...' : isDepPending || isDepConfirming ? 'Depositing...' : 'Approve & Deposit'}
                     </button>
                   </div>
-                ) : (
-                  <p style={{ color: 'var(--muted)' }}>Waiting for the creator to set the expected token for distribution.</p>
-                )
-              ) : (
-                <div>
-                  <p style={{ color: 'var(--muted)', marginBottom: '16px' }}>Expected token: <strong style={{color: 'var(--text)'}}>{share.expectedToken}</strong></p>
-                  
-                  {!share.sent && (
-                    <p style={{ color: '#EF4444', marginBottom: '16px', fontSize: '14px' }}>
-                      ⚠️ Fund transfer (Phase 2) is not yet complete. Distribution is blocked.
-                    </p>
-                  )}
-                  
-                  {isCreator && share.sent && !share.tokensDistributed && (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '24px', padding: '16px', background: 'rgba(255,255,255,0.03)', borderRadius: '8px', border: '1px solid var(--border)' }}>
-                      <p style={{ margin: '0 0 8px 0', fontSize: '14px', color: 'var(--muted)' }}>Deposit Tokens (Creator only):</p>
-                      <div style={{ display: 'flex', gap: '16px' }}>
-                        <input 
-                          type="number" value={depositAmount} onChange={e => setDepositAmount(e.target.value)}
-                          placeholder="Amount to deposit"
-                          style={{ flex: 1, padding: '12px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)' }}
-                        />
-                        <button 
-                          onClick={() => approveDeposit(share.expectedToken, depositAmount)}
-                          disabled={isApproveDepPending || isApproveDepConfirming || isDepPending || isDepConfirming || !depositAmount}
-                          style={{ padding: '12px 24px', background: '#10B981', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: !depositAmount ? 'not-allowed' : 'pointer', opacity: !depositAmount ? 0.5 : 1 }}
-                        >
-                          {isApproveDepPending || isApproveDepConfirming ? 'Approving...' : isDepPending || isDepConfirming ? 'Depositing...' : 'Approve & Deposit'}
-                        </button>
-                      </div>
-                    </div>
-                  )}
-
-                  <button 
-                    onClick={() => validateDistribution(shareId, share.expectedToken)}
-                    disabled={isDistPending || isDistConfirming || !share.sent}
-                    style={{ width: '100%', padding: '16px', background: 'var(--purple)', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: !share.sent ? 'not-allowed' : 'pointer', fontSize: '16px', opacity: !share.sent ? 0.5 : 1 }}
-                  >
-                    {isDistPending ? 'Validating...' : 'Validate my Address to Receive my Tokens'}
-                  </button>
-                  
-                  {isMember && address && share.sent && (
-                    <ClaimableBlock shareId={shareId} member={address} />
-                  )}
                 </div>
               )}
-            </>
+
+              {share.tokensDistributed ? (
+                <div style={{ marginBottom: '24px', color: '#10B981', padding: '16px', background: 'rgba(16, 185, 129, 0.1)', borderRadius: '8px', border: '1px solid #10B981' }}>
+                  Tokens have been successfully distributed to all members.
+                </div>
+              ) : (
+                <button 
+                  onClick={() => validateDistribution(shareId, share.expectedToken)}
+                  disabled={isDistPending || isDistConfirming || !share.sent}
+                  style={{ width: '100%', padding: '16px', background: 'var(--purple)', color: '#fff', border: 'none', borderRadius: '8px', fontWeight: 'bold', cursor: !share.sent ? 'not-allowed' : 'pointer', fontSize: '16px', opacity: !share.sent ? 0.5 : 1, marginBottom: '24px' }}
+                >
+                  {isDistPending ? 'Validating...' : 'Validate my Address to Receive my Tokens'}
+                </button>
+              )}
+              
+              {isMember && address && share.tokensDistributed && (
+                <ClaimableBlock shareId={shareId} member={address} />
+              )}
+            </div>
           )}
         </div>
       )}

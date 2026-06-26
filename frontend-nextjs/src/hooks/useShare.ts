@@ -107,16 +107,6 @@ export function useHasValidatedDist(id: bigint, member: `0x${string}`) {
   });
 }
 
-export function useClaimableAmount(id: bigint, member: `0x${string}`) {
-  return useReadContract({
-    address: CONTRACT,
-    abi: PERSHARE_ABI,
-    functionName: 'getClaimableAmount',
-    args: [id, member],
-    query: { refetchInterval: 5000 }
-  });
-}
-
 export function useShareCount() {
   return useReadContract({
     address: CONTRACT,
