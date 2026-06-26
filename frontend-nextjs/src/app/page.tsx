@@ -125,10 +125,10 @@ export default function Home() {
             <div style={{ fontSize: '12px', fontWeight: 700, color: '#a78bfa', marginBottom: '8px' }}>POOL &amp; DISTRIBUTE · TOKENS &amp; ASSETS</div>
             <h3 style={{ fontSize: '22px', fontWeight: 700, marginBottom: '12px' }}>Buy together, split automatically</h3>
             <p style={{ color: 'var(--muted)', lineHeight: 1.6, fontSize: '15px', marginBottom: '16px' }}>
-              A group acquires tokens or assets together. The seller returns them to the contract, which splits them pro-rata to every member — automatically.
+              A group acquires tokens or assets together. The seller sends them back to the contract, which splits them pro-rata to every member — automatically.
             </p>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
-              {['Presale syndicate', 'OTC group buy', 'NFT (soon)'].map(x => (
+              {['Presale group buy', 'OTC group buy', 'NFT (soon)'].map(x => (
                 <span key={x} style={{ fontSize: '12px', background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '6px', padding: '4px 10px', color: 'var(--muted)' }}>{x}</span>
               ))}
             </div>
@@ -207,7 +207,7 @@ export default function Home() {
               Everyone receives their <span className="text-gradient">exact share</span>.
             </h2>
             <p style={{ color: 'var(--muted)', fontSize: '17px', lineHeight: 1.6, maxWidth: '620px', margin: '0 auto' }}>
-              The hardest part of investing as a group has always been splitting the result fairly. PerShare records every member&apos;s deposit on-chain and computes their fraction automatically — so each person claims exactly what they are owed. No treasurer, no spreadsheet, no trust.
+              The hardest part of pooling funds as a group has always been splitting the result fairly. PerShare records every member&apos;s deposit on-chain and computes their fraction automatically — so each person claims exactly what they are owed. No treasurer, no spreadsheet, no trust.
             </p>
           </div>
 
@@ -240,9 +240,9 @@ export default function Home() {
 
             {/* Right: worked example */}
             <div className="glass-panel" style={{ padding: '32px', display: 'flex', flexDirection: 'column' }}>
-              <div style={{ fontSize: '13px', fontWeight: 700, color: '#a78bfa', marginBottom: '4px' }}>WORKED EXAMPLE · Presale syndicate</div>
+              <div style={{ fontSize: '13px', fontWeight: 700, color: '#a78bfa', marginBottom: '4px' }}>WORKED EXAMPLE · Presale group buy</div>
               <p style={{ color: 'var(--muted)', fontSize: '13px', lineHeight: 1.5, marginBottom: '20px' }}>
-                3 members pool <strong style={{ color: '#fff' }}>10,000 USDT</strong> to buy a presale ticket. The seller returns <strong style={{ color: '#fff' }}>1,000,000 ABC</strong> into the contract.
+                3 members pool <strong style={{ color: '#fff' }}>10,000 USDT</strong> to buy a presale ticket. The seller sends back <strong style={{ color: '#fff' }}>1,000,000 ABC</strong> into the contract.
               </p>
               {[
                 { name: 'Alice', dep: '5,000', pct: '50%', tok: '500,000', color: '#00D2FF' },

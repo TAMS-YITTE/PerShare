@@ -43,7 +43,14 @@ export function Footer() {
         </a>
       </div>
 
-      <p style={{ color: '#8892b0', fontSize: '14px', margin: 0, marginTop: '16px' }}>
+      <div style={{ maxWidth: '800px', textAlign: 'center', marginTop: '16px' }}>
+        <p style={{ color: 'var(--muted)', fontSize: '12px', lineHeight: 1.6, margin: 0 }}>
+          PerShare is a free-to-use non-custodial software, not a regulated financial service or CASP. Nothing herein constitutes an offer, solicitation, or investment advice. Crypto-assets are volatile: you can lose everything. Use at your own risk.<br/>
+          <span style={{ opacity: 0.8 }}>Not intended for persons located in jurisdictions where such use would be illegal or restricted.</span>
+        </p>
+      </div>
+
+      <p style={{ color: '#8892b0', fontSize: '14px', margin: 0, marginTop: '24px' }}>
         &copy; {new Date().getFullYear()} PerShare. All rights reserved.
       </p>
     </footer>

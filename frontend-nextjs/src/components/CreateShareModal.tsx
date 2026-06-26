@@ -25,6 +25,7 @@ export function CreateShareModal({ onClose }: { onClose: () => void }) {
     return d.toISOString().slice(0, 16);
   });
   const [tier, setTier] = useState<PerShareTier>('standard');
+  const [termsAccepted, setTermsAccepted] = useState(false);
 
   useEffect(() => {
     if (isSuccess) {
@@ -254,11 +255,25 @@ export function CreateShareModal({ onClose }: { onClose: () => void }) {
             />
           </div>
 
+          <div style={{ marginTop: '16px', padding: '16px', background: 'rgba(255, 255, 255, 0.03)', borderRadius: '8px', border: '1px solid var(--border)' }}>
+            <label style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', cursor: 'pointer' }}>
+              <input 
+                type="checkbox" 
+                checked={termsAccepted} 
+                onChange={e => setTermsAccepted(e.target.checked)} 
+                style={{ marginTop: '4px', accentColor: 'var(--purple)' }} 
+              />
+              <span style={{ fontSize: '13px', color: 'var(--muted)', lineHeight: 1.5 }}>
+                I understand that PerShare is a non-custodial software, that I am solely responsible for my legal/tax compliance, that I can lose my funds, and I accept the <a href="/terms" target="_blank" style={{ color: 'var(--purple)' }}>Terms</a> &amp; <a href="/risks" target="_blank" style={{ color: 'var(--purple)' }}>Risks</a>.
+              </span>
+            </label>
+          </div>
+
           <div style={{ display: 'flex', gap: '16px', marginTop: '16px' }}>
             <button type="button" onClick={onClose} style={{ flex: 1, padding: '12px', background: 'transparent', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)', cursor: 'pointer' }}>
               Cancel
             </button>
-            <button type="submit" disabled={isPending || isConfirming} style={{ flex: 1, padding: '12px', background: 'var(--purple)', border: 'none', borderRadius: '8px', color: '#fff', cursor: 'pointer', fontWeight: 'bold' }}>
+            <button type="submit" disabled={isPending || isConfirming || !termsAccepted} style={{ flex: 1, padding: '12px', background: 'var(--purple)', border: 'none', borderRadius: '8px', color: '#fff', cursor: (!termsAccepted || isPending || isConfirming) ? 'not-allowed' : 'pointer', fontWeight: 'bold', opacity: (!termsAccepted || isPending || isConfirming) ? 0.5 : 1 }}>
               {isPending ? 'Signing...' : isConfirming ? 'Creating...' : 'Create SHARE'}
             </button>
           </div>

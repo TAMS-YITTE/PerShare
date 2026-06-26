@@ -9,6 +9,13 @@ export default function Risks() {
           Please read this carefully before participating in any pool.
         </p>
 
+        <div style={{ background: 'rgba(20, 28, 47, 0.4)', padding: '24px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)', marginBottom: '48px' }}>
+          <h2 style={{ fontSize: '16px', fontWeight: 700, color: '#fff', marginBottom: '8px' }}>No Offer / No Advice</h2>
+          <p style={{ color: 'var(--muted)', fontSize: '15px', lineHeight: 1.6, margin: 0 }}>
+            PerShare does not offer, endorse, verify, or guarantee any token, asset, or pool. You are solely responsible for your decisions, your legal and tax compliance, and the evaluation of any counterparty.
+          </p>
+        </div>
+
         <div style={{ display: 'grid', gap: '32px' }}>
           <div style={{ background: 'rgba(239, 68, 68, 0.1)', padding: '32px', borderRadius: '16px', border: '1px solid rgba(239, 68, 68, 0.2)' }}>
             <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#ef4444', marginBottom: '12px' }}>1. Counterparty Risk (OTC & Group Buys)</h3>

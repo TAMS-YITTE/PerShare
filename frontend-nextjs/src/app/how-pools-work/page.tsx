@@ -49,7 +49,7 @@ export default function HowPoolsWork() {
         {/* ── WORKED EXAMPLE ──────────────────────────────────────────── */}
         <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(26px, 4vw, 36px)', fontWeight: 800, marginTop: '72px', marginBottom: '16px' }}>A worked example <span style={{ fontSize: '15px', color: 'var(--muted)', fontWeight: 500 }}>· Pool &amp; Distribute</span></h2>
         <p style={{ color: 'var(--muted)', fontSize: '16px', lineHeight: 1.6, marginBottom: '24px' }}>
-          Three members pool <strong style={{ color: '#fff' }}>10,000 USDT</strong> to enter a presale together. The seller returns <strong style={{ color: '#fff' }}>1,000,000 ABC</strong> into the contract. Each member&apos;s share is computed directly from their own deposit:
+          Three members pool <strong style={{ color: '#fff' }}>10,000 USDT</strong> to enter a presale together. The seller sends <strong style={{ color: '#fff' }}>1,000,000 ABC</strong> into the contract. Each member&apos;s share is computed directly from their own deposit:
         </p>
         <pre style={{ background: 'rgba(0,0,0,0.5)', padding: '16px', borderRadius: '10px', color: '#fff', fontSize: '14px', marginBottom: '24px', overflowX: 'auto' }}>
           <code>yourTokens = totalTokensReceived × yourDeposit ÷ poolTotal</code>
