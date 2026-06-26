@@ -56,7 +56,7 @@ export function ShareCard({ id, share, userAddress }: { id: bigint; share: any; 
           <span>Members:</span> <span style={{ color: 'var(--text)' }}>{share.members.length}</span>
         </div>
         <div>
-          <span>Phase 1 Validations:</span> <span style={{ color: 'var(--text)' }}>{Number(share.currentValidations)} / {Number(share.threshold)}</span>
+          <span>Phase 2 Validations:</span> <span style={{ color: 'var(--text)' }}>{Number(share.currentValidations)} / {Number(share.threshold)}</span>
         </div>
         {userAddress && (
           <div style={{ gridColumn: 'span 2', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--bg)', padding: '8px 12px', borderRadius: '6px', marginTop: '4px' }}>
