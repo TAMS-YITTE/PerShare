@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { useAppKit } from '@reown/appkit/react';
 import { useAccount, useDisconnect } from 'wagmi';
@@ -74,7 +74,7 @@ function CustomConnectButton() {
 }
 
 export function Header() {
-
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <>
@@ -124,18 +124,40 @@ export function Header() {
             </Link>
           </nav>
 
-          {/* Right: Reown Wallet Button */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+          {/* Right: Wallet + mobile menu toggle */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <div className="wallet-wrapper">
               <CustomConnectButton />
             </div>
+            <button
+              className="mobile-nav-toggle"
+              onClick={() => setMenuOpen(o => !o)}
+              aria-label="Toggle menu"
+              style={{ display: 'none', alignItems: 'center', justifyContent: 'center', width: '40px', height: '40px', background: 'transparent', border: '1px solid #2a344a', borderRadius: '8px', color: '#fff', cursor: 'pointer' }}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                {menuOpen ? <path d="M18 6 6 18M6 6l12 12" /> : <><path d="M3 6h18" /><path d="M3 12h18" /><path d="M3 18h18" /></>}
+              </svg>
+            </button>
           </div>
         </div>
-        
+
+        {/* Mobile menu */}
+        {menuOpen && (
+          <div style={{ borderTop: '1px solid #1a233a', background: 'rgba(10, 15, 28, 0.98)', padding: '12px 24px 20px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <Link href="/how-pools-work" onClick={() => setMenuOpen(false)} style={{ color: '#cbd5e1', textDecoration: 'none', fontSize: '15px', fontWeight: 500, padding: '12px 8px' }}>How it works</Link>
+            <a href="/#why" onClick={() => setMenuOpen(false)} style={{ color: '#cbd5e1', textDecoration: 'none', fontSize: '15px', fontWeight: 500, padding: '12px 8px' }}>Why PerShare</a>
+            <Link href="/security" onClick={() => setMenuOpen(false)} style={{ color: '#cbd5e1', textDecoration: 'none', fontSize: '15px', fontWeight: 500, padding: '12px 8px' }}>Security</Link>
+            <Link href="/app" onClick={() => setMenuOpen(false)} style={{ marginTop: '8px', textAlign: 'center', background: 'linear-gradient(135deg, #06b6d4, #3b82f6)', color: '#fff', textDecoration: 'none', padding: '12px', borderRadius: '12px', fontSize: '15px', fontWeight: 'bold' }}>Launch App</Link>
+          </div>
+        )}
+
         {/* Responsive styles */}
         <style dangerouslySetInnerHTML={{__html: `
+          .mobile-nav-toggle { display: none; }
           @media (max-width: 768px) {
             .desktop-nav { display: none !important; }
+            .mobile-nav-toggle { display: flex !important; }
             .wallet-wrapper { transform: scale(0.9); }
           }
         `}} />

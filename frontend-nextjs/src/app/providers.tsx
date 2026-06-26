@@ -28,9 +28,14 @@ const BSC_MAINNET = {
 
 const projectId = 'a0485249623e9a167f133146abc2eb4e';
 
+// Public production stays mainnet-only. Set NEXT_PUBLIC_ENABLE_TESTNET=true
+// (e.g. in local/preview) to expose BSC Testnet in the wallet network switcher.
+const ENABLE_TESTNET = process.env.NEXT_PUBLIC_ENABLE_TESTNET === 'true';
+const APP_NETWORKS: any = ENABLE_TESTNET ? [BSC_MAINNET, BSC_TESTNET] : [BSC_MAINNET];
+
 const wagmiAdapter = new WagmiAdapter({
   projectId,
-  networks: [BSC_TESTNET, BSC_MAINNET],
+  networks: APP_NETWORKS,
   transports: {
     [BSC_TESTNET.id]: http('https://data-seed-prebsc-1-s1.binance.org:8545/'),
     [BSC_MAINNET.id]: http('https://bsc-dataseed.binance.org/'),
@@ -39,7 +44,7 @@ const wagmiAdapter = new WagmiAdapter({
 
 createAppKit({
   adapters: [wagmiAdapter],
-  networks: [BSC_TESTNET, BSC_MAINNET],
+  networks: APP_NETWORKS,
   projectId,
   metadata: {
     name: 'PerShare',
