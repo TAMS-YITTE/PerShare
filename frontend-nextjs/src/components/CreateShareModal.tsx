@@ -26,6 +26,7 @@ export function CreateShareModal({ onClose }: { onClose: () => void }) {
   });
   const [tier, setTier] = useState<PerShareTier>('standard');
   const [termsAccepted, setTermsAccepted] = useState(false);
+  const [showPremiumInfo, setShowPremiumInfo] = useState(false);
 
   useEffect(() => {
     if (isSuccess) {
@@ -138,10 +139,15 @@ export function CreateShareModal({ onClose }: { onClose: () => void }) {
                     key={t}
                     type="button"
                     onClick={() => {
+                      if (t === 'premium') {
+                        setShowPremiumInfo(!showPremiumInfo);
+                        return;
+                      }
                       if (isLocked) {
                         toast.error(t === 'social' ? "Social tier is reserved. Contact admin." : "Premium tier is coming soon!");
                         return;
                       }
+                      setShowPremiumInfo(false);
                       setTier(t);
                     }}
                     style={{
@@ -166,6 +172,22 @@ export function CreateShareModal({ onClose }: { onClose: () => void }) {
                 );
               })}
             </div>
+            {showPremiumInfo && (
+              <div style={{ marginTop: '12px', padding: '16px', background: 'rgba(20, 28, 47, 0.4)', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)', fontSize: '13px', color: 'var(--muted)', animation: 'fadeIn 0.2s ease' }}>
+                <h4 style={{ color: '#00D2FF', marginBottom: '12px', fontSize: '14px', display: 'flex', justifyContent: 'space-between' }}>
+                  <span>Premium Services (Coming Soon)</span>
+                  <span style={{ fontSize: '12px', color: 'var(--muted)', fontWeight: 'normal' }}>15k+ USDT pools</span>
+                </h4>
+                <ul style={{ margin: 0, paddingLeft: '16px', display: 'flex', flexDirection: 'column', gap: '8px', lineHeight: 1.5 }}>
+                  <li><strong>Verified Destination:</strong> Flash-audit of the destination contract (admin, mint, pause, return mechanism).</li>
+                  <li><strong>Safe Escrow Setup:</strong> 3/5 or 4/5 Multisig as destination (no single point of failure).</li>
+                  <li><strong>Counterparty Verification:</strong> Direct contact with seller/project via official channels.</li>
+                  <li><strong>Accompanied Execution:</strong> Live support for Phase 2/3 (Set Token, Deposit, Validate, Claim).</li>
+                  <li><strong>Gas Fund:</strong> Small BNB allowance for members to claim/validate.</li>
+                  <li><strong>Side-letter:</strong> Co-signed rules memo in case of seller default.</li>
+                </ul>
+              </div>
+            )}
           </div>
 
           <div>
