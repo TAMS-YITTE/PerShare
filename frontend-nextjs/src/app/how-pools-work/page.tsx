@@ -75,8 +75,31 @@ export default function HowPoolsWork() {
           </div>
         </div>
 
+        {/* ── BEST PRACTICE: MULTISIG PROXY ───────────────────────────── */}
+        <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(26px, 4vw, 36px)', fontWeight: 800, marginTop: '72px', marginBottom: '16px' }}>Best Practice <span style={{ fontSize: '15px', color: 'var(--muted)', fontWeight: 500 }}>· Multisig for Presales</span></h2>
+        <p style={{ color: 'var(--muted)', fontSize: '16px', lineHeight: 1.6, marginBottom: '24px' }}>
+          When participating in a Presale (ICO, IDO), <strong>never set an external smart contract as the Destination Address</strong>. Here is why combining PerShare with a Multisig wallet (like Safe) is the industry standard:
+        </p>
+        
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          <div className="glass-panel" style={{ background: 'rgba(20, 28, 47, 0.4)', padding: '32px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)' }}>
+            <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#00D2FF', marginBottom: '12px' }}>1. The limitation of smart contracts</h3>
+            <p style={{ color: 'var(--muted)', lineHeight: 1.6 }}>Presales are complex. Some push tokens automatically, some require a Web3 wallet to connect and click &quot;Claim&quot;, and others use vesting schedules. A smart contract like PerShare cannot dynamically adapt or click buttons on a third-party website. If you send pooled funds directly to a presale contract, the tokens might get permanently stuck.</p>
+          </div>
+
+          <div className="glass-panel" style={{ background: 'rgba(20, 28, 47, 0.4)', padding: '32px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)' }}>
+            <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#a78bfa', marginBottom: '12px' }}>2. The Proxy Solution (Safe)</h3>
+            <p style={{ color: 'var(--muted)', lineHeight: 1.6 }}>To interact safely with external presales, set your Destination Address to a community-controlled Multisig wallet (e.g., Safe). The Multisig acts as your &quot;human proxy&quot; to buy and claim the tokens on the presale website. While you <em>could</em> use a single personal wallet as the proxy, doing so forces the community to blindly trust one person. A Multisig preserves the decentralized, trustless spirit of your group.</p>
+          </div>
+
+          <div className="glass-panel" style={{ background: 'rgba(16, 185, 129, 0.06)', padding: '32px', borderRadius: '16px', border: '1px solid rgba(16, 185, 129, 0.2)' }}>
+            <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#10B981', marginBottom: '12px' }}>3. The perfect synergy</h3>
+            <p style={{ color: 'var(--muted)', lineHeight: 1.6 }}>Use <strong>Safe</strong> as your manual arm to securely interact with the presale DApp. Use <strong>PerShare</strong> as your automated accountant: it guarantees the collection phase, automatically refunds members if the goal fails, and mathematically computes the pro-rata distribution once you deposit the acquired tokens back into the pool. <em>(Note: If you are simply paying a vendor directly for OTC assets or services, you don&apos;t need a proxy—just put the vendor&apos;s address directly).</em></p>
+          </div>
+        </div>
+
         {/* ── EXTRA MECHANICS ─────────────────────────────────────────── */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', marginTop: '48px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', marginTop: '72px' }}>
           <div className="glass-panel" style={{ background: 'rgba(20, 28, 47, 0.4)', padding: '32px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)' }}>
             <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#00D2FF', marginBottom: '12px' }}>Vesting &amp; late tranches</h3>
             <p style={{ color: 'var(--muted)', lineHeight: 1.6 }}>Many presales release tokens over time. When a later tranche arrives, anyone can deposit it into the same pool — the contract increases the total received and every member can claim their additional pro-rata amount. The split stays correct across unlimited tranches.</p>
