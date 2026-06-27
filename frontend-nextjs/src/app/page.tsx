@@ -341,6 +341,11 @@ export default function Home() {
                   </button>
                 ))}
               </div>
+              {calcTier === 0.02 && (
+                <div style={{ marginTop: '8px', fontSize: '11px', color: 'var(--muted)', fontStyle: 'italic', lineHeight: 1.4 }}>
+                  Verified destination, Safe escrow &amp; hands-on support — coming soon, 15k+ USDT pools.
+                </div>
+              )}
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', color: '#a78bfa' }}>
               <span>PerShare fee</span>
@@ -355,6 +360,35 @@ export default function Home() {
         <p style={{ textAlign: 'center', fontSize: '12px', color: 'var(--muted)', marginTop: '24px' }}>
           Indicative public fees, June 2026. Fee is deducted from the destination payout on success only — 100% refund if the pool is cancelled or expires. PerShare is non-custodial infrastructure; an admin pause exists for emergencies (see <a href="/risks" className="text-gradient" style={{ textDecoration: 'none' }}>Risks &amp; Disclaimers</a>).
         </p>
+      </section>
+
+      {/* ── PREMIUM TIER SECTION ───────────────────────────────────────────── */}
+      <section style={{ padding: '40px 24px 100px', maxWidth: '1000px', margin: '0 auto' }}>
+        <div className="glass-panel" style={{ padding: '48px', border: '1px solid rgba(167, 139, 250, 0.3)', background: 'linear-gradient(to bottom right, rgba(20, 28, 47, 0.8), rgba(167, 139, 250, 0.05))' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', marginBottom: '40px' }}>
+            <span style={{ fontSize: '12px', fontWeight: 700, color: '#a78bfa', textTransform: 'uppercase', letterSpacing: '0.12em', border: '1px solid #a78bfa', padding: '4px 10px', borderRadius: '20px', marginBottom: '16px' }}>Coming Soon</span>
+            <h2 style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px, 4vw, 36px)', fontWeight: 800, margin: '0 0 16px' }}>Premium — Verified &amp; Accompanied Pools</h2>
+            <p style={{ color: 'var(--muted)', fontSize: '17px', lineHeight: 1.6, maxWidth: '640px' }}>
+              For high-stakes pools (15,000+ USDT), PerShare offers a full-service tier. We don&apos;t just provide the code; we actively secure the presale flow from start to finish.
+            </p>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
+            {[
+              { title: 'Verified Destination', desc: 'Flash-audit of the destination contract to verify admin privileges, minting functions, and token return mechanisms.' },
+              { title: 'Safe Escrow Setup', desc: 'We configure a 3/5 or 4/5 Multisig (Safe) as your destination to eliminate any single point of failure.' },
+              { title: 'Counterparty Verification', desc: 'We directly contact the seller or project via official channels to confirm the deal terms (no KYC for your members).' },
+              { title: 'Accompanied Execution', desc: 'Live hands-on support for Phase 2/3 (Set Token, Approve & Deposit, Validate, Claim) to prevent costly mistakes.' },
+              { title: 'Gas Fund Provided', desc: 'We supply a small BNB allowance for your members so they never get stuck during the claiming process.' },
+              { title: 'Side-Letter Memo', desc: 'A simple, co-signed rules memo detailing exact procedures if the seller defaults or fails to deliver.' }
+            ].map((feature, idx) => (
+              <div key={idx} style={{ background: 'rgba(0,0,0,0.2)', padding: '24px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#fff', marginBottom: '8px' }}>{feature.title}</h3>
+                <p style={{ color: 'var(--muted)', fontSize: '14px', lineHeight: 1.6, margin: 0 }}>{feature.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* (Fee calculator moved into the Why PerShare section) */}
