@@ -194,17 +194,16 @@ function SharePageContent() {
         </button>
       </div>
 
-      {/* Zone d'Action Utilisateur (Phase 1) */}
       {activeTab === 'collecte' && (
         <div style={{ background: 'var(--surface)', padding: '32px', borderRadius: '16px', border: '1px solid var(--border)', marginBottom: '24px' }}>
           <h3 style={{ marginBottom: '24px', fontSize: '20px' }}>Phase 1: Fund Collection</h3>
           
-          {status !== 'active' ? (
+          {status !== 'active' && status !== 'expired' && status !== 'refunded' ? (
             <p style={{ color: 'var(--muted)' }}>The collection phase is over ({status}).</p>
-          ) : isMember ? (
+          ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-              {/* Contribuer */}
-              {!isTargetReached && (
+              {/* Contribuer (Only if active) */}
+              {status === 'active' && isMember && !isTargetReached && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                   <div style={{ padding: '16px', background: 'rgba(255, 255, 255, 0.03)', borderRadius: '8px', border: '1px solid var(--border)' }}>
                     <label style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', cursor: 'pointer' }}>
@@ -215,7 +214,7 @@ function SharePageContent() {
                         style={{ marginTop: '4px', accentColor: 'var(--purple)' }} 
                       />
                       <span style={{ fontSize: '13px', color: 'var(--muted)', lineHeight: 1.5 }}>
-                        I understand that PerShare is a non-custodial software, that I am solely responsible for my legal/tax compliance, that I can lose my funds, and I accept the <a href="/terms" target="_blank" style={{ color: 'var(--purple)' }}>Terms</a> &amp; <a href="/risks" target="_blank" style={{ color: 'var(--purple)' }}>Risks</a>.
+                        I understand that PerShare is a non-custodial software, that I am solely responsible for my legal/tax compliance, and that interacting with blockchain technology involves inherent risks (such as smart contract vulnerabilities or user errors) which could lead to a loss of funds. I accept the <a href="/terms" target="_blank" style={{ color: 'var(--purple)' }}>Terms</a> &amp; <a href="/risks" target="_blank" style={{ color: 'var(--purple)' }}>Risks</a>.
                       </span>
                     </label>
                   </div>
@@ -236,8 +235,12 @@ function SharePageContent() {
                 </div>
               )}
 
-              {/* Rembourser */}
-              {!isTargetReached && BigInt(Math.floor(Date.now() / 1000)) > share.deadline && (
+              {status === 'expired' && share.totalReceived === BigInt(0) && (
+                <p style={{ color: 'var(--muted)' }}>The collection phase has expired and no funds were collected.</p>
+              )}
+
+              {/* Rembourser (Only if expired/refunded and target not reached) */}
+              {!isTargetReached && isMember && BigInt(Math.floor(Date.now() / 1000)) > share.deadline && share.totalReceived > BigInt(0) && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                   {!share.refunded && (
                     <button 
@@ -261,7 +264,7 @@ function SharePageContent() {
               )}
             </div>
           ) : (
-            <p style={{ color: 'var(--muted)' }}>You are not a member of this Share.</p>
+            <p style={{ color: 'var(--muted)' }}>You are not a member of this share.</p>
           )}
         </div>
       )}
