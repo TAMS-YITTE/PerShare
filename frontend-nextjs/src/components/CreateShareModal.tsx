@@ -73,10 +73,6 @@ export function CreateShareModal({ onClose }: { onClose: () => void }) {
       toast.error("The Social tier is strictly reserved for verified partners.");
       return;
     }
-    if (tier === 'standard' && parseFloat(targetAmount) > 10000) {
-      toast.error("Standard tier is limited to 10,000 USDT. Please select Premium.");
-      return;
-    }
     
     // Cleanup empty fields
     const cleanedMembers = members.filter(m => m !== '');
@@ -136,14 +132,14 @@ export function CreateShareModal({ onClose }: { onClose: () => void }) {
             <label style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: 'var(--muted)' }}>Select Tier</label>
             <div style={{ display: 'flex', gap: '8px' }}>
               {(['social', 'standard', 'premium'] as PerShareTier[]).map(t => {
-                const isLocked = t === 'social' && !isVIP;
+                const isLocked = t === 'social' || t === 'premium'; // Temporarily locked for Option B go-live
                 return (
                   <button
                     key={t}
                     type="button"
                     onClick={() => {
                       if (isLocked) {
-                        toast.error("Social tier is reserved. Contact admin on Twitter to whitelist your wallet.");
+                        toast.error(t === 'social' ? "Social tier is reserved. Contact admin." : "Premium tier is coming soon!");
                         return;
                       }
                       setTier(t);
@@ -158,14 +154,14 @@ export function CreateShareModal({ onClose }: { onClose: () => void }) {
                       cursor: isLocked ? 'not-allowed' : 'pointer',
                       fontWeight: tier === t ? 'bold' : 'normal',
                       textTransform: 'capitalize',
-                      opacity: isLocked ? 0.5 : 1
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      gap: '4px'
                     }}
                   >
-                    {isLocked && <span style={{marginRight: '4px'}}>🔒</span>}
                     {t}
-                    <div style={{ fontSize: '11px', marginTop: '4px', color: 'var(--muted)', fontWeight: 'normal' }}>
-                      {t === 'social' ? '0.5%' : t === 'standard' ? '1%' : '2%'} fee
-                    </div>
+                    {isLocked && <span style={{ fontSize: '10px', color: 'var(--muted)' }}>Coming soon</span>}
                   </button>
                 );
               })}
