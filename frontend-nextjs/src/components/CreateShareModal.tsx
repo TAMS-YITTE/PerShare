@@ -188,6 +188,15 @@ export function CreateShareModal({ onClose }: { onClose: () => void }) {
           </div>
 
           <div>
+            <label htmlFor="deadline-input" style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: 'var(--muted)' }}>Expiration Date & Time (Deadline)</label>
+            <input 
+              id="deadline-input"
+              required type="datetime-local" value={deadlineDate} onChange={e => setDeadlineDate(e.target.value)}
+              style={{ width: '100%', padding: '12px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)', colorScheme: 'dark' }} 
+            />
+          </div>
+
+          <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
               <label style={{ fontSize: '14px', color: 'var(--muted)' }}>Member Addresses ({members.length})</label>
               <div>
@@ -239,15 +248,6 @@ export function CreateShareModal({ onClose }: { onClose: () => void }) {
               id="threshold-input"
               required type="number" min="1" value={threshold} onChange={e => setThreshold(e.target.value)}
               style={{ width: '100%', padding: '12px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)' }} 
-            />
-          </div>
-
-          <div>
-            <label htmlFor="deadline-input" style={{ display: 'block', marginBottom: '8px', fontSize: '14px', color: 'var(--muted)' }}>Expiration Date & Time (Deadline)</label>
-            <input 
-              id="deadline-input"
-              required type="datetime-local" value={deadlineDate} onChange={e => setDeadlineDate(e.target.value)}
-              style={{ width: '100%', padding: '12px', background: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text)', colorScheme: 'dark' }} 
             />
           </div>
 
