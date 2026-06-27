@@ -376,11 +376,11 @@ export default function Home() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
             {[
               { title: 'Verified Destination', desc: 'Flash-audit of the destination contract to verify admin privileges, minting functions, and token return mechanisms.' },
-              { title: 'Safe Escrow Setup', desc: 'We configure a 3/5 or 4/5 Multisig (Safe) as your destination to eliminate any single point of failure.' },
-              { title: 'Counterparty Verification', desc: 'We directly contact the seller or project via official channels to confirm the deal terms (no KYC for your members).' },
+              { title: 'Safe Escrow Setup', desc: 'We configure a 3/5 or 4/5 Multisig (Safe) as your destination (when the deal structure allows an intermediary wallet).' },
+              { title: 'Official Channel Verification', desc: 'Confirms you\'re dealing with the genuine project account and its publicly announced address (not a substitute for assessing the project\'s legitimacy).' },
               { title: 'Accompanied Execution', desc: 'Live hands-on support for Phase 2/3 (Set Token, Approve & Deposit, Validate, Claim) to prevent costly mistakes.' },
               { title: 'Gas Fund Provided', desc: 'We supply a small BNB allowance for your members so they never get stuck during the claiming process.' },
-              { title: 'Side-Letter Memo', desc: 'A simple, co-signed rules memo detailing exact procedures if the seller defaults or fails to deliver.' }
+              { title: 'Side-Letter Memo', desc: 'A simple rules memo co-signed by the pool creator and PerShare detailing exact procedures if the seller defaults.' }
             ].map((feature, idx) => (
               <div key={idx} style={{ background: 'rgba(0,0,0,0.2)', padding: '24px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
                 <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#fff', marginBottom: '8px' }}>{feature.title}</h3>
