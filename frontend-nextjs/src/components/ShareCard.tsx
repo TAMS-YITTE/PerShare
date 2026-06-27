@@ -16,12 +16,11 @@ export function ShareCard({ id, share, userAddress }: { id: bigint; share: any; 
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        border: '1px solid var(--border)',
-      borderRadius: '12px',
-      padding: '24px',
-      transition: 'all 0.2s ease',
-      cursor: 'pointer'
-    }}>
+        borderRadius: '12px',
+        padding: '24px',
+        transition: 'all 0.2s ease',
+        cursor: 'pointer'
+      }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
         <h3 style={{ margin: 0, fontSize: '18px' }}>{share.name}</h3>
         <span style={{ 

@@ -200,7 +200,7 @@ function SharePageContent() {
           
           {status !== 'active' && status !== 'expired' && status !== 'refunded' ? (
             <p style={{ color: 'var(--muted)' }}>The collection phase is over ({status}).</p>
-          ) : (
+          ) : isMember ? (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
               {/* Contribuer (Only if active) */}
               {status === 'active' && isMember && !isTargetReached && (
