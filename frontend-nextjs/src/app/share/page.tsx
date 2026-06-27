@@ -12,7 +12,7 @@ import {
 } from '../../hooks/useShare';
 import { toast } from 'sonner';
 
-function MemberItem({ member, shareId, currentUser, activeTab }: { member: string, shareId: bigint, currentUser?: string, activeTab: 'collecte'|'envoi'|'distribution' }) {
+function MemberItem({ member, shareId, currentUser, activeTab, isRefunded }: { member: string, shareId: bigint, currentUser?: string, activeTab: 'collecte'|'envoi'|'distribution', isRefunded?: boolean }) {
   const { data: hasValidatedP1 } = useHasValidated(shareId, member as `0x${string}`);
   const { data: hasValidatedP2 } = useHasValidatedDist(shareId, member as `0x${string}`);
   const { data: contribution } = useContribution(shareId, member as `0x${string}`);
@@ -26,7 +26,11 @@ function MemberItem({ member, shareId, currentUser, activeTab }: { member: strin
         {member.slice(0, 8)}...{member.slice(-6)} {isMe && '(You)'}
       </span>
       {activeTab === 'collecte' && contribution !== undefined && contribution > BigInt(0) && (
-        <span style={{ color: '#10B981', fontWeight: 'bold', fontSize: '14px' }}>+{formatUSDT(contribution)} USDT</span>
+        isRefunded ? (
+          <span style={{ color: '#F59E0B', fontWeight: 'bold', fontSize: '14px' }}>↩️ Refunded ({formatUSDT(contribution)} USDT)</span>
+        ) : (
+          <span style={{ color: '#10B981', fontWeight: 'bold', fontSize: '14px' }}>+{formatUSDT(contribution)} USDT</span>
+        )
       )}
       {hasValidated && (
         <span style={{ color: '#10b981', fontWeight: 'bold', fontSize: '14px', display: 'flex', alignItems: 'center', gap: '6px' }}>
@@ -385,7 +389,7 @@ function SharePageContent() {
         <h3 style={{ marginBottom: '24px', fontSize: '20px' }}>Share Members ({share.members.length})</h3>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           {share.members.map((member: string, index: number) => (
-            <MemberItem key={index} member={member} shareId={shareId} currentUser={address as string} activeTab={activeTab} />
+            <MemberItem key={index} member={member} shareId={shareId} currentUser={address as string} activeTab={activeTab} isRefunded={share.refunded} />
           ))}
         </div>
       </div>
