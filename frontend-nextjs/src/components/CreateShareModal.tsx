@@ -180,11 +180,11 @@ export function CreateShareModal({ onClose }: { onClose: () => void }) {
                 </h4>
                 <ul style={{ margin: 0, paddingLeft: '16px', display: 'flex', flexDirection: 'column', gap: '8px', lineHeight: 1.5 }}>
                   <li><strong>Verified Destination:</strong> Flash-audit of the destination contract (admin, mint, pause, return mechanism).</li>
-                  <li><strong>Safe Escrow Setup:</strong> 3/5 or 4/5 Multisig as destination (no single point of failure).</li>
-                  <li><strong>Counterparty Verification:</strong> Direct contact with seller/project via official channels.</li>
+                  <li><strong>Safe Escrow Setup:</strong> 3/5 or 4/5 Multisig as destination (when the deal structure allows an intermediary wallet).</li>
+                  <li><strong>Official Channel Verification:</strong> Confirms genuine project account and public address (not a substitute for project legitimacy assessment).</li>
                   <li><strong>Accompanied Execution:</strong> Live support for Phase 2/3 (Set Token, Deposit, Validate, Claim).</li>
                   <li><strong>Gas Fund:</strong> Small BNB allowance for members to claim/validate.</li>
-                  <li><strong>Side-letter:</strong> Co-signed rules memo in case of seller default.</li>
+                  <li><strong>Side-letter:</strong> Rules memo co-signed by the pool creator and PerShare in case of seller default.</li>
                 </ul>
               </div>
             )}
