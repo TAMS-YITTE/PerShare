@@ -33,13 +33,15 @@ const projectId = 'a0485249623e9a167f133146abc2eb4e';
 const ENABLE_TESTNET = process.env.NEXT_PUBLIC_ENABLE_TESTNET === 'true';
 const APP_NETWORKS: any = ENABLE_TESTNET ? [BSC_MAINNET, BSC_TESTNET] : [BSC_MAINNET];
 
+const ALCHEMY_URL = process.env.NEXT_PUBLIC_ALCHEMY_RPC_URL;
+
 const wagmiAdapter = new WagmiAdapter({
   projectId,
   networks: APP_NETWORKS,
   transports: {
     [BSC_TESTNET.id]: http('https://data-seed-prebsc-1-s1.binance.org:8545/'),
     [BSC_MAINNET.id]: fallback([
-      http('https://bnb-mainnet.g.alchemy.com/v2/1Y-44TqaZ_50x3sgRaNbw'),
+      ...(ALCHEMY_URL ? [http(ALCHEMY_URL)] : []),
       http('https://bsc-dataseed.binance.org/'),
       http('https://bsc-dataseed1.defibit.io/')
     ]),
