@@ -5,7 +5,7 @@
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React, { useState, useEffect } from 'react';
-import { WagmiProvider, http } from 'wagmi';
+import { WagmiProvider, http, fallback } from 'wagmi';
 import { createAppKit } from '@reown/appkit/react';
 import { WagmiAdapter } from '@reown/appkit-adapter-wagmi';
 
@@ -38,7 +38,11 @@ const wagmiAdapter = new WagmiAdapter({
   networks: APP_NETWORKS,
   transports: {
     [BSC_TESTNET.id]: http('https://data-seed-prebsc-1-s1.binance.org:8545/'),
-    [BSC_MAINNET.id]: http('https://bsc-dataseed.binance.org/'),
+    [BSC_MAINNET.id]: fallback([
+      http('https://bnb-mainnet.g.alchemy.com/v2/1Y-44TqaZ_50x3sgRaNbw'),
+      http('https://bsc-dataseed.binance.org/'),
+      http('https://bsc-dataseed1.defibit.io/')
+    ]),
   },
 });
 
