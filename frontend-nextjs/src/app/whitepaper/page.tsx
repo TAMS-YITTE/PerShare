@@ -12,7 +12,7 @@ export default function Whitepaper() {
         <div style={{ background: 'rgba(20, 28, 47, 0.4)', padding: '40px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)', marginBottom: '32px' }}>
           <h2 style={{ fontSize: '24px', fontWeight: 700, marginBottom: '16px', color: '#00D2FF' }}>1. Introduction</h2>
           <p style={{ color: 'var(--muted)', lineHeight: 1.7, marginBottom: '16px' }}>
-            PerShare is a decentralized, self-custodial smart contract protocol built on the BNB Chain. It enables communities, DAOs, and investors to safely pool capital for group purchases (such as OTC deals or presales) and automates the fractional distribution of the acquired assets.
+            PerShare is a decentralized, self-custodial smart contract protocol built on the BNB Chain. It enables communities, DAOs and groups of members to safely pool funds for a shared purchase (such as OTC deals or presales) and automates the fractional distribution of the acquired assets.
           </p>
           <p style={{ color: 'var(--muted)', lineHeight: 1.7 }}>
             Traditional group buys require trusting a central administrator to hold funds, send them to the seller, and manually distribute the tokens back to contributors. PerShare eliminates this counterparty risk through a dual-phase cryptographic architecture.
@@ -54,6 +54,17 @@ export default function Whitepaper() {
           <p style={{ color: 'var(--muted)', lineHeight: 1.7 }}>
             <strong>Dust Sweeping:</strong> Division rounding in Solidity can leave microscopic token fractions (dust) in the contract. PerShare allows the creator to sweep this dust, defined strictly as `totalTokens - sum(theoreticalClaims)`.
           </p>
+        </div>
+
+        <div style={{ background: 'rgba(20, 28, 47, 0.4)', padding: '40px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)', marginBottom: '32px' }}>
+          <h2 style={{ fontSize: '24px', fontWeight: 700, marginBottom: '16px', color: '#00D2FF' }}>5. Part of the Joob Ecosystem</h2>
+          <p style={{ color: 'var(--muted)', lineHeight: 1.7, marginBottom: '16px' }}>
+            PerShare is the collective building block of the <a href="https://www.joobescrow.com" target="_blank" rel="noreferrer" style={{ color: '#00D2FF' }}>Joob ecosystem</a>: JoobEscrow secures a deal between two parties, PerShare lets many members fund one goal together.
+          </p>
+          <ul style={{ color: 'var(--muted)', lineHeight: 1.7, paddingLeft: '20px' }}>
+            <li><strong>One token, JOOB:</strong> no separate PerShare token. From the JOOB TGE, JOOB holders above a threshold pay 0% fees on PerShare, and JOOB governance extends to PerShare parameters.</li>
+            <li><strong>Next step:</strong> pools that directly fund a JoobEscrow escrow, so a group can co-fund a deal that is only paid on delivery (new audit before deployment).</li>
+          </ul>
         </div>
       </div>
     </main>
