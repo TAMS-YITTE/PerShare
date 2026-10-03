@@ -26,8 +26,8 @@ const MILESTONES: Milestone[] = [
     ),
   },
   {
-    title: 'PerShare V2: pools that fund escrows',
-    text: 'Pools that directly fund a JoobEscrow escrow (for example several sponsors co-funding one campaign, paid only on delivery), and full automation for claim-mode token sales. New audit before deployment.',
+    title: 'PerShare V2: co-funded escrow',
+    text: 'Several sponsors pool funds and the pool opens one JoobEscrow escrow, paid only on delivery; if the deal is cancelled or disputed, each member is refunded pro-rata in the same currency. Comes after JoobEscrow V5 and is audited before launch. Also: full automation for claim-mode token sales.',
   },
   {
     title: 'NFT group purchases',

@@ -1,4 +1,5 @@
 import React from 'react';
+import { CoFundedEscrowDiagram } from '../../components/CoFundedEscrowDiagram';
 
 export default function Whitepaper() {
   return (
@@ -65,6 +66,12 @@ export default function Whitepaper() {
             <li><strong>One token, JOOB:</strong> no separate PerShare token. From the JOOB TGE, JOOB holders above a threshold pay 0% fees on PerShare, and JOOB governance extends to PerShare parameters.</li>
             <li><strong>Next step:</strong> pools that directly fund a JoobEscrow escrow, so a group can co-fund a deal that is only paid on delivery (new audit before deployment).</li>
           </ul>
+          <p style={{ color: 'var(--muted)', lineHeight: 1.7, margin: '16px 0' }}>
+            <strong>Co-funded escrow (planned).</strong> Several sponsors or community members pool funds on PerShare, and the pool opens a JoobEscrow escrow as one client. Funds stay locked until the work is delivered and approved by the group. If the deal is cancelled or a dispute goes the group&apos;s way, the refund returns to the pool and each member gets their pro-rata share, in the same currency. Planned with JoobEscrow V5 and PerShare V2; audited before launch.
+          </p>
+          <div style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', padding: '12px' }}>
+            <CoFundedEscrowDiagram />
+          </div>
         </div>
       </div>
     </main>
