@@ -51,7 +51,8 @@ export function Footer() {
       </div>
 
       <p style={{ color: '#8892b0', fontSize: '14px', margin: 0, marginTop: '24px' }}>
-        &copy; {new Date().getFullYear()} PerShare. All rights reserved.
+        &copy; {new Date().getFullYear()} PerShare. All rights reserved. · Part of the{' '}
+        <a href="https://www.joobescrow.com" target="_blank" rel="noreferrer" style={{ color: '#00D2FF', textDecoration: 'none' }}>Joob ecosystem</a>
       </p>
     </footer>
   );

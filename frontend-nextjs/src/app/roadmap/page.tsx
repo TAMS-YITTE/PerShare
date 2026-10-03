@@ -31,8 +31,8 @@ export default function Roadmap() {
 
           <div style={{ position: 'relative' }}>
             <div style={{ position: 'absolute', left: '-41px', top: '0', width: '20px', height: '20px', borderRadius: '50%', background: 'rgba(255,255,255,0.2)', border: '4px solid var(--bg)' }}></div>
-            <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#fff', marginBottom: '8px' }}>Q2 2027 - Decentralized Governance</h3>
-            <p style={{ color: 'var(--muted)', lineHeight: 1.6 }}>Introduction of the SHARE token for platform governance, fee redistribution, and premium pool features.</p>
+            <h3 style={{ fontSize: '20px', fontWeight: 700, color: '#fff', marginBottom: '8px' }}>From the JOOB TGE - One Ecosystem Token</h3>
+            <p style={{ color: 'var(--muted)', lineHeight: 1.6 }}>PerShare joins the Joob ecosystem and uses JOOB, its single token: JOOB holders above a threshold pay 0% fees on PerShare, and JOOB governance extends to PerShare parameters. Next: pools that directly fund a <a href="https://www.joobescrow.com" target="_blank" rel="noreferrer" style={{ color: '#00D2FF' }}>JoobEscrow</a> escrow.</p>
           </div>
 
         </div>
