@@ -34,19 +34,19 @@ docs/
 - **Anti-Dust Security**: Token dust due to asymmetric division rounding is transferred to the first member.
 - **Anti-Collision Security**: `expectedToken` ensures no malicious token can trigger the Phase 2 validation.
 - **Dynamic & Secure Fees**: Default commission of 1% (maximum 2%, enforced on-chain via `setFeeBPS <= 200`), sent to a distinct `feeRecipient` address for added security.
-- **Tokenomics (Dormant)**: Pre-integration of the future `$SHARE` platform token, which will exempt creators holding a certain threshold from fees (0%).
+- **Platform token (Dormant)**: `setPlatformToken` is pre-integrated. PerShare is part of the [Joob ecosystem](https://www.joobescrow.com) and will use **JOOB**, its single token: from the JOOB TGE, creators holding a threshold pay 0% fees. There is no separate PerShare token.
 - **Public Refund (Permissionless)**: In case of failure (deadline passed), anyone can trigger the `refund` to unlock inactive members' funds.
 - **Kill-Switch (Pausable & Ownable)**: Allows temporary transaction blocking if a vulnerability is detected.
 
 ## V1 Compatibility — Grouped by Affinity
 
-**🔒 Secure a transaction (escrow / holding)**
-- **Beat Fiverr/Upwork** ✅ Client/freelance escrow, threshold 2. Available now.
-- **Instant P2P Escrow** ✅ Buyer deposits, seller ships, cross-validation. Available now.
+**🔒 One-to-one deals (client / freelancer, buyer / seller)**
+- Use **[JoobEscrow](https://www.joobescrow.com)**, the escrow of the Joob ecosystem: acceptance, delivery deadline, dispute resolution and a 50/50 exit for abandoned disputes. PerShare is built for groups.
+- **Planned — co-funded escrow (PerShare V2 + JoobEscrow V5):** several sponsors pool funds and the pool opens one JoobEscrow escrow, paid only on delivery; refunds return pro-rata in the same currency. Audited before launch.
 
-**🚀 Invest together (presale / group buy)**
+**🚀 Buy together (group purchase)**
 - **Buy together** ✅ The pool collects USDT and sends it to the presale. Works out of the box if the presale returns tokens automatically (Push mode).
-- **Institutional buying syndicate** ✅ Grouped pool, single ticket to the seller. Available now (Push).
+- **Group ticket** ✅ Grouped pool, single ticket to the seller. Available now (Push).
 
   *Built-in safety net: as long as the pool hasn't validated, the money remains locked in the contract. Any doubts before the deadline? Don't validate, and each member is refunded 100% at the deadline.*
 
